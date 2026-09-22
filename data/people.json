@@ -163,7 +163,7 @@
   },
   {
     "id": "danjyu",
-    "name": "Danjyu",
+    "name": "Danjyu Pandey",
     "gender": "M",
     "parentId": "guja",
     "generation": 6,
@@ -175,7 +175,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "bissu_daughter_1",
