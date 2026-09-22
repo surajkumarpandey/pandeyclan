@@ -7,85 +7,42 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   .hero {
-    background: linear-gradient(180deg, var(--indigo) 0%, var(--indigo-deep) 100%);
+    background: linear-gradient(165deg, var(--ochre) 0%, var(--ochre-deep) 100%);
     color: var(--paper-light);
     overflow: hidden;
     position: relative;
   }
-  .hero .wrap {
-    padding: 88px 28px 0;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 40px;
-    align-items: end;
-  }
-  .hero h1 {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(38px, 6vw, 64px);
-    line-height: 1.05;
-    margin: 0 0 22px;
-  }
-  .hero h1 .place { font-style: italic; color: var(--brass-light); }
-  .hero p.lede {
-    font-size: 18px;
-    color: rgba(246,242,232,0.82);
-    max-width: 46ch;
-    margin: 0 0 32px;
-  }
+  .hero .wrap { padding: 84px 28px 0; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: end; }
+  .hero h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(36px, 5.6vw, 60px); line-height: 1.08; margin: 0 0 22px; }
+  .hero h1 .place { font-style: italic; color: var(--gold-light); }
+  .hero p.lede { font-size: 18px; color: rgba(255,251,243,0.92); max-width: 46ch; margin: 0 0 32px; }
   .hero .ctas { display: flex; gap: 14px; margin-bottom: 56px; flex-wrap: wrap; }
   .hero-art { width: 100%; height: auto; }
 
-  .ridge {
-    background: var(--indigo-deep);
-    padding-bottom: 0;
-  }
-  .ridge svg { display: block; width: 100%; height: auto; }
   .ridge-stats {
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-    padding: 28px 0 44px;
-    color: var(--paper-light);
+    background: var(--maroon-deep);
+    display: flex; justify-content: space-around; text-align: center;
+    padding: 30px 0 40px; color: var(--paper-light);
   }
-  .ridge-stats .num {
-    font-family: var(--font-display);
-    font-size: 34px;
-    color: var(--brass-light);
-    display: block;
-  }
-  .ridge-stats .label { font-size: 13.5px; color: rgba(246,242,232,0.65); }
+  .ridge-stats .num { font-family: var(--font-display); font-size: 34px; color: var(--gold-light); display: block; }
+  .ridge-stats .label { font-size: 13.5px; color: rgba(255,251,243,0.72); }
 
-  .intro-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: center;
-  }
-  .intro-grid p { color: #4a4738; }
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .intro-grid p { color: #5a3a2e; }
+  .village-card { background: var(--paper-light); border: 1px solid var(--line); position: relative; padding: 0; overflow: hidden; }
+  .village-card .aipan-border.on-paper { position: absolute; top: 0; left: 0; }
+  .village-card .inner { padding: 30px 28px 26px; }
 
-  .explore-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-  }
-  .explore-card {
-    background: var(--paper-light);
-    border: 1px solid var(--line);
-    border-top: 3px solid var(--brass);
-    padding: 26px;
-  }
+  .explore-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .explore-card { background: var(--paper-light); border: 1px solid var(--line); border-top: 4px solid var(--ochre); padding: 26px; }
   .explore-card:nth-child(2) { border-top-color: var(--pine); }
-  .explore-card:nth-child(3) { border-top-color: var(--indigo); }
-  .explore-card h3 { font-family: var(--font-display); font-weight: 500; font-size: 21px; margin: 0 0 10px; }
-  .explore-card p { color: #5a5648; font-size: 15px; margin: 0 0 18px; }
+  .explore-card:nth-child(3) { border-top-color: var(--maroon); }
+  .explore-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; margin: 0 0 10px; }
+  .explore-card p { color: #6b4a3d; font-size: 15px; margin: 0 0 18px; }
 
-  .how-it-grows {
-    background: var(--paper-light);
-    border: 1px solid var(--line);
-    padding: 40px;
-  }
-  .how-it-grows ol { padding-left: 20px; color: #4a4738; }
+  .how-it-grows { background: var(--maroon); color: var(--paper-light); padding: 44px 40px; position: relative; }
+  .how-it-grows h2 { color: var(--paper-light); }
+  .how-it-grows ol { padding-left: 20px; color: rgba(255,251,243,0.88); }
   .how-it-grows li { margin-bottom: 10px; }
 
   @media (max-width: 800px) {
@@ -101,81 +58,91 @@
     <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="tree.html">Family Tree</a></li>
-      <li><a href="map.html">Map &amp; Village</a></li>
-      <li><a href="audit.html">Changelog</a></li>
-      <li><a href="admin.html">Edit</a></li>
+      <li><a href="index.html" class="active" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
+      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
 </nav>
 
 <header class="hero">
+  <div class="aipan-border"></div>
   <div class="wrap">
     <div>
-      <h1>Thirteen generations,<br>one ridge in <span class="place">Bairati</span>.</h1>
-      <p class="lede">From Sukhdev's household in the Kumaon hills to everyone carrying his name today — traced, mapped, and kept by the family itself.</p>
+      <h1 data-i18n="home.h1">Thirteen generations,<br>one ridge in <span class="place">Bairati</span>.</h1>
+      <p class="lede" data-i18n="home.lede">From Sukhdev Ji's household in the Kumaon hills to everyone carrying his name today — traced, mapped, and kept by the family itself.</p>
       <div class="ctas">
-        <a class="btn btn-brass" href="tree.html">Explore the family tree</a>
-        <a class="btn btn-outline" href="map.html">See where everyone is</a>
+        <a class="btn btn-gold" href="tree.html" data-i18n="home.cta.tree">Explore the family tree</a>
+        <a class="btn btn-outline" href="map.html" data-i18n="home.cta.map">See where everyone has been</a>
       </div>
     </div>
     <svg class="hero-art" viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <linearGradient id="skyGlow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#c07f42" stop-opacity="0.55"/>
-          <stop offset="100%" stop-color="#c07f42" stop-opacity="0"/>
-        </linearGradient>
+        <radialGradient id="skyGlow" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#F0B75C" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#F0B75C" stop-opacity="0"/>
+        </radialGradient>
       </defs>
-      <circle cx="330" cy="70" r="60" fill="url(#skyGlow)"/>
-      <path d="M0,220 L45,150 L80,190 L130,110 L170,175 L210,95 L250,180 L300,130 L340,200 L420,140 L420,300 L0,300 Z" fill="#2c3648" opacity="0.9"/>
-      <path d="M0,260 L60,200 L110,230 L160,170 L220,235 L280,180 L330,240 L420,190 L420,300 L0,300 Z" fill="#232c3d"/>
+      <circle cx="330" cy="70" r="70" fill="url(#skyGlow)"/>
+      <path d="M0,220 L45,150 L80,190 L130,110 L170,175 L210,95 L250,180 L300,130 L340,200 L420,140 L420,300 L0,300 Z" fill="#3E1218" opacity="0.85"/>
+      <path d="M0,260 L60,200 L110,230 L160,170 L220,235 L280,180 L330,240 L420,190 L420,300 L0,300 Z" fill="#5C1F27"/>
+      <!-- temple silhouette, nod to the aipan tradition drawn at thresholds -->
+      <g fill="#FBF2E3" opacity="0.85">
+        <rect x="196" y="240" width="28" height="40"/>
+        <polygon points="196,240 210,205 224,240"/>
+        <rect x="206" y="196" width="8" height="14"/>
+      </g>
     </svg>
   </div>
+  <div class="aipan-border" style="transform:scaleY(-1);"></div>
 </header>
 
-<div class="ridge">
-  <svg viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M0,90 L0,60 L150,20 L280,55 L420,10 L560,50 L700,25 L860,60 L1000,15 L1200,45 L1200,90 Z" fill="#eae3d2"/>
-  </svg>
-  <div class="wrap ridge-stats">
-    <div><span class="num" id="stat-people">—</span><span class="label">people recorded</span></div>
-    <div><span class="num" id="stat-gens">—</span><span class="label">generations traced</span></div>
-    <div><span class="num">1</span><span class="label">ancestral village — Bairati, Almora</span></div>
+<div class="ridge-stats">
+  <div class="wrap" style="display:flex; justify-content:space-around;">
+    <div><span class="num" id="stat-people">—</span><span class="label" data-i18n="home.stat.people">people recorded</span></div>
+    <div><span class="num" id="stat-gens">—</span><span class="label" data-i18n="home.stat.gens">generations traced</span></div>
+    <div><span class="num">1</span><span class="label" data-i18n="home.stat.village">ancestral village — Bairati, Almora</span></div>
   </div>
 </div>
 
 <main>
   <section class="section wrap intro-grid">
     <div>
-      <h2 class="section-title">A household in the Kumaon hills</h2>
+      <h2 class="section-title" data-i18n="home.intro.title">A household in the Kumaon hills</h2>
       <p>Bairati sits in the Almora district of Uttarakhand, in the Kumaon Himalayas — once the heart of the Katyuri and Chand kingdoms, and for generations, home to this family. This site holds what's known of that lineage: who came from whom, where they scattered to, and what's remembered of the village itself.</p>
       <p>It starts as a chart, hand-drawn and photographed. It's meant to grow into something fuller — photos, stories, and the whereabouts of everyone who carries this name today.</p>
     </div>
-    <div class="card">
-      <p class="muted" style="margin:0 0 6px;">Ancestral village</p>
-      <p style="font-family:var(--font-display); font-size:22px; margin:0 0 14px;">Bairati, Almora, Uttarakhand</p>
-      <a class="btn btn-outline-dark btn-sm" href="map.html">Open the map &rarr;</a>
+    <div class="village-card">
+      <div class="aipan-border on-paper"></div>
+      <div class="inner">
+        <p class="muted" style="margin:0 0 6px;">Ancestral village</p>
+        <p style="font-family:var(--font-display); font-size:22px; margin:0 0 14px;">Bairati, Almora, Uttarakhand</p>
+        <a class="btn btn-outline-dark btn-sm" href="village.html">Visit the village page &rarr;</a>
+      </div>
     </div>
   </section>
 
   <section class="section wrap">
-    <h2 class="section-title">Find your place in it</h2>
-    <p class="section-lede">Three ways into the family record.</p>
+    <h2 class="section-title" data-i18n="home.explore.title">Find your place in it</h2>
+    <p class="section-lede" data-i18n="home.explore.lede">Three ways into the family record.</p>
     <div class="explore-grid">
       <div class="explore-card">
-        <h3>The Tree</h3>
-        <p>Search any name and follow the line up to Sukhdev, or down to the youngest generation recorded.</p>
+        <h3 data-i18n="home.card.tree.title">The Tree</h3>
+        <p data-i18n="home.card.tree.body">Search any name and follow the line up to Sukhdev Ji, or down to the youngest generation recorded.</p>
         <a class="btn btn-outline-dark btn-sm" href="tree.html">Open the tree</a>
       </div>
       <div class="explore-card">
-        <h3>The Map</h3>
-        <p>Where the family has lived and moved — from Bairati outward, generation by generation.</p>
+        <h3 data-i18n="home.card.map.title">The Journeys Map</h3>
+        <p data-i18n="home.card.map.body">From Bairati outward — where the family has lived, worked, and travelled, generation by generation.</p>
         <a class="btn btn-outline-dark btn-sm" href="map.html">Open the map</a>
       </div>
       <div class="explore-card">
-        <h3>The Changelog</h3>
-        <p>Every addition and correction made to this record, and who made it.</p>
+        <h3 data-i18n="home.card.audit.title">The Changelog</h3>
+        <p data-i18n="home.card.audit.body">Every addition and correction made to this record, and who made it.</p>
         <a class="btn btn-outline-dark btn-sm" href="audit.html">View changes</a>
       </div>
     </div>
@@ -183,20 +150,21 @@
 
   <section class="section wrap">
     <div class="how-it-grows">
-      <h2 class="section-title" style="margin-bottom:18px;">How this record grows</h2>
-      <p style="color:#5a5648; max-width:60ch;">This isn't a finished document — it's a shared, living record. Anyone in the family with an editor password can add a photo, correct a name, or fill in a missing branch.</p>
+      <h2 class="section-title" data-i18n="home.grows.title" style="margin-bottom:18px;">How this record grows</h2>
+      <p style="max-width:60ch;" data-i18n="home.grows.body">This isn't a finished document — it's a shared, living record. Anyone in the family with an editor password can add a photo, correct a name, or fill in a missing branch.</p>
       <ol>
         <li>Find your branch in the tree.</li>
         <li>Sign in on the Edit page with the password given to you.</li>
-        <li>Add what you know — a photo, a place lived, a short note.</li>
+        <li>Add what you know — a photo, a place lived or visited, a short note.</li>
         <li>Your change is saved and recorded on the Changelog, with your name attached.</li>
       </ol>
-      <a class="btn btn-brass btn-sm" href="admin.html">Go to the Edit page</a>
+      <a class="btn btn-gold btn-sm" href="admin.html" data-i18n="home.grows.cta">Go to the Edit page</a>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
+  <div class="aipan-border"></div>
   <div class="wrap">
     <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
     <span><a href="https://maps.app.goo.gl/AtZsa3H4NLkJ7oMK9?g_st=ic" target="_blank" rel="noopener">Bairati on Google Maps</a></span>
@@ -204,6 +172,7 @@
 </footer>
 
 <script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
 <script>
   PandeyData.loadPeople().then(people => {
     document.getElementById('stat-people').textContent = people.length;

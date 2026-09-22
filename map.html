@@ -3,29 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Map &amp; Village — The Pandey Clan of Bairati</title>
+<title>Journeys Map — The Pandey Clan of Bairati</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-  .village-strip {
-    background: var(--indigo);
-    color: var(--paper-light);
-    padding: 44px 0;
+  .map-toolbar { background: var(--maroon); color: var(--paper-light); padding: 20px 0; }
+  .map-toolbar .wrap { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .mode-switch { display: flex; background: rgba(255,251,243,0.12); border-radius: 999px; padding: 3px; }
+  .mode-switch button {
+    border: none; background: none; color: rgba(255,251,243,0.75); padding: 8px 16px;
+    border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer;
   }
-  .village-strip h1 { font-family: var(--font-display); font-weight: 500; font-size: 32px; margin: 0 0 10px; }
-  .village-strip p { max-width: 68ch; color: rgba(246,242,232,0.82); margin: 0; }
-  .village-strip a { color: var(--brass-light); }
-  #map { width: 100%; height: 68vh; min-height: 420px; }
-  .map-note {
-    background: var(--paper-light);
-    border-top: 1px solid var(--line);
-    padding: 14px 0;
-    font-size: 13.5px;
-    color: #6b6656;
-  }
+  .mode-switch button.active { background: var(--gold); color: var(--maroon-deep); }
+  #person-select { max-width: 260px; }
+  #map { width: 100%; height: 68vh; min-height: 460px; }
+  .map-note { background: var(--paper-light); border-top: 1px solid var(--line); padding: 14px 0; font-size: 13.5px; color: #8a6a58; }
+  .legend-strip { display: flex; gap: 22px; flex-wrap: wrap; font-size: 13px; }
+  .legend-strip span { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,251,243,0.85); }
+  .legend-strip i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
   .leaflet-popup-content { font-family: var(--font-body); font-size: 14px; }
-  .leaflet-popup-content b { font-family: var(--font-display); font-weight: 500; }
+  .leaflet-popup-content b { font-family: var(--font-display); font-weight: 600; }
+  .leaflet-popup-content ul { margin: 6px 0 0; padding-left: 18px; }
 </style>
 </head>
 <body>
@@ -35,94 +34,155 @@
     <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="tree.html">Family Tree</a></li>
-      <li><a href="map.html" class="active">Map &amp; Village</a></li>
-      <li><a href="audit.html">Changelog</a></li>
-      <li><a href="admin.html">Edit</a></li>
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" class="active" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
+      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
 </nav>
 
-<div class="village-strip">
+<div class="map-toolbar">
   <div class="wrap">
-    <h1>Bairati, Almora — the ancestral village</h1>
-    <p>Set in the Kumaon Himalayas of Uttarakhand, once part of the Katyuri and later Chand kingdoms. <a href="https://maps.app.goo.gl/AtZsa3H4NLkJ7oMK9?g_st=ic" target="_blank" rel="noopener">Open in Google Maps</a>. Every other pin below is a place the family has since lived or moved to — add yours from the Edit page.</p>
+    <div class="mode-switch">
+      <button id="mode-family" class="active">Whole family</button>
+      <button id="mode-person">One person's journey</button>
+    </div>
+    <select id="person-select" class="hidden"></select>
+    <span class="legend-strip" style="margin-left:auto;">
+      <span><i style="background:#E0952A"></i> ancestral village</span>
+      <span><i style="background:#5C1F27"></i> current home</span>
+      <span><i style="background:#3F5341"></i> lived</span>
+      <span><i style="background:#B3402A"></i> visited</span>
+    </span>
   </div>
 </div>
 
 <div id="map"></div>
 <div class="map-note wrap">
-  Locations are approximate, generated from place names. If a pin looks wrong, correct the person's location from the Edit page and it will update here.
+  Locations are geocoded automatically from place names and are approximate. Add or correct anyone's places from the Edit page.
 </div>
 
 <script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
 <script>
 (async function () {
   const people = await PandeyData.loadPeople();
-  const map = L.map('map').setView([29.62, 79.62], 8); // roughly centered on Almora district
+  const map = L.map('map').setView([27.5, 78.5], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap contributors'
+    maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  const brassIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:16px;height:16px;border-radius:50%;background:#9c5a2c;border:2px solid #f6f2e8;box-shadow:0 0 0 1px #9c5a2c;"></div>',
-    iconSize: [16, 16], iconAnchor: [8, 8]
-  });
-  const indigoIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:12px;height:12px;border-radius:50%;background:#232c3d;border:2px solid #f6f2e8;"></div>',
-    iconSize: [12, 12], iconAnchor: [6, 6]
-  });
-
-  // Bairati, Almora — approximate coordinate. If you have the exact
-  // point from the shared Google Maps pin, update lat/lng below.
-  const BAIRATI = { lat: 29.596, lng: 79.665, label: 'Bairati, Almora — ancestral village' };
-  L.marker([BAIRATI.lat, BAIRATI.lng], { icon: brassIcon }).addTo(map)
-    .bindPopup(`<b>${BAIRATI.label}</b>`);
-
-  // ---------- Collect place names from people.json ----------
-  const placeToPeople = {}; // place string -> [names]
-  people.forEach(p => {
-    if (p.currentLocation) {
-      (placeToPeople[p.currentLocation] ||= []).push(PandeyData.displayName(p) + ' (current)');
-    }
-    (p.pastLocations || []).forEach(l => {
-      if (l.place) (placeToPeople[l.place] ||= []).push(PandeyData.displayName(p) + (l.year ? ` (${l.year})` : ' (past)'));
+  const COLORS = { origin: '#E0952A', current: '#5C1F27', lived: '#3F5341', visited: '#B3402A' };
+  function dot(color, size = 12) {
+    return L.divIcon({
+      className: '',
+      html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid #FFFBF3;box-shadow:0 0 0 1px ${color};"></div>`,
+      iconSize: [size, size], iconAnchor: [size/2, size/2]
     });
-  });
-  const places = Object.keys(placeToPeople);
+  }
 
-  // ---------- Geocode via Nominatim, one at a time, with local caching ----------
-  const CACHE_KEY = 'pandey_geocode_cache_v1';
+  // ---------- Geocoding with local cache ----------
+  const CACHE_KEY = 'pandey_geocode_cache_v2';
   const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
-
   async function geocode(place) {
-    if (cache[place]) return cache[place];
+    if (cache[place] !== undefined) return cache[place];
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(place)}`,
-        { headers: { 'Accept-Language': 'en' } }
-      );
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(place)}`, { headers: { 'Accept-Language': 'en' } });
       const data = await res.json();
       const result = data[0] ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
       cache[place] = result;
       localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
       return result;
-    } catch (e) {
-      return null;
+    } catch (e) { return null; }
+  }
+
+  let layerGroup = L.layerGroup().addTo(map);
+  function clearLayer() { layerGroup.clearLayers(); }
+
+  // ---------- Whole-family aggregate mode ----------
+  async function renderFamilyMode() {
+    clearLayer();
+    const byPlace = {}; // place -> { types:Set, people: [{name,type}] }
+    people.forEach(p => {
+      (p.locations || []).forEach(l => {
+        if (!l.place) return;
+        byPlace[l.place] ||= { people: [] };
+        byPlace[l.place].people.push({ name: PandeyData.displayName(p), type: l.type, id: p.id });
+      });
+    });
+    const places = Object.keys(byPlace);
+    for (const place of places) {
+      const coords = await geocode(place);
+      if (!coords) continue;
+      const entry = byPlace[place];
+      const hasOrigin = entry.people.some(x => x.type === 'origin');
+      const count = entry.people.length;
+      const radius = hasOrigin ? 16 : Math.min(10 + count * 2, 26);
+      const color = hasOrigin ? COLORS.origin : COLORS.visited;
+      const marker = L.circleMarker([coords.lat, coords.lng], {
+        radius, color: '#FFFBF3', weight: 2, fillColor: color, fillOpacity: 0.85
+      }).addTo(layerGroup);
+      const list = entry.people.slice(0, 12).map(x => `<li>${x.name}${x.type !== 'visited' ? ` (${x.type})` : ''}</li>`).join('');
+      marker.bindPopup(`<b>${place}</b><span class="muted"> · ${count} record${count>1?'s':''}</span><ul>${list}</ul>${count>12 ? `<span class="muted">+${count-12} more</span>`:''}`);
     }
   }
 
-  for (const place of places) {
-    const coords = await geocode(place);
-    if (coords) {
-      L.marker([coords.lat, coords.lng], { icon: indigoIcon }).addTo(map)
-        .bindPopup(`<b>${place}</b><br>${placeToPeople[place].join('<br>')}`);
+  // ---------- Single-person journey mode ----------
+  async function renderPersonMode(personId) {
+    clearLayer();
+    const p = people.find(x => x.id === personId);
+    if (!p || !p.locations || !p.locations.length) return;
+    const points = [];
+    for (const loc of p.locations) {
+      const coords = await geocode(loc.place);
+      if (!coords) continue;
+      points.push({ ...loc, ...coords });
+      const icon = dot(COLORS[loc.type] || COLORS.visited, loc.type === 'origin' || loc.type === 'current' ? 16 : 12);
+      L.marker([coords.lat, coords.lng], { icon }).addTo(layerGroup)
+        .bindPopup(`<b>${loc.place}</b><br>${loc.type}${loc.year ? ' · ' + loc.year : ''}${loc.note ? '<br>' + loc.note : ''}`);
     }
-    await new Promise(r => setTimeout(r, 1100)); // respect Nominatim's 1 req/sec limit
+    if (points.length > 1) {
+      L.polyline(points.map(pt => [pt.lat, pt.lng]), { color: '#8C2F1F', weight: 2, dashArray: '5,7', opacity: 0.7 }).addTo(layerGroup);
+    }
+    if (points.length) {
+      map.fitBounds(points.map(pt => [pt.lat, pt.lng]), { padding: [40, 40] });
+    }
+  }
+
+  // ---------- Mode switching ----------
+  const familyBtn = document.getElementById('mode-family');
+  const personBtn = document.getElementById('mode-person');
+  const personSelect = document.getElementById('person-select');
+
+  const withJourneys = people.filter(p => p.locations && p.locations.length)
+    .sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+  personSelect.innerHTML = withJourneys.map(p => `<option value="${p.id}">${PandeyData.displayName(p)}</option>`).join('');
+
+  familyBtn.addEventListener('click', () => {
+    familyBtn.classList.add('active'); personBtn.classList.remove('active');
+    personSelect.classList.add('hidden');
+    map.setView([27.5, 78.5], 5);
+    renderFamilyMode();
+  });
+  personBtn.addEventListener('click', () => {
+    personBtn.classList.add('active'); familyBtn.classList.remove('active');
+    personSelect.classList.remove('hidden');
+    if (personSelect.value) renderPersonMode(personSelect.value);
+  });
+  personSelect.addEventListener('change', () => renderPersonMode(personSelect.value));
+
+  const params = new URLSearchParams(location.search);
+  const preselect = params.get('person');
+  if (preselect && withJourneys.some(p => p.id === preselect)) {
+    personBtn.click();
+    personSelect.value = preselect;
+    renderPersonMode(preselect);
+  } else {
+    renderFamilyMode();
   }
 })();
 </script>

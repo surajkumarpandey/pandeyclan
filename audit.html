@@ -24,18 +24,20 @@
     <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="tree.html">Family Tree</a></li>
-      <li><a href="map.html">Map &amp; Village</a></li>
-      <li><a href="audit.html" class="active">Changelog</a></li>
-      <li><a href="admin.html">Edit</a></li>
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="audit.html" class="active" data-i18n="nav.audit">Changelog</a></li>
+      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
 </nav>
 
 <div class="section wrap">
-  <h1 class="section-title">Changelog</h1>
-  <p class="section-lede">Every edit made to this record, in one place — who changed what, and when.</p>
+  <h1 class="section-title" data-i18n="audit.title">Changelog</h1>
+  <p class="section-lede" data-i18n="audit.lede">Every edit made to this record, in one place — who changed what, and when.</p>
 
   <div class="filters">
     <input type="search" id="f-search" placeholder="Search person, editor, or field…">
@@ -46,6 +48,7 @@
 </div>
 
 <script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
 <script>
 (async function () {
   let entries = [];

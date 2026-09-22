@@ -1,7 +1,7 @@
 [
   {
     "id": "sukhdev",
-    "name": "Sukhdev",
+    "name": "Sukhdev Ji",
     "gender": "M",
     "parentId": null,
     "generation": 1,
@@ -10,11 +10,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "shubhankar",
@@ -27,11 +26,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "gunankar",
@@ -44,11 +42,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bhramdas",
@@ -61,11 +58,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "samapati",
@@ -78,11 +74,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "guja",
@@ -95,11 +90,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "sudhir",
@@ -112,11 +106,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bhusa",
@@ -129,11 +122,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bissu",
@@ -146,11 +138,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "danjyu",
@@ -163,11 +154,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bissu_daughter_1",
@@ -180,11 +170,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "keshav",
@@ -197,11 +186,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "purushu",
@@ -214,11 +202,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "premnidhi",
@@ -231,11 +218,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "anrjunjyu",
@@ -248,11 +234,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "deepu",
@@ -265,11 +250,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "anand",
@@ -282,11 +266,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "purushu_daughter_2",
@@ -299,11 +282,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "premnidhi_daughter_3",
@@ -316,11 +298,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "deepu_daughter_4",
@@ -333,11 +314,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "narayan",
@@ -350,11 +330,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "shripati",
@@ -367,11 +346,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bhagirath",
@@ -384,11 +362,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "shibu",
@@ -401,11 +378,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "gangadutt",
@@ -418,11 +394,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "kulanand",
@@ -435,11 +410,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harikishan_1",
@@ -452,11 +426,10 @@
     "notes": "son of Ganga Dutt",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harikishan_2",
@@ -469,11 +442,10 @@
     "notes": "son of Shibu",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harikishan_2_daughter_5",
@@ -486,11 +458,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_small",
@@ -503,11 +474,10 @@
     "notes": "son of Shibu — different person from the Devi Dutt in Tree B",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_small_daughter_6",
@@ -520,11 +490,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_big",
@@ -537,11 +506,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "laxmidutt",
@@ -554,11 +522,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_big_daughter_7",
@@ -571,11 +538,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_big_daughter_8",
@@ -588,11 +554,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_big_daughter_9",
@@ -605,11 +570,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "devidutt_big_daughter_10",
@@ -622,11 +586,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "nityanand",
@@ -639,11 +602,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "jaikishan",
@@ -656,11 +618,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "nityanand_daughter_11",
@@ -673,11 +634,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "jaikishan_daughter_12",
@@ -690,11 +650,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "prayagdutt",
@@ -707,11 +666,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "jaikishan_daughter_13",
@@ -724,11 +682,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "jaikishan_daughter_14",
@@ -741,11 +698,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "gopaldutt",
@@ -758,11 +714,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "prayagdutt_daughter_15",
@@ -775,11 +730,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "prayagdutt_daughter_16",
@@ -792,11 +746,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "prayagdutt_daughter_17",
@@ -809,11 +762,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bhuwan",
@@ -826,11 +778,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bhuwan_daughter_18",
@@ -843,11 +794,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "rahul",
@@ -860,11 +810,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "gopaldutt_daughter_19",
@@ -877,11 +826,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "ashish",
@@ -894,11 +842,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "divyansh",
@@ -911,11 +858,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "anandbhallabh",
@@ -928,11 +874,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bholadutt",
@@ -945,11 +890,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "taradutt",
@@ -962,11 +906,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "shekhar",
@@ -979,11 +922,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "kailash",
@@ -996,11 +938,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "pradeep",
@@ -1013,11 +954,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "pradeep_daughter_20",
@@ -1030,11 +970,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "pradeep_daughter_21",
@@ -1047,11 +986,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "ashok",
@@ -1064,11 +1002,53 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": [
+      {
+        "place": "Bairati, Almora",
+        "type": "origin",
+        "year": null,
+        "note": "Ancestral village"
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Nashik",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Hyderabad",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Arunachal Pradesh",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Angola",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "note": null
+      }
+    ]
   },
   {
     "id": "suraj",
@@ -1081,11 +1061,83 @@
     "notes": "Suraj Kumar Pandey",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": [
+      {
+        "place": "Bairati, Almora",
+        "type": "origin",
+        "year": null,
+        "note": "Ancestral village"
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Assam",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Canada",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Andaman",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Madras",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Ropar",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Mangalore",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Jaisalmer",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "visited",
+        "year": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "note": null
+      }
+    ]
   },
   {
     "id": "ashok_daughter_22",
@@ -1098,11 +1150,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "suraj_son",
@@ -1115,11 +1166,10 @@
     "notes": "highlighted in chart",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "khajan",
@@ -1132,11 +1182,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "dev",
@@ -1149,11 +1198,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "khajan_daughter_23",
@@ -1166,11 +1214,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "taradutt_daughter_24",
@@ -1183,11 +1230,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "chetan",
@@ -1200,11 +1246,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "shekhar_daughter_25",
@@ -1217,11 +1262,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "shekhar_daughter_26",
@@ -1234,11 +1278,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "varun",
@@ -1251,11 +1294,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harit",
@@ -1268,11 +1310,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "varun_daughter_27",
@@ -1285,11 +1326,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "kailash_daughter_28",
@@ -1302,11 +1342,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "hem",
@@ -1319,11 +1358,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "vedansh",
@@ -1336,11 +1374,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "umesh",
@@ -1353,11 +1390,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bholadutt_daughter_29",
@@ -1370,11 +1406,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bholadutt_daughter_30",
@@ -1387,11 +1422,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "suresh",
@@ -1404,11 +1438,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bholadutt_daughter_31",
@@ -1421,11 +1454,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "lalit",
@@ -1438,11 +1470,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harish",
@@ -1455,11 +1486,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "bholadutt_daughter_32",
@@ -1472,11 +1502,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "manoj_umesh",
@@ -1489,11 +1518,10 @@
     "notes": "son of Umesh",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "umesh_daughter_33",
@@ -1506,11 +1534,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "manoj_umesh_son",
@@ -1523,11 +1550,10 @@
     "notes": "highlighted in chart",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "manoj_umesh_daughter_34",
@@ -1540,11 +1566,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "visvesh",
@@ -1557,11 +1582,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "vineet",
@@ -1574,11 +1598,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "manoj_suresh",
@@ -1591,11 +1614,10 @@
     "notes": "son of Suresh",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harshit",
@@ -1608,11 +1630,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "divas",
@@ -1625,11 +1646,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "manoj_suresh_son",
@@ -1642,11 +1662,10 @@
     "notes": "highlighted in chart",
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "jatin",
@@ -1659,11 +1678,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "lalit_daughter_35",
@@ -1676,11 +1694,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "lalit_daughter_36",
@@ -1693,11 +1710,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "lalit_daughter_37",
@@ -1710,11 +1726,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "ritesh",
@@ -1727,11 +1742,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "gaurav",
@@ -1744,11 +1758,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "harish_daughter_38",
@@ -1761,11 +1774,10 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   },
   {
     "id": "gaurav_daughter_39",
@@ -1778,10 +1790,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "currentLocation": null,
-    "pastLocations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "locations": []
   }
 ]

@@ -39,7 +39,7 @@
     pointer-events: none;
   }
   .node.placeholder text { fill: #8a8371; font-style: italic; }
-  .node.highlight circle { stroke: var(--brass); stroke-width: 3px; }
+  .node.highlight circle { stroke: var(--ochre); stroke-width: 3px; }
 
   .panel {
     position: absolute;
@@ -80,23 +80,25 @@
     <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
     <button class="nav-toggle" aria-label="Menu">&#9776;</button>
     <ul class="links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="tree.html" class="active">Family Tree</a></li>
-      <li><a href="map.html">Map &amp; Village</a></li>
-      <li><a href="audit.html">Changelog</a></li>
-      <li><a href="admin.html">Edit</a></li>
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" class="active" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
+      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
 </nav>
 
 <div class="tree-toolbar">
   <div class="wrap">
-    <input type="search" id="search-box" placeholder="Search a name…" aria-label="Search the family tree">
+    <input type="search" id="search-box" placeholder="Search a name…" aria-label="Search the family tree" data-i18n-placeholder="tree.search.placeholder">
     <span class="legend">
-      <span><i style="background:var(--indigo)"></i> named</span>
-      <span><i style="background:#c9bd9f"></i> unnamed / placeholder</span>
+      <span><i style="background:var(--maroon)"></i> <span data-i18n="tree.legend.named">named</span></span>
+      <span><i style="background:#E7C9A8"></i> <span data-i18n="tree.legend.placeholder">unnamed / placeholder</span></span>
     </span>
-    <span class="muted" style="font-size:13px; margin-left:auto;">Click a node to expand it. Click the name for details.</span>
+    <span class="muted" style="font-size:13px; margin-left:auto;" data-i18n="tree.hint">Click a node to expand it. Click the name for details.</span>
   </div>
 </div>
 
@@ -109,6 +111,7 @@
 </div>
 
 <script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
 <script>
 (async function () {
   const people = await PandeyData.loadPeople();
@@ -123,7 +126,7 @@
     };
   }
   const roots = people.filter(p => !p.parentId).map(buildNode);
-  const virtualRoot = { id: '__root__', data: { name: 'Sukhdev\'s Line' }, children: roots };
+  const virtualRoot = { id: '__root__', data: { name: 'Sukhdev Ji\'s Line' }, children: roots };
 
   const svg = d3.select('#tree-svg');
   const g = svg.append('g');
@@ -137,13 +140,8 @@
   root.x0 = 0;
   root.y0 = 0;
 
-  // collapse everything beyond depth 2 initially so the first paint is legible
-  root.descendants().forEach(d => {
-    if (d.depth > 2 && d.children) {
-      d._children = d.children;
-      d.children = null;
-    }
-  });
+  // Default view: fully expanded. (Nodes still collapse/expand on click
+  // if you'd rather browse branch by branch.)
 
   const nodeHeight = 26;
   const levelWidth = 170;
@@ -152,8 +150,8 @@
   let i = 0;
 
   function color(d) {
-    if (d.data.id === '__root__') return 'var(--indigo)';
-    return d.data.data && d.data.data.unnamedPlaceholder ? '#c9bd9f' : 'var(--indigo)';
+    if (d.data.id === '__root__') return 'var(--maroon)';
+    return d.data.data && d.data.data.unnamedPlaceholder ? '#E7C9A8' : 'var(--maroon)';
   }
 
   function update(source) {
@@ -223,9 +221,16 @@
 
   update(root);
 
-  // center the initial view
+  // fit the fully-expanded tree into view on first paint
   const stage = document.querySelector('.tree-stage');
-  svg.call(zoom.transform, d3.zoomIdentity.translate(70, stage.clientHeight / 2).scale(0.9));
+  requestAnimationFrame(() => {
+    const bounds = g.node().getBBox();
+    const fullWidth = stage.clientWidth, fullHeight = stage.clientHeight;
+    const scale = Math.max(0.25, Math.min(1, 0.92 / Math.max(bounds.width / fullWidth, bounds.height / fullHeight)));
+    const tx = fullWidth / 2 - (bounds.x + bounds.width / 2) * scale;
+    const ty = fullHeight / 2 - (bounds.y + bounds.height / 2) * scale;
+    svg.call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+  });
 
   // ---------- Detail panel ----------
   const panel = document.getElementById('panel');
@@ -235,7 +240,9 @@
   function openPanel(p) {
     const chain = PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ');
     const photos = (p.photos || []).map(src => `<img src="${src}" alt="">`).join('');
-    const pastLoc = (p.pastLocations || []).map(l => `${l.place}${l.year ? ' (' + l.year + ')' : ''}`).join(', ');
+    const current = (p.locations || []).find(l => l.type === 'current');
+    const others = (p.locations || []).filter(l => l.type !== 'current' && l.type !== 'origin');
+    const othersStr = others.map(l => `${l.place}${l.type ? ' (' + l.type + (l.year ? ', ' + l.year : '') + ')' : ''}`).join(', ');
     panelBody.innerHTML = `
       <h2>${PandeyData.displayName(p)}</h2>
       <div class="chain">${chain}</div>
@@ -243,13 +250,16 @@
       <dl>
         ${p.occupation ? `<dt>Occupation</dt><dd>${p.occupation}</dd>` : ''}
         ${p.birthYear ? `<dt>Born</dt><dd>${p.birthYear}</dd>` : ''}
-        ${p.currentLocation ? `<dt>Current location</dt><dd>${p.currentLocation}</dd>` : ''}
-        ${pastLoc ? `<dt>Past locations</dt><dd>${pastLoc}</dd>` : ''}
+        ${current ? `<dt>Current location</dt><dd>${current.place}</dd>` : ''}
+        ${othersStr ? `<dt>Other places</dt><dd>${othersStr}</dd>` : ''}
         ${p.bio ? `<dt>Notes</dt><dd>${p.bio}</dd>` : ''}
         ${p.notes ? `<dt>Chart notes</dt><dd class="muted">${p.notes}</dd>` : ''}
       </dl>
-      ${photos ? `<dt style="font-size:12px;font-weight:600;color:#6b6656;margin-top:14px;">Photos</dt><div class="photos">${photos}</div>` : ''}
-      <p style="margin-top:22px;"><a class="btn btn-outline-dark btn-sm" href="admin.html?person=${p.id}">Add details for this person</a></p>
+      ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">Photos</dt><div class="photos">${photos}</div>` : ''}
+      <p style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-outline-dark btn-sm" href="admin.html?person=${p.id}">Add details</a>
+        ${(p.locations || []).length ? `<a class="btn btn-outline-dark btn-sm" href="map.html?person=${p.id}">See their journey</a>` : ''}
+      </p>
     `;
     panel.classList.add('open');
   }
