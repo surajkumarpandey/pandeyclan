@@ -21,7 +21,7 @@
 
   .tree-body {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 1fr 280px;
     align-items: start;
   }
   .story-sidebar {
@@ -30,7 +30,7 @@
     height: calc(100vh - 64px);
     overflow-y: auto;
     padding: 28px 22px;
-    border-right: 1px solid var(--line);
+    border-left: 1px solid var(--line);
     background: var(--paper-light);
   }
   .story-sidebar .gen-num { font-family: var(--font-display); font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
@@ -44,7 +44,7 @@
     overflow-x: auto;
     background-image: url('assets/img/tree-backdrop.jpg');
     background-repeat: repeat;
-    background-size: 900px auto;
+    background-size: 620px auto;
     background-color: var(--paper);
   }
   .tree-canvas { position: relative; }
@@ -62,7 +62,7 @@
   .node circle.avatar-ring { stroke-width: 2px; cursor: pointer; transition: stroke-width .12s; }
   .node image { cursor: pointer; }
   .node:hover circle.avatar-ring { stroke-width: 3.5px; }
-  .node text { font-family: var(--font-body); font-size: 9.5px; fill: var(--ink); cursor: pointer; text-anchor: middle; }
+  .node text { font-family: var(--font-body); font-size: 11px; fill: var(--ink); cursor: pointer; text-anchor: middle; }
   .node.placeholder text { fill: #a3826f; font-style: italic; }
   .node.dim { opacity: 0.15; }
   .node.highlight circle.avatar-ring { stroke: var(--gold) !important; stroke-width: 4px; }
@@ -90,7 +90,7 @@
 
   @media (max-width: 800px) {
     .tree-body { grid-template-columns: 1fr; }
-    .story-sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+    .story-sidebar { position: static; height: auto; border-left: none; border-top: 1px solid var(--line); }
   }
 </style>
 </head>
@@ -105,6 +105,7 @@
       <li><a href="tree.html" class="active" data-i18n="nav.tree">Family Tree</a></li>
       <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
       <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
@@ -124,15 +125,15 @@
 </div>
 
 <div class="tree-body">
-  <aside class="story-sidebar" id="story-sidebar">
-    <p class="muted" style="font-size:13.5px;">Scroll down through the tree — this panel follows along with a bit about each generation.</p>
-  </aside>
-
-  <div class="tree-scroll-wrap">
+  <div class="tree-scroll-wrap" id="tree-scroll-wrap">
     <div class="tree-canvas" id="tree-canvas">
       <svg id="tree-svg"></svg>
     </div>
   </div>
+
+  <aside class="story-sidebar" id="story-sidebar">
+    <p class="muted" style="font-size:13.5px;">Scroll down through the tree — this panel follows along with a bit about each generation.</p>
+  </aside>
 </div>
 
 <aside class="panel" id="panel">
@@ -158,8 +159,8 @@
   const root = d3.hierarchy(buildNode(rootPerson), d => d.children);
   const maxDepth = d3.max(root.descendants(), d => d.depth);
 
-  const DX = 108;  // horizontal spacing between siblings — wide enough for labels like "Daughter" not to collide
-  const DY = 148;  // vertical spacing between generations
+  const DX = 120;  // horizontal spacing between siblings — wide enough for bigger avatars + labels
+  const DY = 168;  // vertical spacing between generations
   const MARGIN_TOP = 60, MARGIN_SIDE = 60;
 
   const treeLayout = d3.tree().nodeSize([DX, DY]);
@@ -174,6 +175,13 @@
   const canvas = document.getElementById('tree-canvas');
   canvas.style.width = totalWidth + 'px';
   canvas.style.height = totalHeight + 'px';
+
+  // Bring the root into view immediately instead of leaving the scroll
+  // position at the canvas's default left edge, which — since the tree
+  // spreads roughly symmetrically from the root — could otherwise leave
+  // Sukhdev off-screen to the right on first load.
+  const scrollWrap = document.getElementById('tree-scroll-wrap');
+  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, offsetX - 60); });
 
   const svg = d3.select('#tree-svg').attr('width', totalWidth).attr('height', totalHeight);
   const g = svg.append('g').attr('transform', `translate(${offsetX},${MARGIN_TOP})`);
@@ -201,7 +209,7 @@
     .selectAll('path.link').data(root.links()).join('path').attr('class', 'link').attr('d', linkGen);
 
   // ---------- Nodes ----------
-  const R = 11, ROOT_R = 20;
+  const R = 20, ROOT_R = 34;
   const nodeSel = g.append('g').attr('class', 'nodes-layer')
     .selectAll('g.node').data(root.descendants()).join('g')
     .attr('class', d => 'node' + (d.data.data.unnamedPlaceholder ? ' placeholder' : '') + (d.depth === 0 ? ' root-node' : ''))
@@ -226,7 +234,7 @@
         .attr('fill', d.depth === 0 ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
     }
 
-    sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 13);
+    sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
   });
 
   nodeSel.on('click', (event, d) => { event.stopPropagation(); openPanel(d.data.data); });
@@ -264,19 +272,20 @@
     const avatarHtml = (p.photos && p.photos.length) ? `<img class="avatar-lg" src="${p.photos[0]}" alt="">` : `<div class="avatar-lg-placeholder"></div>`;
     const current = (p.locations || []).find(l => l.type === 'current');
     const others = (p.locations || []).filter(l => l.type !== 'current' && l.type !== 'origin');
-    const othersStr = others.map(l => `${l.place}${l.type ? ' (' + l.type + (l.year ? ', ' + l.year : '') + ')' : ''}`).join(', ');
+    const othersStr = others.map(l => `${l.place}${l.year ? ' (' + l.year + ')' : ''}`).join(', ');
     panelBody.innerHTML = `
       ${avatarHtml}
       <h2>${PandeyData.displayName(p)}</h2>
       <div class="chain">${chain}</div>
       ${p.unnamedPlaceholder ? '<span class="badge badge-placeholder">Name not recorded</span>' : ''}
       <dl>
+        ${p.fullName ? `<dt>Full name</dt><dd>${p.fullName}</dd>` : ''}
         ${p.occupation ? `<dt>Occupation</dt><dd>${p.occupation}</dd>` : ''}
         ${p.birthYear ? `<dt>Born</dt><dd>${p.birthYear}</dd>` : ''}
         ${current ? `<dt>Current location</dt><dd>${current.place}</dd>` : ''}
-        ${othersStr ? `<dt>Other places</dt><dd>${othersStr}</dd>` : ''}
-        ${p.bio ? `<dt>Notes</dt><dd>${p.bio}</dd>` : ''}
-        ${p.notes ? `<dt>Chart notes</dt><dd class="muted">${p.notes}</dd>` : ''}
+        ${othersStr ? `<dt>Places visited</dt><dd>${othersStr}</dd>` : ''}
+        ${p.bio ? `<dt>Description</dt><dd>${p.bio}</dd>` : ''}
+        ${p.notes ? `<dt>Note</dt><dd class="muted">${p.notes}</dd>` : ''}
       </dl>
       ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">Photos</dt><div class="photos">${photos}</div>` : ''}
       <p style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap;">
