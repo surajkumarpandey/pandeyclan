@@ -1,22 +1,38 @@
 /* ============================================================
-   i18n.js — English/Hindi toggle for the site's own text
-   (navigation, headings, buttons, labels). Person names, bios,
-   and other content typed in by family members are NOT
+   i18n.js — English / Hindi / Kumaoni toggle for the site's own
+   text (navigation, headings, buttons, labels). Person names,
+   bios, and other content typed in by family members are NOT
    machine-translated — they stay exactly as entered, in
    whichever language the editor used.
+
+   A NOTE ON THE KUMAONI ENTRIES:
+   Kumaoni is a much lower-resource language than Hindi for
+   translation, and getting it visibly wrong on a family site is
+   worse than leaving it blank. So the `kum` field below is only
+   filled in where there's real confidence; everywhere else it's
+   left out on purpose, and the site automatically falls back to
+   Hindi (then English) rather than guess. If someone in the
+   family speaks Kumaoni, this file is the place to fill the rest
+   in — every entry follows the same { hi: '...', kum: '...' }
+   shape, so it's a matter of adding `kum` lines, not touching
+   any other code.
    ============================================================ */
 
 const PandeyI18n = (() => {
+  const LANGS = ['en', 'hi', 'kum'];
+  const LANG_LABEL = { en: 'English', hi: 'हिंदी', kum: 'कुमाऊँनी' };
+
   const DICT = {
-    'nav.home': { hi: 'मुख पृष्ठ' },
+    'nav.home': { hi: 'मुख पृष्ठ', kum: 'घर' },
     'nav.tree': { hi: 'वंश वृक्ष' },
     'nav.map': { hi: 'यात्रा मानचित्र' },
     'nav.village': { hi: 'गाँव बैरती' },
+    'nav.archive': { hi: 'अभिलेखागार' },
     'nav.audit': { hi: 'परिवर्तन इतिहास' },
     'nav.admin': { hi: 'संपादित करें' },
 
     'home.h1': { hi: 'तेरह पीढ़ियाँ,<br>एक पर्वत श्रृंखला — <span class="place">बैरती</span> में।' },
-    'home.lede': { hi: 'कुमाऊं की पहाड़ियों में सुखदेव जी के घर से लेकर आज उनका नाम धारण करने वाले हर सदस्य तक — परिवार द्वारा ही संजोया और संकलित।' },
+    'home.lede': { hi: 'कुमाऊं की पहाड़ियों में श्री सुखदेव के घर से लेकर आज उनका नाम धारण करने वाले हर सदस्य तक — परिवार द्वारा ही संजोया और संकलित।' },
     'home.cta.tree': { hi: 'वंश वृक्ष देखें' },
     'home.cta.map': { hi: 'सब कहाँ हैं, देखें' },
     'home.stat.people': { hi: 'सदस्य दर्ज' },
@@ -26,7 +42,7 @@ const PandeyI18n = (() => {
     'home.explore.title': { hi: 'अपनी जगह खोजें' },
     'home.explore.lede': { hi: 'परिवार के अभिलेख में प्रवेश के तीन रास्ते।' },
     'home.card.tree.title': { hi: 'वंश वृक्ष' },
-    'home.card.tree.body': { hi: 'कोई भी नाम खोजें और सुखदेव जी तक ऊपर, या सबसे नई पीढ़ी तक नीचे तक अनुसरण करें।' },
+    'home.card.tree.body': { hi: 'कोई भी नाम खोजें और श्री सुखदेव तक ऊपर, या सबसे नई पीढ़ी तक नीचे तक अनुसरण करें।' },
     'home.card.map.title': { hi: 'यात्रा मानचित्र' },
     'home.card.map.body': { hi: 'बैरती से लेकर आज तक — परिवार कहाँ-कहाँ रहा और गया, पीढ़ी दर पीढ़ी।' },
     'home.card.audit.title': { hi: 'परिवर्तन इतिहास' },
@@ -41,6 +57,8 @@ const PandeyI18n = (() => {
     'tree.hint': { hi: 'किसी व्यक्ति पर क्लिक करें — विवरण के लिए नाम पर क्लिक करें।' },
 
     'village.title': { hi: 'बैरती, अल्मोड़ा — पैतृक गाँव' },
+    'archive.title': { hi: 'पारिवारिक अभिलेखागार' },
+    'archive.lede': { hi: 'जो किसी एक व्यक्ति या पीढ़ी से नहीं जुड़ा — पुरानी तस्वीरें, दस्तावेज़, वस्तुएं। जो कुछ भी आपके पास हो, संपादन पृष्ठ से जोड़ें।' },
     'audit.title': { hi: 'परिवर्तन इतिहास' },
     'audit.lede': { hi: 'इस अभिलेख में किया गया हर संपादन — किसने क्या बदला, और कब।' },
 
@@ -48,32 +66,38 @@ const PandeyI18n = (() => {
     'admin.title': { hi: 'अभिलेख संपादित करें' },
   };
 
+  function textFor(key, lang) {
+    const entry = DICT[key];
+    if (!entry) return null;
+    // fallback chain: requested language -> Hindi -> null (caller keeps English)
+    return entry[lang] || (lang === 'kum' ? entry.hi : null) || null;
+  }
+
   function apply(lang) {
-    document.documentElement.lang = lang === 'hi' ? 'hi' : 'en';
-    document.body.classList.toggle('lang-hi', lang === 'hi');
+    if (!LANGS.includes(lang)) lang = 'en';
+    document.documentElement.lang = lang === 'en' ? 'en' : 'hi'; // kum has no ISO tag in wide use; hi is the closer accessibility hint
+    document.body.classList.toggle('lang-hi', lang !== 'en');
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      const entry = DICT[key];
-      if (entry && lang === 'hi' && entry.hi) {
-        if (!el.dataset.enOriginal) el.dataset.enOriginal = el.innerHTML;
-        el.innerHTML = entry.hi;
-      } else if (el.dataset.enOriginal) {
-        el.innerHTML = el.dataset.enOriginal;
-      }
+      if (!el.dataset.enOriginal) el.dataset.enOriginal = el.innerHTML;
+      const text = lang === 'en' ? null : textFor(key, lang);
+      el.innerHTML = text || el.dataset.enOriginal;
     });
     localStorage.setItem('pandey_lang', lang);
   }
 
   function init() {
-    const saved = localStorage.getItem('pandey_lang') || 'en';
-    apply(saved);
+    let current = localStorage.getItem('pandey_lang') || 'en';
+    if (!LANGS.includes(current)) current = 'en';
+    apply(current);
     const btn = document.getElementById('lang-toggle');
     if (btn) {
-      btn.textContent = saved === 'hi' ? 'English' : 'हिंदी';
+      const label = (lang) => LANG_LABEL[LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length]];
+      btn.textContent = label(current);
       btn.addEventListener('click', () => {
-        const next = (localStorage.getItem('pandey_lang') || 'en') === 'hi' ? 'en' : 'hi';
-        apply(next);
-        btn.textContent = next === 'hi' ? 'English' : 'हिंदी';
+        current = LANGS[(LANGS.indexOf(current) + 1) % LANGS.length];
+        apply(current);
+        btn.textContent = label(current);
       });
     }
   }
