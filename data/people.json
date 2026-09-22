@@ -417,7 +417,7 @@
   },
   {
     "id": "harikishan_1",
-    "name": "HariKishan",
+    "name": "Harikrishn",
     "gender": "M",
     "parentId": "kulanand",
     "generation": 11,
@@ -429,7 +429,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "harikishan_2",
