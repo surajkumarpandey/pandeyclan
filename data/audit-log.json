@@ -70,5 +70,23 @@
     "field": "photos",
     "oldValue": "0 photo(s)",
     "newValue": "1 photo(s)"
+  },
+  {
+    "timestamp": "2026-09-22T06:56:51.642Z",
+    "editorName": "suraj",
+    "personId": "ashok_daughter_22",
+    "personName": "Pallavi",
+    "field": "name",
+    "oldValue": "Daughter",
+    "newValue": "Pallavi"
+  },
+  {
+    "timestamp": "2026-09-22T06:56:51.642Z",
+    "editorName": "suraj",
+    "personId": "ashok_daughter_22",
+    "personName": "Pallavi",
+    "field": "birthYear",
+    "oldValue": "",
+    "newValue": "1990"
   }
 ]
