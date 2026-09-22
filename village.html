@@ -6,7 +6,13 @@
 <title>Bairati Village — The Pandey Clan of Bairati</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .village-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 54px 0 46px; }
+  .village-hero {
+    background-image: url('assets/img/hero-village.jpg'), linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%);
+    background-size: cover, cover;
+    background-position: center, center;
+    background-blend-mode: overlay, normal;
+    color: var(--paper-light); padding: 54px 0 46px;
+  }
   .village-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 36px; margin: 0 0 12px; }
   .village-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
   .village-hero a { color: var(--gold-light); }

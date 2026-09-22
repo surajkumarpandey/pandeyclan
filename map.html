@@ -8,7 +8,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-  .map-toolbar { background: var(--maroon); color: var(--paper-light); padding: 20px 0; }
+  .map-toolbar {
+    background-image: url('assets/img/hero-map.jpg'), var(--maroon);
+    background-size: cover; background-position: center; background-blend-mode: overlay;
+    color: var(--paper-light); padding: 20px 0;
+  }
   .map-toolbar .wrap { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
   .mode-switch { display: flex; background: rgba(255,251,243,0.12); border-radius: 999px; padding: 3px; }
   .mode-switch button {

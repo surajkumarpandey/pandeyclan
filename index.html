@@ -7,7 +7,10 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   .hero {
-    background: linear-gradient(165deg, var(--ochre) 0%, var(--ochre-deep) 100%);
+    background-image: url('assets/img/hero-home.jpg'), linear-gradient(165deg, var(--ochre) 0%, var(--ochre-deep) 100%);
+    background-size: cover, cover;
+    background-position: center, center;
+    background-blend-mode: overlay, normal;
     color: var(--paper-light);
     overflow: hidden;
     position: relative;
@@ -40,7 +43,13 @@
   .explore-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; margin: 0 0 10px; }
   .explore-card p { color: #6b4a3d; font-size: 15px; margin: 0 0 18px; }
 
-  .how-it-grows { background: var(--maroon); color: var(--paper-light); padding: 44px 40px; position: relative; }
+  .how-it-grows {
+    background-image: url('assets/img/how-it-grows.jpg'), linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%);
+    background-size: cover, cover;
+    background-position: center, center;
+    background-blend-mode: overlay, normal;
+    color: var(--paper-light); padding: 44px 40px; position: relative;
+  }
   .how-it-grows h2 { color: var(--paper-light); }
   .how-it-grows ol { padding-left: 20px; color: rgba(255,251,243,0.88); }
   .how-it-grows li { margin-bottom: 10px; }
