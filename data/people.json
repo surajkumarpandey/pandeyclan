@@ -1,7 +1,7 @@
 [
   {
     "id": "sukhdev",
-    "name": "Sukhdev Ji",
+    "name": "Sukhdev Pandey",
     "gender": "M",
     "parentId": null,
     "generation": 1,
@@ -13,7 +13,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "shubhankar",
