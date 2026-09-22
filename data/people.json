@@ -1782,5 +1782,21 @@
     "bio": "",
     "occupation": null,
     "locations": []
+  },
+  {
+    "id": "mrityunjay",
+    "name": "Mrityunjay",
+    "gender": "M",
+    "parentId": "suraj",
+    "generation": 14,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
