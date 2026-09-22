@@ -129,7 +129,7 @@
       <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
-      <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
@@ -240,6 +240,7 @@
   // Where a person has a spouse recorded, children hang from the MIDPOINT
   // between the couple rather than from one parent alone — so first work out
   // that midpoint for anyone who has one.
+  const R = 20, ROOT_R = 34;
   const spouseGap = Math.max(DX * 0.62, R * 2.6);
   const midXMap = new Map();       // person id -> x used as the link's source
   const spouseRenderList = [];     // spouses to draw once nodes are in place
@@ -265,7 +266,6 @@
     .selectAll('path.link').data(root.links()).join('path').attr('class', 'link').attr('d', linkGen);
 
   // ---------- Nodes ----------
-  const R = 20, ROOT_R = 34;
 
   // A wavy, sun-ray halo behind each avatar — the "divine" edge the family
   // asked for, evoking Indian sun/mandala iconography rather than a plain ring.
