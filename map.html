@@ -75,7 +75,13 @@
 <script src="js/i18n.js"></script>
 <script>
 (async function () {
-  const people = await PandeyData.loadPeople();
+  let people;
+  try {
+    people = await PandeyData.loadPeople();
+  } catch (e) {
+    showFatalError('Could not load the family data: ' + e.message);
+    return;
+  }
   const map = L.map('map').setView([27.5, 78.5], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
