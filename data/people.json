@@ -906,10 +906,13 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/taradutt_1790081489139.jpg"
+    ],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Ex Army, Farmer",
+    "locations": [],
+    "fullName": "Shri Tara Dutt Pandey"
   },
   {
     "id": "shekhar",
