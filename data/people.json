@@ -647,7 +647,7 @@
   },
   {
     "id": "nityanand",
-    "name": "Nityanand",
+    "name": "Nityanand Pandey",
     "gender": "M",
     "parentId": "laxmidutt",
     "generation": 16,
@@ -659,7 +659,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "jaikishan",
