@@ -1824,7 +1824,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/hemlata-pant_1790102733091.jpg"
+    ],
     "bio": "",
     "occupation": null
   }
