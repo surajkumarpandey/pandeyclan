@@ -126,7 +126,13 @@
 <script src="js/github.js"></script>
 <script>
 (async function () {
-  const people = await PandeyData.loadPeople();
+  let people;
+  try {
+    people = await PandeyData.loadPeople();
+  } catch (e) {
+    showFatalError('Could not load the family data: ' + e.message);
+    return;
+  }
   const rootPersonId = (people.find(p => !p.parentId) || {}).id;
   let token = null;
   let editorName = '';
