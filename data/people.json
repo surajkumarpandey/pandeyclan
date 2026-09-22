@@ -1017,7 +1017,7 @@
         "place": "Bairati, Almora",
         "type": "origin",
         "year": null,
-        "note": "Ancestral village"
+        "note": null
       },
       {
         "place": "Delhi",
@@ -1056,7 +1056,10 @@
         "note": null
       }
     ],
-    "spouseId": "hemlata-pant"
+    "spouseId": "hemlata-pant",
+    "fullName": null,
+    "birthDate": null,
+    "audioMessage": "uploads/ashok_voice_1790103072510.wav"
   },
   {
     "id": "suraj",
