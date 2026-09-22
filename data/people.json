@@ -1160,22 +1160,6 @@
     "locations": []
   },
   {
-    "id": "suraj_son",
-    "name": "Son",
-    "gender": "M",
-    "parentId": "suraj",
-    "generation": 14,
-    "tree": "A",
-    "unnamedPlaceholder": true,
-    "notes": "highlighted in chart",
-    "birthYear": null,
-    "deathYear": null,
-    "photos": [],
-    "bio": "",
-    "occupation": null,
-    "locations": []
-  },
-  {
     "id": "khajan",
     "name": "Khajan",
     "gender": "M",
