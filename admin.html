@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edit — The Pandey Clan of Bairati</title>
+<title>Admin — The Pandey Clan of Bairati</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
   .login-box { max-width: 420px; margin: 64px auto; }
@@ -22,77 +22,42 @@
   .photo-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
   .photo-grid .thumb { position: relative; width: 84px; height: 84px; }
   .photo-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
-  .photo-grid .remove { position: absolute; top: -6px; right: -6px; background: var(--maroon); color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; line-height: 1; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
   .tabs button { background: none; border: 1px solid var(--line-dark); padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--maroon); }
   .tabs button.active { background: var(--maroon); color: var(--paper-light); border-color: var(--maroon); }
-  .editor-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .editor-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); gap: 10px; }
   @media (max-width: 800px) { .editor-layout { grid-template-columns: 1fr; } .loc-row { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
 <nav class="site-nav">
-  <div class="wrap">
-    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
-    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
-    <ul class="links">
-      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
-      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
-      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
-      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
-      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
-      <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
-      <li><a href="admin.html" class="active" data-i18n="nav.admin">Edit</a></li>
-      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
-    </ul>
-  </div>
+  <div class="wrap"><a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a></div>
 </nav>
 
 <div class="section wrap">
 
   <div id="login-view" class="login-box">
-    <h1 class="section-title" style="text-align:center;" data-i18n="admin.signin.title">Sign in to edit</h1>
+    <h1 class="section-title" style="text-align:center;">Sign in</h1>
     <div class="card">
-      <div class="field"><label for="editor-name">Your name</label><input type="text" id="editor-name" placeholder="So changes are attributed to you"></div>
-      <div class="field"><label for="editor-password">Password</label><input type="password" id="editor-password" placeholder="Given to you by the admin"></div>
+      <div class="field"><label>Password</label><input type="password" id="editor-password"></div>
       <button class="btn btn-gold" id="login-btn" style="width:100%; justify-content:center;">Sign in</button>
       <div id="login-status" class="status-msg"></div>
-      <p class="muted" style="font-size:12.5px; margin-top:16px;">First time setting this up? Use <a href="setup.html">the superuser setup page</a> instead.</p>
+      <p class="muted" style="font-size:12.5px; margin-top:16px;">First time? Use <a href="setup.html">superuser setup</a> instead.</p>
     </div>
   </div>
 
   <div id="editor-view" class="hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h1 class="section-title" style="margin:0;" data-i18n="admin.title">Edit the record</h1>
-      <div>
-        <span class="muted" id="signed-in-as" style="margin-right:14px;"></span>
-        <button class="btn btn-outline-dark btn-sm" id="signout-btn">Sign out</button>
-      </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+      <h1 class="section-title" style="margin:0;">Admin</h1>
+      <button class="btn btn-outline-dark btn-sm" id="signout-btn">Sign out</button>
     </div>
 
     <div class="tabs" id="tabs">
       <button id="tab-people" class="active">People</button>
       <button id="tab-generations">Generation stories</button>
       <button id="tab-archive">Archive</button>
-      <button id="tab-editors" class="hidden">Manage editors</button>
-    </div>
-
-    <div id="generations-panel" class="hidden editor-layout">
-      <div class="person-list">
-        <ul id="generation-ul"></ul>
-      </div>
-      <div id="generation-form-area"><p class="muted">Select a generation from the list to add its story.</p></div>
-    </div>
-
-    <div id="archive-panel" class="hidden editor-layout">
-      <div class="person-list">
-        <ul id="archive-ul"></ul>
-      </div>
-      <div id="archive-form-area">
-        <p class="muted">Select an item to edit it, or add a new one below.</p>
-        <button class="btn btn-gold btn-sm" id="new-archive-item-btn" style="margin-top:10px;">+ Add a new item</button>
-      </div>
+      <button id="tab-village">Village page</button>
     </div>
 
     <div id="people-panel" class="editor-layout">
@@ -103,17 +68,31 @@
       <div id="form-area"><p class="muted">Select someone from the list to edit their details.</p></div>
     </div>
 
-    <div id="editors-panel" class="hidden">
-      <div class="card" style="max-width:520px; margin-bottom:24px;">
-        <h3 style="margin-top:0; font-family:var(--font-display);">Add an editor</h3>
-        <div class="field"><label>Their name</label><input type="text" id="new-editor-name"></div>
-        <div class="field"><label>Password to give them</label><input type="text" id="new-editor-password"></div>
-        <button class="btn btn-gold btn-sm" id="add-editor-btn">Add editor</button>
-        <div id="add-editor-status" class="status-msg"></div>
+    <div id="generations-panel" class="hidden editor-layout">
+      <div class="person-list"><ul id="generation-ul"></ul></div>
+      <div id="generation-form-area"><p class="muted">Select a generation from the list to add its story.</p></div>
+    </div>
+
+    <div id="archive-panel" class="hidden editor-layout">
+      <div class="person-list"><ul id="archive-ul"></ul></div>
+      <div id="archive-form-area">
+        <p class="muted">Select an item to edit it, or add a new one below.</p>
+        <button class="btn btn-gold btn-sm" id="new-archive-item-btn" style="margin-top:10px;">+ Add a new item</button>
       </div>
-      <div class="card" style="max-width:520px;">
-        <h3 style="margin-top:0; font-family:var(--font-display);">Current editors</h3>
-        <div id="editor-list"></div>
+    </div>
+
+    <div id="village-panel" class="hidden">
+      <div class="card" style="max-width:640px;">
+        <div class="field"><label>Ancestral village intro (shown under the page heading)</label><textarea id="v-intro" style="min-height:90px;"></textarea></div>
+        <div class="field"><label>Region &amp; history</label><textarea id="v-history" style="min-height:160px;"></textarea></div>
+        <div class="field"><label>Aipan section text</label><textarea id="v-aipan" style="min-height:120px;"></textarea></div>
+        <div class="field">
+          <label>Village photos</label>
+          <div class="photo-grid" id="v-photo-grid"></div>
+          <input type="file" id="v-photo-input" accept="image/*" multiple style="margin-top:10px;">
+        </div>
+        <button class="btn btn-gold" id="save-village-btn">Save village page</button>
+        <span id="save-village-status" class="status-msg"></span>
       </div>
     </div>
   </div>
@@ -135,385 +114,93 @@
   }
   const rootPersonId = (people.find(p => !p.parentId) || {}).id;
   let token = null;
-  let editorName = '';
   let currentPerson = null;
-  let isSuperuser = false;
 
   // ---------- Login ----------
   document.getElementById('login-btn').addEventListener('click', async () => {
-    const name = document.getElementById('editor-name').value.trim();
     const pw = document.getElementById('editor-password').value;
     const statusEl = document.getElementById('login-status');
-    if (!name || !pw) { statusEl.textContent = 'Enter your name and password.'; statusEl.className = 'status-msg error'; return; }
+    if (!pw) { statusEl.textContent = 'Enter your password.'; statusEl.className = 'status-msg error'; return; }
     statusEl.textContent = 'Checking…'; statusEl.className = 'status-msg';
-
     try {
-      const accessRes = await fetch('data/access.json?_=' + Date.now());
+      const accessRes = await fetch('data/access.json?_=' + Date.now(), { cache: 'no-store' });
       const access = await accessRes.json();
-      let matchedEntry = null, found = null;
+      let found = null;
       for (const entry of access.editors || []) {
         const t = await PandeyCrypto.decryptToken(entry, pw);
-        if (t) { found = t; matchedEntry = entry; break; }
+        if (t) { found = t; break; }
       }
       if (!found) { statusEl.textContent = 'Incorrect password.'; statusEl.className = 'status-msg error'; return; }
       const works = await PandeyGitHub.verifyToken(found);
-      if (!works) { statusEl.textContent = 'This password decrypted a token, but it no longer works — ask the admin to reissue it.'; statusEl.className = 'status-msg error'; return; }
-
+      if (!works) { statusEl.textContent = 'This password decrypted a token, but it no longer works — check owner/repo in js/github.js, or reissue the token.'; statusEl.className = 'status-msg error'; return; }
       token = found;
-      editorName = name;
-      isSuperuser = matchedEntry.role === 'superuser';
       document.getElementById('login-view').classList.add('hidden');
       document.getElementById('editor-view').classList.remove('hidden');
-      document.getElementById('signed-in-as').textContent = `Signed in as ${name}${isSuperuser ? ' (superuser)' : ''}`;
-      if (isSuperuser) document.getElementById('tab-editors').classList.remove('hidden');
       renderPersonList();
     } catch (e) {
-      statusEl.textContent = 'Could not reach GitHub. Check your connection and try again.';
+      statusEl.textContent = 'Could not reach GitHub: ' + e.message;
       statusEl.className = 'status-msg error';
     }
   });
   document.getElementById('signout-btn').addEventListener('click', () => location.reload());
 
   // ---------- Tabs ----------
-  document.getElementById('tab-people').addEventListener('click', () => switchTab('people'));
-  document.getElementById('tab-generations').addEventListener('click', () => { switchTab('generations'); renderGenerationList(); });
-  document.getElementById('tab-archive').addEventListener('click', () => { switchTab('archive'); renderArchiveList(); });
-  document.getElementById('tab-editors').addEventListener('click', () => { switchTab('editors'); renderEditorList(); });
+  const TABS = ['people', 'generations', 'archive', 'village'];
+  TABS.forEach(t => document.getElementById('tab-' + t).addEventListener('click', () => {
+    switchTab(t);
+    if (t === 'generations') renderGenerationList();
+    if (t === 'archive') renderArchiveList();
+    if (t === 'village') loadVillageForm();
+  }));
   function switchTab(tab) {
-    document.getElementById('tab-people').classList.toggle('active', tab === 'people');
-    document.getElementById('tab-generations').classList.toggle('active', tab === 'generations');
-    document.getElementById('tab-archive').classList.toggle('active', tab === 'archive');
-    document.getElementById('tab-editors').classList.toggle('active', tab === 'editors');
-    document.getElementById('people-panel').classList.toggle('hidden', tab !== 'people');
-    document.getElementById('generations-panel').classList.toggle('hidden', tab !== 'generations');
-    document.getElementById('archive-panel').classList.toggle('hidden', tab !== 'archive');
-    document.getElementById('editors-panel').classList.toggle('hidden', tab !== 'editors');
-  }
-
-  // ---------- Family Archive ----------
-  let currentArchiveItem = null;
-  let pendingArchivePhotos = [];
-
-  async function renderArchiveList() {
-    const ul = document.getElementById('archive-ul');
-    const { content } = await PandeyGitHub.getFile('data/archive.json', token);
-    const items = content ? JSON.parse(content) : [];
-    ul.innerHTML = items.map((it, idx) => `<li><a href="#" data-idx="${idx}">${it.title || 'Untitled'}</a></li>`).join('') || '<li class="muted" style="padding:10px 14px; font-size:13.5px;">Nothing yet.</li>';
-    ul.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
-        a.classList.add('active');
-        loadArchiveForm(items[parseInt(a.dataset.idx, 10)]);
-      });
+    TABS.forEach(t => {
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+      document.getElementById(t + '-panel').classList.toggle('hidden', t !== tab);
     });
   }
 
-  document.getElementById('new-archive-item-btn').addEventListener('click', () => loadArchiveForm(null));
-
-  function loadArchiveForm(item) {
-    currentArchiveItem = item || { id: null, title: '', description: '', photos: [] };
-    pendingArchivePhotos = [];
-    const area = document.getElementById('archive-form-area');
-    area.innerHTML = `
-      <h2 style="font-family:var(--font-display); font-weight:600; font-size:22px; margin:0 0 16px;">${item ? 'Edit item' : 'New item'}</h2>
-      <div class="field"><label>Title</label><input type="text" id="a-title" value="${currentArchiveItem.title || ''}" placeholder="e.g. Old house in Bairati"></div>
-      <div class="field"><label>Description</label><textarea id="a-description">${currentArchiveItem.description || ''}</textarea></div>
-      <div class="field">
-        <label>Photos</label>
-        <div class="photo-grid" id="a-photo-grid">${(currentArchiveItem.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
-        <input type="file" id="a-photo-input" accept="image/*" multiple style="margin-top:10px;">
-      </div>
-      <button class="btn btn-gold" id="save-archive-btn">Save item</button>
-      <span id="save-archive-status" class="status-msg"></span>
-    `;
-    document.getElementById('a-photo-input').addEventListener('change', handleArchivePhotoSelect);
-    document.getElementById('save-archive-btn').addEventListener('click', saveArchiveItem);
-  }
-
-  function handleArchivePhotoSelect(e) {
-    [...e.target.files].forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const maxDim = 1600;
-          let { width, height } = img;
-          if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
-          const canvas = document.createElement('canvas');
-          canvas.width = width; canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          const filename = `archive_${Date.now()}.jpg`;
-          pendingArchivePhotos.push({ dataUrl, filename });
-          document.getElementById('a-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function saveArchiveItem() {
-    const statusEl = document.getElementById('save-archive-status');
-    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
-    try {
-      const newPhotoUrls = [];
-      for (const photo of pendingArchivePhotos) {
-        const base64 = photo.dataUrl.split(',')[1];
-        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, base64, `Add archive photo`, token);
-        newPhotoUrls.push(`uploads/${photo.filename}`);
-      }
-      const titleVal = document.getElementById('a-title').value.trim();
-      const descVal = document.getElementById('a-description').value.trim();
-      if (!titleVal) { statusEl.textContent = 'Give it a title.'; statusEl.className = 'status-msg error'; return; }
-
-      await PandeyGitHub.readModifyWriteJSON('data/archive.json', (items) => {
-        items = items || [];
-        if (currentArchiveItem.id) {
-          const idx = items.findIndex(i => i.id === currentArchiveItem.id);
-          if (idx >= 0) {
-            items[idx] = { ...items[idx], title: titleVal, description: descVal, photos: [...(items[idx].photos || []), ...newPhotoUrls] };
-          }
-        } else {
-          items.push({ id: 'archive-' + Date.now(), title: titleVal, description: descVal, photos: newPhotoUrls, addedAt: new Date().toISOString(), addedBy: editorName });
-        }
-        return items;
-      }, `${currentArchiveItem.id ? 'Edit' : 'Add'} archive item: ${titleVal} — by ${editorName}`, token);
-
-      await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
-        log = log || [];
-        log.push({ timestamp: new Date().toISOString(), editorName, personId: 'archive', personName: titleVal, field: currentArchiveItem.id ? 'archive item edited' : 'archive item added', oldValue: '', newValue: titleVal });
-        return log;
-      }, `Log archive change: ${titleVal} by ${editorName}`, token);
-
-      pendingArchivePhotos = [];
-      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
-      renderArchiveList();
-    } catch (e) {
-      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
-    }
-  }
-
-  // ---------- Generation stories ----------
-  let currentGeneration = null;
-  let pendingGenPhotos = [];
-
-  async function renderGenerationList() {
-    const ul = document.getElementById('generation-ul');
-    const { content } = await PandeyGitHub.getFile('data/generations.json', token);
-    const gens = content ? JSON.parse(content) : [];
-    ul.innerHTML = gens.map(g => `<li><a href="#" data-gen="${g.generation}">${g.title || 'Generation ' + g.generation}</a></li>`).join('');
-    ul.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
-        a.classList.add('active');
-        loadGenerationForm(parseInt(a.dataset.gen, 10), gens);
-      });
-    });
-    if (preselectGen) {
-      const target = ul.querySelector(`a[data-gen="${preselectGen}"]`);
-      if (target) target.click();
-    }
-  }
-
-  function existingGenThumb(src) { return `<div class="thumb"><img src="${src}"><button class="remove" data-src="${src}">&times;</button></div>`; }
-
-  function loadGenerationForm(genNum, gens) {
-    currentGeneration = gens.find(g => g.generation === genNum) || { generation: genNum, title: '', description: '', photos: [] };
-    pendingGenPhotos = [];
-    const area = document.getElementById('generation-form-area');
-    area.innerHTML = `
-      <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 20px;">Generation ${genNum}</h2>
-      <div class="field"><label>Title</label><input type="text" id="g-title" value="${currentGeneration.title || ''}"></div>
-      <div class="field"><label>Story</label><textarea id="g-description" style="min-height:160px;">${currentGeneration.description || ''}</textarea></div>
-      <div class="field">
-        <label>Photos</label>
-        <div class="photo-grid" id="g-photo-grid">${(currentGeneration.photos || []).map(existingGenThumb).join('')}</div>
-        <input type="file" id="g-photo-input" accept="image/*" multiple style="margin-top:10px;">
-      </div>
-      <button class="btn btn-gold" id="save-gen-btn">Save generation story</button>
-      <span id="save-gen-status" class="status-msg"></span>
-    `;
-    document.getElementById('g-photo-input').addEventListener('change', handleGenPhotoSelect);
-    document.getElementById('save-gen-btn').addEventListener('click', saveGeneration);
-    wireGenPhotoRemovers();
-  }
-
-  function handleGenPhotoSelect(e) {
-    [...e.target.files].forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const maxDim = 1600;
-          let { width, height } = img;
-          if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
-          const canvas = document.createElement('canvas');
-          canvas.width = width; canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          const filename = `gen${currentGeneration.generation}_${Date.now()}.jpg`;
-          pendingGenPhotos.push({ dataUrl, filename });
-          document.getElementById('g-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"><button class="remove" data-pending="${filename}">&times;</button></div>`);
-          wireGenPhotoRemovers();
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-  function wireGenPhotoRemovers() {
-    document.querySelectorAll('#g-photo-grid .remove').forEach(btn => {
-      btn.onclick = () => { if (btn.dataset.pending) pendingGenPhotos = pendingGenPhotos.filter(p => p.filename !== btn.dataset.pending); btn.closest('.thumb').remove(); };
-    });
-  }
-
-  async function saveGeneration() {
-    const statusEl = document.getElementById('save-gen-status');
-    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
-    try {
-      const newPhotoUrls = [];
-      for (const photo of pendingGenPhotos) {
-        const base64 = photo.dataUrl.split(',')[1];
-        const path = `uploads/${photo.filename}`;
-        await PandeyGitHub.putFileRaw(path, base64, `Add photo for Generation ${currentGeneration.generation}`, token);
-        newPhotoUrls.push(path);
-      }
-      const titleVal = document.getElementById('g-title').value.trim();
-      const descVal = document.getElementById('g-description').value.trim();
-
-      let before, updated;
-      await PandeyGitHub.readModifyWriteJSON('data/generations.json', (gens) => {
-        gens = gens || [];
-        const idx = gens.findIndex(g => g.generation === currentGeneration.generation);
-        before = idx >= 0 ? { ...gens[idx] } : { title: '', description: '', photos: [] };
-        updated = {
-          generation: currentGeneration.generation,
-          title: titleVal, description: descVal,
-          photos: [...(before.photos || []), ...newPhotoUrls]
-        };
-        if (idx >= 0) gens[idx] = updated; else gens.push(updated);
-        return gens;
-      }, `Edit Generation ${currentGeneration.generation} story — by ${editorName}`, token);
-
-      const diffs = [];
-      if ((before.title || '') !== updated.title) diffs.push({ field: 'title', oldValue: before.title, newValue: updated.title });
-      if ((before.description || '') !== updated.description) diffs.push({ field: 'description', oldValue: before.description, newValue: updated.description });
-      if ((before.photos || []).length !== updated.photos.length) diffs.push({ field: 'photos', oldValue: `${(before.photos||[]).length} photo(s)`, newValue: `${updated.photos.length} photo(s)` });
-      if (diffs.length) {
-        await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
-          log = log || [];
-          diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: `generation-${currentGeneration.generation}`, personName: `Generation ${currentGeneration.generation}`, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
-          return log;
-        }, `Log Generation ${currentGeneration.generation} story edit by ${editorName}`, token);
-      }
-
-      pendingGenPhotos = [];
-      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
-    } catch (e) {
-      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
-    }
-  }
-
-  // ---------- Manage editors (superuser only) ----------
-  document.getElementById('add-editor-btn').addEventListener('click', async () => {
-    const name = document.getElementById('new-editor-name').value.trim();
-    const pw = document.getElementById('new-editor-password').value;
-    const statusEl = document.getElementById('add-editor-status');
-    if (!name || !pw) { statusEl.textContent = 'Enter a name and password.'; statusEl.className = 'status-msg error'; return; }
-    statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
-    try {
-      const entry = await PandeyCrypto.encryptToken(token, pw);
-      entry._label = name;
-      entry.role = 'editor';
-      await PandeyGitHub.readModifyWriteJSON('data/access.json', (access) => {
-        access = access || { editors: [] };
-        access.editors = access.editors || [];
-        access.editors.push(entry);
-        return access;
-      }, `Add editor: ${name} — by ${editorName}`, token);
-      statusEl.textContent = `Added. Give ${name} the password you just set.`; statusEl.className = 'status-msg ok';
-      document.getElementById('new-editor-name').value = '';
-      document.getElementById('new-editor-password').value = '';
-      renderEditorList();
-    } catch (e) {
-      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
-    }
-  });
-
-  async function renderEditorList() {
-    const listEl = document.getElementById('editor-list');
-    listEl.innerHTML = 'Loading…';
-    const { content } = await PandeyGitHub.getFile('data/access.json', token);
-    const access = content ? JSON.parse(content) : { editors: [] };
-    listEl.innerHTML = (access.editors || []).map((e, idx) => `
-      <div class="editor-row">
-        <span>${e._label || 'Unnamed'} ${e.role === 'superuser' ? '<span class="badge badge-superuser">superuser</span>' : ''}</span>
-        ${e.role === 'superuser' ? '' : `<button class="btn btn-outline-dark btn-sm" data-label="${e._label || ''}">Remove</button>`}
-      </div>
-    `).join('') || '<p class="muted">No editors yet.</p>';
-    listEl.querySelectorAll('button[data-label]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const label = btn.dataset.label;
-        await PandeyGitHub.readModifyWriteJSON('data/access.json', (access) => {
-          access = access || { editors: [] };
-          const idx = (access.editors || []).findIndex(e => (e._label || '') === label && e.role !== 'superuser');
-          if (idx >= 0) access.editors.splice(idx, 1);
-          return access;
-        }, `Remove editor: ${label || 'unnamed'} — by ${editorName}`, token);
-        renderEditorList();
-      });
-    });
-  }
-
-  // ---------- Person list ----------
+  // ================= PEOPLE =================
   function renderPersonList(filter = '') {
     const ul = document.getElementById('person-ul');
     const q = filter.trim().toLowerCase();
     const sorted = [...people].sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
     ul.innerHTML = sorted
       .filter(p => !q || PandeyData.displayName(p).toLowerCase().includes(q))
-      .map(p => `<li class="${p.unnamedPlaceholder ? 'placeholder' : ''}"><a href="#" data-id="${p.id}">${PandeyData.displayName(p)}</a></li>`)
+      .map(p => `<li class="${p.unnamedPlaceholder ? 'placeholder' : ''}"><a href="#" data-id="${p.id}">${PandeyData.displayName(p)}${p.spouseId ? ' 💍' : ''}</a></li>`)
       .join('');
-    ul.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
-        a.classList.add('active');
-        loadPersonForm(a.dataset.id);
-      });
-    });
+    ul.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      loadPersonForm(a.dataset.id);
+    }));
   }
   document.getElementById('person-search').addEventListener('input', (e) => renderPersonList(e.target.value));
 
-  const params = new URLSearchParams(location.search);
-  const preselect = params.get('person');
-  const preselectGen = params.get('generation');
-
-  // ---------- Edit form ----------
   let pendingPhotos = [];
+  let pendingAudio = null;
   const LOC_TYPES = ['origin', 'current', 'lived', 'visited'];
 
   function loadPersonForm(id) {
     currentPerson = people.find(p => p.id === id);
     pendingPhotos = [];
+    pendingAudio = null;
     const p = currentPerson;
     const area = document.getElementById('form-area');
-    const locRows = (p.locations || []).map((l, idx) => locRow(l, idx)).join('');
-    const children = people.filter(c => c.parentId === p.id)
-      .sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
-    const childRows = children.map(c => `<div class="editor-row"><a href="#" class="child-link" data-id="${c.id}">${PandeyData.displayName(c)}</a></div>`).join('')
-      || '<p class="muted" style="font-size:13.5px;">No children recorded yet.</p>';
+    const locRows = (p.locations || []).map(l => locRow(l)).join('');
+    const children = people.filter(c => c.parentId === p.id).sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+    const childRows = children.map(c => `<div class="editor-row"><a href="#" class="child-link" data-id="${c.id}">${PandeyData.displayName(c)}</a></div>`).join('') || '<p class="muted" style="font-size:13.5px;">No children recorded yet.</p>';
+    const spouse = p.spouseId ? people.find(x => x.id === p.spouseId) : null;
+
     area.innerHTML = `
       <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 4px;">${PandeyData.displayName(p)}</h2>
       <p class="muted" style="margin:0 0 24px;">${PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ')}</p>
 
       <div class="field"><label>Name</label><input type="text" id="f-name" value="${p.unnamedPlaceholder ? '' : (p.name || '')}" placeholder="${p.unnamedPlaceholder ? 'Add their real name if known' : ''}"></div>
-      <div class="field"><label>Full name (optional, if longer than the name above)</label><input type="text" id="f-fullname" value="${p.fullName || ''}" placeholder="e.g. Suraj Kumar Pandey"></div>
+      <div class="field"><label>Full name (optional)</label><input type="text" id="f-fullname" value="${p.fullName || ''}"></div>
+      <div class="field"><label>Gender</label><select id="f-gender"><option value="unknown" ${p.gender==='unknown'?'selected':''}>Unknown</option><option value="M" ${p.gender==='M'?'selected':''}>Male</option><option value="F" ${p.gender==='F'?'selected':''}>Female</option></select></div>
       <div class="field"><label>Occupation</label><input type="text" id="f-occupation" value="${p.occupation || ''}"></div>
-      <div class="field"><label>Birth year</label><input type="text" id="f-birthyear" value="${p.birthYear || ''}"></div>
+      <div class="field"><label>Date of birth</label><input type="date" id="f-birthdate" value="${p.birthDate || ''}"></div>
 
       <div class="field">
         <label>Places — origin, current home, lived, or visited</label>
@@ -525,13 +212,34 @@
 
       <div class="field">
         <label>Photos</label>
-        <div class="photo-grid" id="photo-grid">${(p.photos || []).map(src => existingThumb(src)).join('')}</div>
+        <div class="photo-grid" id="photo-grid">${(p.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
         <input type="file" id="photo-input" accept="image/*" multiple style="margin-top:10px;">
-        <p class="muted" style="font-size:12.5px; margin-top:6px;">Images are resized to fit the web before uploading.</p>
+      </div>
+
+      <div class="field">
+        <label>Voice message (up to 5 MB)</label>
+        ${p.audioMessage ? `<audio controls src="${p.audioMessage}" style="width:100%; margin-bottom:8px;"></audio><button type="button" class="btn btn-outline-dark btn-sm" id="remove-audio-btn">Remove voice message</button>` : ''}
+        <input type="file" id="audio-input" accept="audio/*" style="margin-top:10px; display:block;">
+        <p class="muted" id="audio-file-note" style="font-size:12.5px; margin-top:6px;"></p>
       </div>
 
       <button class="btn btn-gold" id="save-btn">Save changes</button>
       <span id="save-status" class="status-msg"></span>
+
+      <hr style="margin:32px 0; border:none; border-top:1px solid var(--line);">
+
+      <h3 style="font-family:var(--font-display); font-size:19px; margin:0 0 12px;">Spouse</h3>
+      ${spouse ? `
+        <div class="editor-row"><a href="#" class="child-link" data-id="${spouse.id}">${PandeyData.displayName(spouse)}</a>
+          <button class="btn btn-outline-dark btn-sm" id="unlink-spouse-btn">Unlink</button></div>
+      ` : `
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:end;">
+          <div class="field" style="margin:0; flex:1; min-width:140px;"><label>Add a spouse — name</label><input type="text" id="new-spouse-name"></div>
+          <div class="field" style="margin:0; min-width:110px;"><label>Gender</label><select id="new-spouse-gender"><option value="F">Female</option><option value="M">Male</option><option value="unknown">Unknown</option></select></div>
+          <button class="btn btn-outline-dark btn-sm" id="add-spouse-btn" style="margin-bottom:16px;">+ Add spouse</button>
+        </div>
+      `}
+      <span id="spouse-status" class="status-msg"></span>
 
       <hr style="margin:32px 0; border:none; border-top:1px solid var(--line);">
 
@@ -546,118 +254,55 @@
 
       ${p.id !== rootPersonId ? `
       <hr style="margin:32px 0; border:none; border-top:1px solid var(--line);">
+      <h3 style="font-family:var(--font-display); font-size:19px; margin:0 0 10px;">Move to a different parent</h3>
+      <p class="muted" style="font-size:13.5px;">Currently under <strong>${PandeyData.ancestorChain(people, p.id).slice(-2, -1).map(n => PandeyData.displayName(n))[0] || '—'}</strong>. Search for the correct parent below — everyone below this person moves with them, and generation numbers update automatically.</p>
+      <div class="field"><label>Search for the new parent</label><input type="text" id="reparent-search" placeholder="Type a name…" autocomplete="off"></div>
+      <div id="reparent-results" style="max-height:180px; overflow-y:auto; border:1px solid var(--line); background:var(--paper-light); margin-bottom:10px; display:none;"></div>
+      <p id="reparent-selected" class="muted" style="font-size:13.5px;"></p>
+      <button class="btn btn-outline-dark btn-sm" id="reparent-btn" disabled>Move here</button>
+      <span id="reparent-status" class="status-msg"></span>
+      ` : ''}
+
+      ${p.id !== rootPersonId ? `
+      <hr style="margin:32px 0; border:none; border-top:1px solid var(--line);">
       <h3 style="font-family:var(--font-display); font-size:19px; margin:0 0 10px; color:var(--ochre-deep);">Remove this person</h3>
-      <p class="muted" style="font-size:13.5px;">Only possible if they have no children recorded. This can't be undone from the site (though it stays in the repository's history).</p>
+      <p class="muted" style="font-size:13.5px;">Only possible if they have no children recorded.</p>
       <button class="btn btn-outline-dark btn-sm" id="delete-person-btn" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Remove ${PandeyData.displayName(p)}</button>
       <span id="delete-status" class="status-msg"></span>
       ` : `<p class="muted" style="font-size:13px; margin-top:24px;">The root ancestor can't be removed from here.</p>`}
     `;
 
+    if (p.id !== rootPersonId) wireReparentUI();
+
     document.getElementById('add-loc').addEventListener('click', () => {
-      document.getElementById('loc-rows').insertAdjacentHTML('beforeend', locRow({}, Date.now()));
+      document.getElementById('loc-rows').insertAdjacentHTML('beforeend', locRow({}));
       wireLocRemovers();
     });
     wireLocRemovers();
     document.getElementById('photo-input').addEventListener('change', handlePhotoSelect);
+    document.getElementById('audio-input').addEventListener('change', handleAudioSelect);
     document.getElementById('save-btn').addEventListener('click', savePerson);
     document.getElementById('add-child-btn').addEventListener('click', addChild);
-    document.querySelectorAll('.child-link').forEach(a => {
-      a.addEventListener('click', (e) => { e.preventDefault(); loadPersonForm(a.dataset.id); });
-    });
+    document.querySelectorAll('.child-link').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadPersonForm(a.dataset.id); }));
     const deleteBtn = document.getElementById('delete-person-btn');
     if (deleteBtn) deleteBtn.addEventListener('click', deletePerson);
+    const addSpouseBtn = document.getElementById('add-spouse-btn');
+    if (addSpouseBtn) addSpouseBtn.addEventListener('click', addSpouse);
+    const unlinkBtn = document.getElementById('unlink-spouse-btn');
+    if (unlinkBtn) unlinkBtn.addEventListener('click', unlinkSpouse);
+    const removeAudioBtn = document.getElementById('remove-audio-btn');
+    if (removeAudioBtn) removeAudioBtn.addEventListener('click', removeAudioMessage);
   }
 
-  function slugify(name) {
-    return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'person';
-  }
-  function uniqueId(base, existingIds) {
-    let id = base, i = 1;
-    while (existingIds.has(id)) id = `${base}-${++i}`;
-    return id;
-  }
-
-  async function addChild() {
-    const name = document.getElementById('new-child-name').value.trim();
-    const gender = document.getElementById('new-child-gender').value;
-    const statusEl = document.getElementById('add-child-status');
-    if (!name) { statusEl.textContent = 'Enter a name.'; statusEl.className = 'status-msg error'; return; }
-    statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
-    try {
-      let newPerson, parentName;
-      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
-        const existingIds = new Set(latestPeople.map(x => x.id));
-        const parent = latestPeople.find(x => x.id === currentPerson.id);
-        parentName = PandeyData.displayName(parent);
-        const newId = uniqueId(slugify(name), existingIds);
-        newPerson = {
-          id: newId, name, gender, parentId: parent.id,
-          generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
-          unnamedPlaceholder: false, notes: null, fullName: null,
-          birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
-        };
-        latestPeople.push(newPerson);
-        return latestPeople;
-      }, `Add ${name} as child of ${parentName || currentPerson.name} — by ${editorName}`, token);
-
-      await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
-        log = log || [];
-        log.push({ timestamp: new Date().toISOString(), editorName, personId: newPerson.id, personName: name, field: 'added', oldValue: '', newValue: `added as child of ${parentName}` });
-        return log;
-      }, `Log: added ${name} — by ${editorName}`, token);
-
-      people.push(newPerson);
-      statusEl.textContent = `Added ${name}.`; statusEl.className = 'status-msg ok';
-      loadPersonForm(currentPerson.id);
-      renderPersonList(document.getElementById('person-search').value);
-    } catch (e) {
-      statusEl.textContent = 'Could not add: ' + e.message; statusEl.className = 'status-msg error';
-    }
-  }
-
-  async function deletePerson() {
-    const hasChildren = people.some(x => x.parentId === currentPerson.id);
-    const statusEl = document.getElementById('delete-status');
-    if (hasChildren) { statusEl.textContent = 'This person has children recorded — remove or reassign them first.'; statusEl.className = 'status-msg error'; return; }
-    if (!confirm(`Remove ${PandeyData.displayName(currentPerson)} from the tree? This can't be undone from the site.`)) return;
-    statusEl.textContent = 'Removing…'; statusEl.className = 'status-msg';
-    try {
-      let removed;
-      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
-        const idx = latestPeople.findIndex(x => x.id === currentPerson.id);
-        if (idx === -1) { removed = null; return latestPeople; }
-        removed = latestPeople.splice(idx, 1)[0];
-        return latestPeople;
-      }, `Remove ${currentPerson.name || currentPerson.id} — by ${editorName}`, token);
-
-      if (!removed) { statusEl.textContent = 'Already removed.'; statusEl.className = 'status-msg error'; return; }
-
-      await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
-        log = log || [];
-        log.push({ timestamp: new Date().toISOString(), editorName, personId: removed.id, personName: removed.name, field: 'removed', oldValue: removed.name, newValue: '(removed)' });
-        return log;
-      }, `Log: removed ${removed.name || removed.id} — by ${editorName}`, token);
-
-      people.splice(people.findIndex(x => x.id === removed.id), 1);
-      document.getElementById('form-area').innerHTML = '<p class="muted">Select someone from the list to edit their details.</p>';
-      renderPersonList(document.getElementById('person-search').value);
-    } catch (e) {
-      statusEl.textContent = 'Could not remove: ' + e.message; statusEl.className = 'status-msg error';
-    }
-  }
-
-  function locRow(l, idx) {
-    return `<div class="loc-row" data-idx="${idx}">
+  function locRow(l) {
+    return `<div class="loc-row">
       <input type="text" class="loc-place" placeholder="Place" value="${l.place || ''}">
       <select class="loc-type">${LOC_TYPES.map(t => `<option value="${t}" ${l.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>
       <input type="text" class="loc-year" placeholder="Year" value="${l.year || ''}">
       <button type="button" class="btn btn-outline-dark btn-sm remove-loc">&times;</button>
     </div>`;
   }
-  function wireLocRemovers() {
-    document.querySelectorAll('.remove-loc').forEach(btn => { btn.onclick = () => btn.closest('.loc-row').remove(); });
-  }
-  function existingThumb(src) { return `<div class="thumb"><img src="${src}"><button class="remove" data-src="${src}">&times;</button></div>`; }
+  function wireLocRemovers() { document.querySelectorAll('.remove-loc').forEach(btn => { btn.onclick = () => btn.closest('.loc-row').remove(); }); }
 
   function handlePhotoSelect(e) {
     [...e.target.files].forEach(file => {
@@ -674,74 +319,95 @@
           const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
           const filename = `${currentPerson.id}_${Date.now()}.jpg`;
           pendingPhotos.push({ dataUrl, filename });
-          document.getElementById('photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"><button class="remove" data-pending="${filename}">&times;</button></div>`);
-          wirePhotoRemovers();
+          document.getElementById('photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
         };
         img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
     });
   }
-  function wirePhotoRemovers() {
-    document.querySelectorAll('#photo-grid .remove').forEach(btn => {
-      btn.onclick = () => { if (btn.dataset.pending) pendingPhotos = pendingPhotos.filter(p => p.filename !== btn.dataset.pending); btn.closest('.thumb').remove(); };
-    });
-  }
-  wirePhotoRemovers();
 
-  // ---------- Save ----------
+  const MAX_AUDIO_BYTES = 5 * 1024 * 1024;
+  function handleAudioSelect(e) {
+    const file = e.target.files[0];
+    const note = document.getElementById('audio-file-note');
+    if (!file) return;
+    if (file.size > MAX_AUDIO_BYTES) {
+      note.textContent = `That file is ${(file.size / 1024 / 1024).toFixed(1)} MB — the limit is 5 MB. Try a shorter recording or a more compressed format (m4a/mp3).`;
+      note.style.color = '#b5432f';
+      e.target.value = '';
+      pendingAudio = null;
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64 = ev.target.result.split(',')[1];
+      const ext = (file.name.split('.').pop() || 'mp3').toLowerCase();
+      pendingAudio = { base64, filename: `${currentPerson.id}_voice_${Date.now()}.${ext}` };
+      note.textContent = `Ready to upload: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+      note.style.color = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function removeAudioMessage() {
+    const statusEl = document.getElementById('save-status');
+    statusEl.textContent = 'Removing…'; statusEl.className = 'status-msg';
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
+        latestPeople[idx].audioMessage = null;
+        return latestPeople;
+      }, `Remove voice message for ${currentPerson.name} — by superadmin`, token);
+      people[people.findIndex(p => p.id === currentPerson.id)].audioMessage = null;
+      loadPersonForm(currentPerson.id);
+    } catch (e) {
+      statusEl.textContent = 'Could not remove: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
   async function savePerson() {
     const statusEl = document.getElementById('save-status');
     statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
     try {
       const newPhotoUrls = [];
       for (const photo of pendingPhotos) {
-        const base64 = photo.dataUrl.split(',')[1];
-        const path = `uploads/${photo.filename}`;
-        await PandeyGitHub.putFileRaw(path, base64, `Add photo for ${currentPerson.name || currentPerson.id}`, token);
-        newPhotoUrls.push(path);
+        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add photo for ${currentPerson.name || currentPerson.id}`, token);
+        newPhotoUrls.push(`uploads/${photo.filename}`);
+      }
+      let audioPath;
+      if (pendingAudio) {
+        await PandeyGitHub.putFileRaw(`uploads/${pendingAudio.filename}`, pendingAudio.base64, `Add voice message for ${currentPerson.name || currentPerson.id}`, token);
+        audioPath = `uploads/${pendingAudio.filename}`;
       }
 
       const nameVal = document.getElementById('f-name').value.trim();
       const fullNameVal = document.getElementById('f-fullname').value.trim() || null;
+      const genderVal = document.getElementById('f-gender').value;
       const locVal = [...document.querySelectorAll('#loc-rows .loc-row')].map(row => ({
-        place: row.querySelector('.loc-place').value.trim(),
-        type: row.querySelector('.loc-type').value,
-        year: row.querySelector('.loc-year').value.trim() || null,
-        note: null
+        place: row.querySelector('.loc-place').value.trim(), type: row.querySelector('.loc-type').value,
+        year: row.querySelector('.loc-year').value.trim() || null, note: null
       })).filter(l => l.place);
       const occVal = document.getElementById('f-occupation').value.trim() || null;
-      const birthVal = document.getElementById('f-birthyear').value.trim() || null;
+      const birthVal = document.getElementById('f-birthdate').value || null;
       const bioVal = document.getElementById('f-bio').value.trim();
 
-      let before, updated;
+      let updated;
       await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
         const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
-        before = { ...latestPeople[idx] };
         updated = {
-          ...latestPeople[idx],
-          name: nameVal || latestPeople[idx].name,
-          fullName: fullNameVal,
+          ...latestPeople[idx], name: nameVal || latestPeople[idx].name, fullName: fullNameVal, gender: genderVal,
           unnamedPlaceholder: nameVal ? false : latestPeople[idx].unnamedPlaceholder,
-          occupation: occVal, birthYear: birthVal, bio: bioVal,
-          locations: locVal,
-          photos: [...(latestPeople[idx].photos || []), ...newPhotoUrls]
+          occupation: occVal, birthDate: birthVal, birthYear: null, bio: bioVal, locations: locVal,
+          photos: [...(latestPeople[idx].photos || []), ...newPhotoUrls],
+          audioMessage: audioPath !== undefined ? audioPath : latestPeople[idx].audioMessage
         };
         latestPeople[idx] = updated;
         return latestPeople;
-      }, `Edit ${nameVal || currentPerson.name || currentPerson.id} — by ${editorName}`, token);
-
-      const diffs = diffFields(before, updated);
-      if (diffs.length) {
-        await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
-          log = log || [];
-          diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: updated.id, personName: updated.name, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
-          return log;
-        }, `Log edit to ${updated.name || updated.id} by ${editorName}`, token);
-      }
+      }, `Edit ${nameVal || currentPerson.name || currentPerson.id} — by superadmin`, token);
 
       people[people.findIndex(p => p.id === updated.id)] = updated;
-      pendingPhotos = [];
+      pendingPhotos = []; pendingAudio = null;
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
       renderPersonList(document.getElementById('person-search').value);
     } catch (e) {
@@ -749,25 +415,401 @@
     }
   }
 
-  function diffFields(before, after) {
-    const fields = ['name', 'occupation', 'birthYear', 'bio'];
-    const out = [];
-    fields.forEach(f => { const a = before[f] ?? ''; const b = after[f] ?? ''; if (String(a) !== String(b)) out.push({ field: f, oldValue: a, newValue: b }); });
-    const bl = JSON.stringify(before.locations || []), al = JSON.stringify(after.locations || []);
-    if (bl !== al) out.push({ field: 'locations', oldValue: `${(before.locations||[]).length} place(s)`, newValue: `${(after.locations||[]).length} place(s)` });
-    if ((after.photos || []).length !== (before.photos || []).length) out.push({ field: 'photos', oldValue: `${(before.photos||[]).length} photo(s)`, newValue: `${(after.photos||[]).length} photo(s)` });
-    return out;
+  function slugify(name) { return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'person'; }
+  function uniqueId(base, existingIds) { let id = base, i = 1; while (existingIds.has(id)) id = `${base}-${++i}`; return id; }
+
+  async function addChild() {
+    const name = document.getElementById('new-child-name').value.trim();
+    const gender = document.getElementById('new-child-gender').value;
+    const statusEl = document.getElementById('add-child-status');
+    if (!name) { statusEl.textContent = 'Enter a name.'; statusEl.className = 'status-msg error'; return; }
+    statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
+    try {
+      let newPerson, parentName;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const existingIds = new Set(latestPeople.map(x => x.id));
+        const parent = latestPeople.find(x => x.id === currentPerson.id);
+        parentName = PandeyData.displayName(parent);
+        newPerson = {
+          id: uniqueId(slugify(name), existingIds), name, gender, parentId: parent.id,
+          generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
+          unnamedPlaceholder: false, notes: null, fullName: null, spouseId: null, audioMessage: null,
+          birthDate: null, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
+        };
+        latestPeople.push(newPerson);
+        return latestPeople;
+      }, `Add ${name} as child of ${parentName || currentPerson.name} — by superadmin`, token);
+      people.push(newPerson);
+      statusEl.textContent = `Added ${name}.`; statusEl.className = 'status-msg ok';
+      loadPersonForm(currentPerson.id);
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not add: ' + e.message; statusEl.className = 'status-msg error';
+    }
   }
 
-  if (preselect) {
-    const observer = new MutationObserver(() => {
-      if (!document.getElementById('editor-view').classList.contains('hidden')) { loadPersonForm(preselect); observer.disconnect(); }
+  async function addSpouse() {
+    const name = document.getElementById('new-spouse-name').value.trim();
+    const gender = document.getElementById('new-spouse-gender').value;
+    const statusEl = document.getElementById('spouse-status');
+    if (!name) { statusEl.textContent = 'Enter a name.'; statusEl.className = 'status-msg error'; return; }
+    statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
+    try {
+      let newSpouse;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const existingIds = new Set(latestPeople.map(x => x.id));
+        const partner = latestPeople.find(x => x.id === currentPerson.id);
+        newSpouse = {
+          id: uniqueId(slugify(name), existingIds), name, gender, parentId: null,
+          generation: partner.generation, tree: partner.tree || 'A',
+          unnamedPlaceholder: false, notes: null, fullName: null, spouseId: partner.id, audioMessage: null,
+          birthDate: null, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
+        };
+        latestPeople.push(newSpouse);
+        partner.spouseId = newSpouse.id;
+        return latestPeople;
+      }, `Add ${name} as spouse of ${currentPerson.name} — by superadmin`, token);
+      people.push(newSpouse);
+      people[people.findIndex(x => x.id === currentPerson.id)].spouseId = newSpouse.id;
+      statusEl.textContent = `Added ${name}.`; statusEl.className = 'status-msg ok';
+      loadPersonForm(currentPerson.id);
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not add: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  async function unlinkSpouse() {
+    const statusEl = document.getElementById('spouse-status');
+    statusEl.textContent = 'Unlinking…'; statusEl.className = 'status-msg';
+    try {
+      const spouseId = currentPerson.spouseId;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const a = latestPeople.find(x => x.id === currentPerson.id);
+        const b = latestPeople.find(x => x.id === spouseId);
+        if (a) a.spouseId = null;
+        if (b) b.spouseId = null;
+        return latestPeople;
+      }, `Unlink spouse of ${currentPerson.name} — by superadmin`, token);
+      people.forEach(p => { if (p.id === currentPerson.id || p.id === spouseId) p.spouseId = null; });
+      loadPersonForm(currentPerson.id);
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not unlink: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  async function deletePerson() {
+    const hasChildren = people.some(x => x.parentId === currentPerson.id);
+    const statusEl = document.getElementById('delete-status');
+    if (hasChildren) { statusEl.textContent = 'This person has children recorded — remove or reassign them first.'; statusEl.className = 'status-msg error'; return; }
+    if (!confirm(`Remove ${PandeyData.displayName(currentPerson)} from the tree?`)) return;
+    statusEl.textContent = 'Removing…'; statusEl.className = 'status-msg';
+    try {
+      let removed;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const idx = latestPeople.findIndex(x => x.id === currentPerson.id);
+        if (idx === -1) { removed = null; return latestPeople; }
+        removed = latestPeople.splice(idx, 1)[0];
+        if (removed.spouseId) { const sp = latestPeople.find(x => x.id === removed.spouseId); if (sp) sp.spouseId = null; }
+        return latestPeople;
+      }, `Remove ${currentPerson.name || currentPerson.id} — by superadmin`, token);
+      if (!removed) { statusEl.textContent = 'Already removed.'; statusEl.className = 'status-msg error'; return; }
+      people.splice(people.findIndex(x => x.id === removed.id), 1);
+      document.getElementById('form-area').innerHTML = '<p class="muted">Select someone from the list to edit their details.</p>';
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not remove: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ---------- Move to a different parent ----------
+  function isDescendantOf(peopleList, ancestorId, candidateId) {
+    let node = peopleList.find(x => x.id === candidateId);
+    while (node && node.parentId) {
+      if (node.parentId === ancestorId) return true;
+      node = peopleList.find(x => x.id === node.parentId);
+    }
+    return false;
+  }
+  function recalcGenerationsFrom(peopleList, personId) {
+    const person = peopleList.find(x => x.id === personId);
+    const parent = person.parentId ? peopleList.find(x => x.id === person.parentId) : null;
+    person.generation = parent ? (parent.generation || 1) + 1 : 1;
+    peopleList.filter(x => x.parentId === personId).forEach(child => recalcGenerationsFrom(peopleList, child.id));
+  }
+
+  let reparentTargetId = null;
+  function wireReparentUI() {
+    reparentTargetId = null;
+    const searchInput = document.getElementById('reparent-search');
+    const resultsEl = document.getElementById('reparent-results');
+    const selectedEl = document.getElementById('reparent-selected');
+    const moveBtn = document.getElementById('reparent-btn');
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      moveBtn.disabled = true; reparentTargetId = null; selectedEl.textContent = '';
+      if (!q) { resultsEl.style.display = 'none'; return; }
+      const matches = people
+        .filter(x => x.id !== currentPerson.id && !x.unnamedPlaceholder && x.name.toLowerCase().includes(q))
+        .filter(x => !isDescendantOf(people, currentPerson.id, x.id))
+        .slice(0, 15);
+      if (!matches.length) { resultsEl.innerHTML = '<div style="padding:8px 12px; font-size:13.5px; color:#8a6a58;">No matches</div>'; resultsEl.style.display = 'block'; return; }
+      resultsEl.innerHTML = matches.map(m => `<div class="reparent-option" data-id="${m.id}" style="padding:8px 12px; font-size:14px; cursor:pointer; border-bottom:1px solid var(--line);">${PandeyData.displayName(m)}</div>`).join('');
+      resultsEl.style.display = 'block';
+      resultsEl.querySelectorAll('.reparent-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          reparentTargetId = opt.dataset.id;
+          selectedEl.textContent = 'New parent: ' + opt.textContent;
+          resultsEl.style.display = 'none';
+          searchInput.value = opt.textContent;
+          moveBtn.disabled = false;
+        });
+      });
     });
-    observer.observe(document.getElementById('editor-view'), { attributes: true });
-  } else if (preselectGen) {
+
+    document.getElementById('reparent-btn').addEventListener('click', movePerson);
+  }
+
+  async function movePerson() {
+    const statusEl = document.getElementById('reparent-status');
+    if (!reparentTargetId) return;
+    const newParent = people.find(x => x.id === reparentTargetId);
+    if (!confirm(`Move ${PandeyData.displayName(currentPerson)} (and everyone below them) to be under ${PandeyData.displayName(newParent)}?`)) return;
+    statusEl.textContent = 'Moving…'; statusEl.className = 'status-msg';
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const person = latestPeople.find(x => x.id === currentPerson.id);
+        person.parentId = reparentTargetId;
+        recalcGenerationsFrom(latestPeople, person.id);
+        return latestPeople;
+      }, `Move ${currentPerson.name} under ${newParent.name} — by superadmin`, token);
+
+      // reflect the same change (parentId + cascading generations) in the local copy
+      const localPerson = people.find(x => x.id === currentPerson.id);
+      localPerson.parentId = reparentTargetId;
+      recalcGenerationsFrom(people, localPerson.id);
+
+      statusEl.textContent = 'Moved.'; statusEl.className = 'status-msg ok';
+      loadPersonForm(currentPerson.id);
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not move: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ================= GENERATIONS =================
+  let currentGeneration = null;
+  let pendingGenPhotos = [];
+  async function renderGenerationList() {
+    const ul = document.getElementById('generation-ul');
+    const { content } = await PandeyGitHub.getFile('data/generations.json', token);
+    const gens = content ? JSON.parse(content) : [];
+    ul.innerHTML = gens.map(g => `<li><a href="#" data-gen="${g.generation}">${g.title || 'Generation ' + g.generation}</a></li>`).join('');
+    ul.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadGenerationForm(parseInt(a.dataset.gen, 10), gens); }));
+  }
+  function loadGenerationForm(genNum, gens) {
+    currentGeneration = gens.find(g => g.generation === genNum) || { generation: genNum, title: '', description: '', photos: [] };
+    pendingGenPhotos = [];
+    const area = document.getElementById('generation-form-area');
+    area.innerHTML = `
+      <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 20px;">Generation ${genNum}</h2>
+      <div class="field"><label>Title</label><input type="text" id="g-title" value="${currentGeneration.title || ''}"></div>
+      <div class="field"><label>Story</label><textarea id="g-description" style="min-height:160px;">${currentGeneration.description || ''}</textarea></div>
+      <div class="field"><label>Photos</label><div class="photo-grid" id="g-photo-grid">${(currentGeneration.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+      <input type="file" id="g-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
+      <button class="btn btn-gold" id="save-gen-btn">Save generation story</button>
+      <span id="save-gen-status" class="status-msg"></span>
+    `;
+    document.getElementById('g-photo-input').addEventListener('change', (e) => {
+      [...e.target.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 1600; let { width, height } = img;
+            if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
+            const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+            const filename = `gen${currentGeneration.generation}_${Date.now()}.jpg`;
+            pendingGenPhotos.push({ dataUrl, filename });
+            document.getElementById('g-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    document.getElementById('save-gen-btn').addEventListener('click', saveGeneration);
+  }
+  async function saveGeneration() {
+    const statusEl = document.getElementById('save-gen-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const newPhotoUrls = [];
+      for (const photo of pendingGenPhotos) {
+        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add photo for Generation ${currentGeneration.generation}`, token);
+        newPhotoUrls.push(`uploads/${photo.filename}`);
+      }
+      const titleVal = document.getElementById('g-title').value.trim();
+      const descVal = document.getElementById('g-description').value.trim();
+      await PandeyGitHub.readModifyWriteJSON('data/generations.json', (gens) => {
+        gens = gens || [];
+        const idx = gens.findIndex(g => g.generation === currentGeneration.generation);
+        const before = idx >= 0 ? gens[idx] : { photos: [] };
+        const updated = { generation: currentGeneration.generation, title: titleVal, description: descVal, photos: [...(before.photos || []), ...newPhotoUrls] };
+        if (idx >= 0) gens[idx] = updated; else gens.push(updated);
+        return gens;
+      }, `Edit Generation ${currentGeneration.generation} story — by superadmin`, token);
+      pendingGenPhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ================= ARCHIVE =================
+  let currentArchiveItem = null;
+  let pendingArchivePhotos = [];
+  async function renderArchiveList() {
+    const ul = document.getElementById('archive-ul');
+    const { content } = await PandeyGitHub.getFile('data/archive.json', token);
+    const items = content ? JSON.parse(content) : [];
+    ul.innerHTML = items.map((it, idx) => `<li><a href="#" data-idx="${idx}">${it.title || 'Untitled'}</a></li>`).join('') || '<li class="muted" style="padding:10px 14px; font-size:13.5px;">Nothing yet.</li>';
+    ul.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadArchiveForm(items[parseInt(a.dataset.idx, 10)]); }));
+  }
+  document.getElementById('new-archive-item-btn').addEventListener('click', () => loadArchiveForm(null));
+  function loadArchiveForm(item) {
+    currentArchiveItem = item || { id: null, title: '', description: '', photos: [] };
+    pendingArchivePhotos = [];
+    const area = document.getElementById('archive-form-area');
+    area.innerHTML = `
+      <h2 style="font-family:var(--font-display); font-weight:600; font-size:22px; margin:0 0 16px;">${item ? 'Edit item' : 'New item'}</h2>
+      <div class="field"><label>Title</label><input type="text" id="a-title" value="${currentArchiveItem.title || ''}" placeholder="e.g. Old house in Bairati"></div>
+      <div class="field"><label>Description</label><textarea id="a-description">${currentArchiveItem.description || ''}</textarea></div>
+      <div class="field"><label>Photos</label><div class="photo-grid" id="a-photo-grid">${(currentArchiveItem.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+      <input type="file" id="a-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
+      <button class="btn btn-gold" id="save-archive-btn">Save item</button>
+      <span id="save-archive-status" class="status-msg"></span>
+    `;
+    document.getElementById('a-photo-input').addEventListener('change', (e) => {
+      [...e.target.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 1600; let { width, height } = img;
+            if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
+            const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+            const filename = `archive_${Date.now()}.jpg`;
+            pendingArchivePhotos.push({ dataUrl, filename });
+            document.getElementById('a-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    document.getElementById('save-archive-btn').addEventListener('click', saveArchiveItem);
+  }
+  async function saveArchiveItem() {
+    const statusEl = document.getElementById('save-archive-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const newPhotoUrls = [];
+      for (const photo of pendingArchivePhotos) {
+        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add archive photo`, token);
+        newPhotoUrls.push(`uploads/${photo.filename}`);
+      }
+      const titleVal = document.getElementById('a-title').value.trim();
+      const descVal = document.getElementById('a-description').value.trim();
+      if (!titleVal) { statusEl.textContent = 'Give it a title.'; statusEl.className = 'status-msg error'; return; }
+      await PandeyGitHub.readModifyWriteJSON('data/archive.json', (items) => {
+        items = items || [];
+        if (currentArchiveItem.id) {
+          const idx = items.findIndex(i => i.id === currentArchiveItem.id);
+          if (idx >= 0) items[idx] = { ...items[idx], title: titleVal, description: descVal, photos: [...(items[idx].photos || []), ...newPhotoUrls] };
+        } else {
+          items.push({ id: 'archive-' + Date.now(), title: titleVal, description: descVal, photos: newPhotoUrls, addedAt: new Date().toISOString() });
+        }
+        return items;
+      }, `${currentArchiveItem.id ? 'Edit' : 'Add'} archive item: ${titleVal} — by superadmin`, token);
+      pendingArchivePhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+      renderArchiveList();
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ================= VILLAGE =================
+  let pendingVillagePhotos = [];
+  async function loadVillageForm() {
+    pendingVillagePhotos = [];
+    const { content } = await PandeyGitHub.getFile('data/village.json', token);
+    const v = content ? JSON.parse(content) : { intro: '', history: '', aipan: '', photos: [] };
+    document.getElementById('v-intro').value = v.intro || '';
+    document.getElementById('v-history').value = v.history || '';
+    document.getElementById('v-aipan').value = v.aipan || '';
+    document.getElementById('v-photo-grid').innerHTML = (v.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('');
+    document.getElementById('v-photo-input').onchange = (e) => {
+      [...e.target.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 1600; let { width, height } = img;
+            if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
+            const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+            const filename = `village_${Date.now()}.jpg`;
+            pendingVillagePhotos.push({ dataUrl, filename });
+            document.getElementById('v-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    };
+    document.getElementById('save-village-btn').onclick = saveVillage;
+  }
+  async function saveVillage() {
+    const statusEl = document.getElementById('save-village-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const newPhotoUrls = [];
+      for (const photo of pendingVillagePhotos) {
+        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add village photo`, token);
+        newPhotoUrls.push(`uploads/${photo.filename}`);
+      }
+      const intro = document.getElementById('v-intro').value.trim();
+      const history = document.getElementById('v-history').value.trim();
+      const aipan = document.getElementById('v-aipan').value.trim();
+      await PandeyGitHub.readModifyWriteJSON('data/village.json', (v) => {
+        v = v || { photos: [] };
+        return { intro, history, aipan, photos: [...(v.photos || []), ...newPhotoUrls] };
+      }, `Edit village page — by superadmin`, token);
+      pendingVillagePhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  const params = new URLSearchParams(location.search);
+  const preselect = params.get('person');
+  const preselectGen = params.get('generation');
+  if (preselect || preselectGen) {
     const observer = new MutationObserver(() => {
       if (!document.getElementById('editor-view').classList.contains('hidden')) {
-        switchTab('generations'); renderGenerationList(); observer.disconnect();
+        if (preselect) loadPersonForm(preselect);
+        else { switchTab('generations'); renderGenerationList(); }
+        observer.disconnect();
       }
     });
     observer.observe(document.getElementById('editor-view'), { attributes: true });
