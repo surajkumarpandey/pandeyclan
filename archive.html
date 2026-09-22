@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Family Archive — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .archive-hero {
+    background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%);
+    color: var(--paper-light); padding: 54px 0 46px;
+  }
+  .archive-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 32px; margin: 0 0 10px; }
+  .archive-hero p { max-width: 68ch; color: rgba(255,251,243,0.85); margin: 0; }
+  .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+  .archive-card { background: var(--paper-light); border: 1px solid var(--line); overflow: hidden; }
+  .archive-card img { width: 100%; height: 190px; object-fit: cover; }
+  .archive-card .body { padding: 18px 20px; }
+  .archive-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 18px; margin: 0 0 6px; }
+  .archive-card p { font-size: 14px; color: #5a3a2e; margin: 0; }
+  .empty-state { padding: 60px 0; text-align: center; color: #8a6a58; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="archive.html" class="active" data-i18n="nav.archive">Archive</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
+      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="archive-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1 data-i18n="archive.title">Family Archive</h1>
+    <p data-i18n="archive.lede">Things that don't belong to one person or one generation — old photographs, documents, objects, anything worth keeping. Add whatever you have from the Edit page.</p>
+  </div>
+</div>
+
+<div class="section wrap">
+  <div id="archive-grid" class="archive-grid"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="aipan-border"></div>
+  <div class="wrap">
+    <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
+    <span><a href="admin.html">Add something to the archive</a></span>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(async function () {
+  let items = [];
+  try {
+    const res = await fetch('data/archive.json?_=' + Date.now());
+    items = await res.json();
+  } catch (e) { items = []; }
+  items.sort((a, b) => new Date(b.addedAt || 0) - new Date(a.addedAt || 0));
+
+  const grid = document.getElementById('archive-grid');
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Nothing here yet. <a href="admin.html">Add the first item</a>.</div>`;
+    return;
+  }
+  grid.innerHTML = items.map(item => `
+    <div class="archive-card">
+      ${item.photos && item.photos.length ? `<img src="${item.photos[0]}" alt="${item.title || ''}">` : ''}
+      <div class="body">
+        <h3>${item.title || 'Untitled'}</h3>
+        <p>${item.description || ''}</p>
+      </div>
+    </div>
+  `).join('');
+})();
+</script>
+</body>
+</html>
