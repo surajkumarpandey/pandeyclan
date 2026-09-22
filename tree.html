@@ -145,10 +145,16 @@
 <script src="js/i18n.js"></script>
 <script>
 (async function () {
-  const [people, generations] = await Promise.all([
-    PandeyData.loadPeople(),
-    fetch('data/generations.json?_=' + Date.now()).then(r => r.json()).catch(() => [])
-  ]);
+  let people, generations;
+  try {
+    [people, generations] = await Promise.all([
+      PandeyData.loadPeople(),
+      fetch('data/generations.json?_=' + Date.now()).then(r => r.json()).catch(() => [])
+    ]);
+  } catch (e) {
+    showFatalError('Could not load the family tree: ' + e.message);
+    return;
+  }
   const genById = {};
   generations.forEach(g => { genById[g.generation] = g; });
 
