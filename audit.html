@@ -30,7 +30,6 @@
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" class="active" data-i18n="nav.audit">Changelog</a></li>
-      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
@@ -81,7 +80,7 @@
 
     const wrap = document.getElementById('table-wrap');
     if (!rows.length) {
-      wrap.innerHTML = `<div class="empty-state">No changes recorded yet. Once someone edits a person's details from the Edit page, it will show up here.</div>`;
+      wrap.innerHTML = `<div class="empty-state">No changes recorded yet. Once an edit is made, it will show up here.</div>`;
       return;
     }
     wrap.innerHTML = `
