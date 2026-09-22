@@ -941,7 +941,7 @@
   },
   {
     "id": "bholadutt",
-    "name": "Bhola Dutt",
+    "name": "Bhola Dutt Pandey",
     "gender": "M",
     "parentId": "laxmidutt",
     "generation": 16,
@@ -953,7 +953,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "taradutt",
