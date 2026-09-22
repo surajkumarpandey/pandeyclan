@@ -88,5 +88,14 @@
     "field": "birthYear",
     "oldValue": "",
     "newValue": "1990"
+  },
+  {
+    "timestamp": "2026-09-22T07:05:25.615Z",
+    "editorName": "pandey",
+    "personId": "suraj",
+    "personName": "Suraj",
+    "field": "bio",
+    "oldValue": "Data Scientist working at NGI.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)",
+    "newValue": "Data Scientist.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)"
   }
 ]
