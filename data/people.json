@@ -19,7 +19,7 @@
   },
   {
     "id": "shubhankar",
-    "name": "Shubhankar",
+    "name": "Shubhankar Pandey",
     "gender": "M",
     "parentId": "sukhdev",
     "generation": 2,
@@ -31,7 +31,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "gunankar",
