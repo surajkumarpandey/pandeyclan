@@ -7,10 +7,10 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   .box { max-width: 640px; margin: 48px auto; }
-  pre { background: var(--maroon-deep); color: #f4e6d8; padding: 16px; border-radius: var(--radius); overflow-x: auto; font-size: 13px; }
+  pre { background: var(--maroon-deep); color: #f4e6d8; padding: 16px; border-radius: var(--radius); overflow-x: auto; font-size: 13px; white-space: pre-wrap; word-break: break-all; }
   .warn { background: rgba(179,64,42,0.08); border: 1px solid var(--ochre); padding: 14px 18px; border-radius: var(--radius); font-size: 14px; margin-bottom: 24px; }
   .steps { counter-reset: step; list-style: none; padding: 0; margin: 0 0 28px; }
-  .steps li { counter-increment: step; padding-left: 34px; position: relative; margin-bottom: 12px; font-size: 15px; }
+  .steps li { counter-increment: step; padding-left: 34px; position: relative; margin-bottom: 14px; font-size: 15px; }
   .steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 22px; height: 22px; background: var(--ochre); color: #fff; border-radius: 50%; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
@@ -18,21 +18,20 @@
 <nav class="site-nav"><div class="wrap"><a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a></div></nav>
 <div class="section wrap box">
   <h1 class="section-title">Superuser setup</h1>
-  <p class="section-lede">You only do this once — to create your own superuser login. After that, you add and remove everyone else's passwords from inside the Edit page itself, no tokens involved.</p>
+  <p class="section-lede">One person, one password, done once. There's no invite system and no other roles — you're the only one who can change anything on the site, from this one login.</p>
 
   <div class="warn">This page isn't linked from the site's navigation on purpose. Keep the URL to yourself — you'll only need it this one time.</div>
 
   <ol class="steps">
     <li>On GitHub: <strong>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</strong>.</li>
     <li>Scope it to <strong>only this one repository</strong>, and grant <strong>only</strong> the "Contents: Read and write" permission. Nothing else.</li>
-    <li>Copy the token it gives you, paste it below, choose your own name and a password, and click Generate.</li>
-    <li>Paste the result into <code>data/access.json</code> (inside the <code>editors</code> array) and commit it.</li>
-    <li>You're done — go to <code>admin.html</code> and sign in with that password. You'll see a "Manage editors" tab where you can add everyone else, each with their own password, no tokens needed from here on.</li>
+    <li>Copy the token, paste it below with your own password, and click Generate.</li>
+    <li>Paste the result into <code>data/access.json</code> (inside the <code>editors</code> array), and commit it.</li>
+    <li>Go to <code>admin.html</code> — not linked anywhere in the site's navigation either — and sign in with that password.</li>
   </ol>
 
   <div class="field"><label>Your fine-grained GitHub token</label><input type="password" id="token-input" placeholder="Scoped to this repo, contents: read & write only"></div>
-  <div class="field"><label>Your name</label><input type="text" id="name-input" placeholder="e.g. Suraj"></div>
-  <div class="field"><label>Your superuser password</label><input type="text" id="password-input" placeholder="Something only you know"></div>
+  <div class="field"><label>Your password</label><input type="text" id="password-input" placeholder="Something only you know"></div>
   <button class="btn btn-gold" id="generate-btn">Generate superuser entry</button>
 
   <div id="result" class="hidden" style="margin-top:28px;">
@@ -46,11 +45,9 @@
 <script>
 document.getElementById('generate-btn').addEventListener('click', async () => {
   const token = document.getElementById('token-input').value.trim();
-  const name = document.getElementById('name-input').value.trim();
   const pw = document.getElementById('password-input').value;
   if (!token || !pw) { alert('Enter both the token and a password.'); return; }
   const entry = await PandeyCrypto.encryptToken(token, pw);
-  entry._label = name || undefined;
   entry.role = 'superuser';
   const out = JSON.stringify(entry, null, 2);
   document.getElementById('output').textContent = out;
