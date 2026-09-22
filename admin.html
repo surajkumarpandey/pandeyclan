@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .login-box { max-width: 420px; margin: 64px auto; }
+  .login-box .card { text-align: left; }
+  .status-msg { font-size: 14px; margin-top: 10px; }
+  .status-msg.error { color: #b5432f; }
+  .status-msg.ok { color: var(--pine); }
+  .editor-layout { display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: start; }
+  .person-list { max-height: 70vh; overflow-y: auto; background: var(--paper-light); border: 1px solid var(--line); }
+  .person-list input { border-radius: 0; border-bottom: 1px solid var(--line); }
+  .person-list ul { list-style: none; margin: 0; padding: 0; }
+  .person-list li a {
+    display: block; padding: 9px 14px; font-size: 14px; text-decoration: none; color: var(--ink);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .person-list li a:hover, .person-list li a.active { background: rgba(156,90,44,0.1); }
+  .person-list li.placeholder a { color: #8a8371; font-style: italic; }
+  .loc-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .loc-row input { flex: 1; }
+  .loc-row button { flex-shrink: 0; }
+  .photo-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .photo-grid .thumb { position: relative; width: 84px; height: 84px; }
+  .photo-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
+  .photo-grid .remove { position: absolute; top: -6px; right: -6px; background: var(--indigo); color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; line-height: 1; }
+  @media (max-width: 800px) { .editor-layout { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="map.html">Map &amp; Village</a></li>
+      <li><a href="audit.html">Changelog</a></li>
+      <li><a href="admin.html" class="active">Edit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="section wrap">
+
+  <div id="login-view" class="login-box">
+    <h1 class="section-title" style="text-align:center;">Sign in to edit</h1>
+    <div class="card">
+      <div class="field">
+        <label for="editor-name">Your name</label>
+        <input type="text" id="editor-name" placeholder="So changes are attributed to you">
+      </div>
+      <div class="field">
+        <label for="editor-password">Password</label>
+        <input type="password" id="editor-password" placeholder="Given to you by the admin">
+      </div>
+      <button class="btn btn-brass" id="login-btn" style="width:100%; justify-content:center;">Sign in</button>
+      <div id="login-status" class="status-msg"></div>
+    </div>
+  </div>
+
+  <div id="editor-view" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h1 class="section-title" style="margin:0;">Edit the record</h1>
+      <div>
+        <span class="muted" id="signed-in-as" style="margin-right:14px;"></span>
+        <button class="btn btn-outline-dark btn-sm" id="signout-btn">Sign out</button>
+      </div>
+    </div>
+
+    <div class="editor-layout">
+      <div class="person-list">
+        <input type="search" id="person-search" placeholder="Find a person…">
+        <ul id="person-ul"></ul>
+      </div>
+
+      <div id="form-area">
+        <p class="muted">Select someone from the list to edit their details.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/crypto.js"></script>
+<script src="js/github.js"></script>
+<script>
+(async function () {
+  const people = await PandeyData.loadPeople();
+  let token = null;
+  let editorName = '';
+  let peopleSha = null;
+  let currentPerson = null;
+
+  // ---------- Login ----------
+  document.getElementById('login-btn').addEventListener('click', async () => {
+    const name = document.getElementById('editor-name').value.trim();
+    const pw = document.getElementById('editor-password').value;
+    const statusEl = document.getElementById('login-status');
+    if (!name || !pw) { statusEl.textContent = 'Enter your name and password.'; statusEl.className = 'status-msg error'; return; }
+    statusEl.textContent = 'Checking…'; statusEl.className = 'status-msg';
+
+    try {
+      const accessRes = await fetch('data/access.json?_=' + Date.now());
+      const access = await accessRes.json();
+      let found = null;
+      for (const entry of access.editors || []) {
+        const t = await PandeyCrypto.decryptToken(entry, pw);
+        if (t) { found = t; break; }
+      }
+      if (!found) { statusEl.textContent = 'Incorrect password.'; statusEl.className = 'status-msg error'; return; }
+      const works = await PandeyGitHub.verifyToken(found);
+      if (!works) { statusEl.textContent = 'This password decrypted a token, but it no longer works — ask the admin to reissue it.'; statusEl.className = 'status-msg error'; return; }
+
+      token = found;
+      editorName = name;
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('editor-view').classList.remove('hidden');
+      document.getElementById('signed-in-as').textContent = `Signed in as ${name}`;
+      renderPersonList();
+    } catch (e) {
+      statusEl.textContent = 'Could not reach GitHub. Check your connection and try again.';
+      statusEl.className = 'status-msg error';
+    }
+  });
+
+  document.getElementById('signout-btn').addEventListener('click', () => location.reload());
+
+  // ---------- Person list ----------
+  function renderPersonList(filter = '') {
+    const ul = document.getElementById('person-ul');
+    const q = filter.trim().toLowerCase();
+    const sorted = [...people].sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+    ul.innerHTML = sorted
+      .filter(p => !q || PandeyData.displayName(p).toLowerCase().includes(q))
+      .map(p => `<li class="${p.unnamedPlaceholder ? 'placeholder' : ''}"><a href="#" data-id="${p.id}">${PandeyData.displayName(p)}</a></li>`)
+      .join('');
+    ul.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        loadPersonForm(a.dataset.id);
+      });
+    });
+  }
+  document.getElementById('person-search').addEventListener('input', (e) => renderPersonList(e.target.value));
+
+  // open directly to a person if ?person=id was passed from the tree page
+  const params = new URLSearchParams(location.search);
+  const preselect = params.get('person');
+
+  // ---------- Edit form ----------
+  let pendingPhotos = []; // {dataUrl, filename}
+
+  function loadPersonForm(id) {
+    currentPerson = people.find(p => p.id === id);
+    pendingPhotos = [];
+    const p = currentPerson;
+    const area = document.getElementById('form-area');
+    const pastLocRows = (p.pastLocations || []).map((l, idx) => locRow(l.place, l.year, idx)).join('');
+    area.innerHTML = `
+      <h2 style="font-family:var(--font-display); font-weight:500; font-size:24px; margin:0 0 4px;">${PandeyData.displayName(p)}</h2>
+      <p class="muted" style="margin:0 0 24px;">${PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ')}</p>
+
+      <div class="field"><label>Full name</label><input type="text" id="f-name" value="${p.unnamedPlaceholder ? '' : (p.name || '')}" placeholder="${p.unnamedPlaceholder ? 'Add their real name if known' : ''}"></div>
+      <div class="field"><label>Occupation</label><input type="text" id="f-occupation" value="${p.occupation || ''}"></div>
+      <div class="field"><label>Birth year</label><input type="text" id="f-birthyear" value="${p.birthYear || ''}"></div>
+      <div class="field"><label>Current location</label><input type="text" id="f-currentloc" value="${p.currentLocation || ''}"></div>
+
+      <div class="field">
+        <label>Past locations</label>
+        <div id="loc-rows">${pastLocRows}</div>
+        <button type="button" class="btn btn-outline-dark btn-sm" id="add-loc">+ Add a place</button>
+      </div>
+
+      <div class="field"><label>Notes / short bio</label><textarea id="f-bio">${p.bio || ''}</textarea></div>
+
+      <div class="field">
+        <label>Photos</label>
+        <div class="photo-grid" id="photo-grid">${(p.photos || []).map(src => existingThumb(src)).join('')}</div>
+        <input type="file" id="photo-input" accept="image/*" multiple style="margin-top:10px;">
+        <p class="muted" style="font-size:12.5px; margin-top:6px;">Images are resized to fit the web before uploading.</p>
+      </div>
+
+      <button class="btn btn-brass" id="save-btn">Save changes</button>
+      <span id="save-status" class="status-msg"></span>
+    `;
+
+    document.getElementById('add-loc').addEventListener('click', () => {
+      document.getElementById('loc-rows').insertAdjacentHTML('beforeend', locRow('', '', Date.now()));
+      wireLocRemovers();
+    });
+    wireLocRemovers();
+
+    document.getElementById('photo-input').addEventListener('change', handlePhotoSelect);
+    document.getElementById('save-btn').addEventListener('click', savePerson);
+  }
+
+  function locRow(place, year, idx) {
+    return `<div class="loc-row" data-idx="${idx}">
+      <input type="text" class="loc-place" placeholder="Place" value="${place || ''}">
+      <input type="text" class="loc-year" placeholder="Year" value="${year || ''}" style="max-width:90px;">
+      <button type="button" class="btn btn-outline-dark btn-sm remove-loc">&times;</button>
+    </div>`;
+  }
+  function wireLocRemovers() {
+    document.querySelectorAll('.remove-loc').forEach(btn => {
+      btn.onclick = () => btn.closest('.loc-row').remove();
+    });
+  }
+  function existingThumb(src) {
+    return `<div class="thumb"><img src="${src}"><button class="remove" data-src="${src}">&times;</button></div>`;
+  }
+
+  function handlePhotoSelect(e) {
+    [...e.target.files].forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            const scale = maxDim / Math.max(width, height);
+            width *= scale; height *= scale;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const filename = `${currentPerson.id}_${Date.now()}.jpg`;
+          pendingPhotos.push({ dataUrl, filename });
+          document.getElementById('photo-grid').insertAdjacentHTML('beforeend',
+            `<div class="thumb"><img src="${dataUrl}"><button class="remove" data-pending="${filename}">&times;</button></div>`);
+          wirePhotoRemovers();
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  function wirePhotoRemovers() {
+    document.querySelectorAll('#photo-grid .remove').forEach(btn => {
+      btn.onclick = () => {
+        if (btn.dataset.pending) pendingPhotos = pendingPhotos.filter(p => p.filename !== btn.dataset.pending);
+        btn.closest('.thumb').remove();
+      };
+    });
+  }
+  wirePhotoRemovers();
+
+  // ---------- Save ----------
+  async function savePerson() {
+    const statusEl = document.getElementById('save-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      // 1. Read latest people.json to avoid clobbering someone else's concurrent edit
+      const { content, sha } = await PandeyGitHub.getFile('data/people.json', token);
+      const latestPeople = JSON.parse(content);
+      const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
+      const before = { ...latestPeople[idx] };
+
+      // 2. Upload any new photos first, collecting their repo paths
+      const newPhotoUrls = [];
+      for (const photo of pendingPhotos) {
+        const base64 = photo.dataUrl.split(',')[1];
+        const path = `uploads/${photo.filename}`;
+        await PandeyGitHub.putFileRaw(path, base64, `Add photo for ${before.name || before.id}`, token);
+        newPhotoUrls.push(path);
+      }
+
+      // 3. Build updated person object from the form
+      const nameVal = document.getElementById('f-name').value.trim();
+      const updated = {
+        ...latestPeople[idx],
+        name: nameVal || latestPeople[idx].name,
+        unnamedPlaceholder: nameVal ? false : latestPeople[idx].unnamedPlaceholder,
+        occupation: document.getElementById('f-occupation').value.trim() || null,
+        birthYear: document.getElementById('f-birthyear').value.trim() || null,
+        currentLocation: document.getElementById('f-currentloc').value.trim() || null,
+        bio: document.getElementById('f-bio').value.trim(),
+        pastLocations: [...document.querySelectorAll('#loc-rows .loc-row')].map(row => ({
+          place: row.querySelector('.loc-place').value.trim(),
+          year: row.querySelector('.loc-year').value.trim()
+        })).filter(l => l.place),
+        photos: [...(latestPeople[idx].photos || []), ...newPhotoUrls]
+      };
+      latestPeople[idx] = updated;
+
+      // 4. Write updated people.json
+      await PandeyGitHub.putFile(
+        'data/people.json', JSON.stringify(latestPeople, null, 2),
+        `Edit ${updated.name || updated.id} — by ${editorName}`, token, sha
+      );
+
+      // 5. Append structured audit entries for each changed field
+      const diffs = diffFields(before, updated);
+      if (diffs.length) {
+        const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
+        const log = auditRes.content ? JSON.parse(auditRes.content) : [];
+        diffs.forEach(d => log.push({
+          timestamp: new Date().toISOString(),
+          editorName,
+          personId: updated.id,
+          personName: updated.name,
+          field: d.field,
+          oldValue: d.oldValue,
+          newValue: d.newValue
+        }));
+        await PandeyGitHub.putFile(
+          'data/audit-log.json', JSON.stringify(log, null, 2),
+          `Log edit to ${updated.name || updated.id} by ${editorName}`, token, auditRes.sha
+        );
+      }
+
+      people[people.findIndex(p => p.id === updated.id)] = updated;
+      pendingPhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message;
+      statusEl.className = 'status-msg error';
+    }
+  }
+
+  function diffFields(before, after) {
+    const fields = ['name', 'occupation', 'birthYear', 'currentLocation', 'bio'];
+    const out = [];
+    fields.forEach(f => {
+      const a = before[f] ?? ''; const b = after[f] ?? '';
+      if (String(a) !== String(b)) out.push({ field: f, oldValue: a, newValue: b });
+    });
+    const beforeLoc = JSON.stringify(before.pastLocations || []);
+    const afterLoc = JSON.stringify(after.pastLocations || []);
+    if (beforeLoc !== afterLoc) out.push({ field: 'pastLocations', oldValue: beforeLoc, newValue: afterLoc });
+    if ((after.photos || []).length !== (before.photos || []).length) {
+      out.push({ field: 'photos', oldValue: `${(before.photos||[]).length} photo(s)`, newValue: `${(after.photos||[]).length} photo(s)` });
+    }
+    return out;
+  }
+
+  if (preselect) {
+    // will be picked up once signed in
+    const observer = new MutationObserver(() => {
+      if (!document.getElementById('editor-view').classList.contains('hidden')) {
+        loadPersonForm(preselect);
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.getElementById('editor-view'), { attributes: true });
+  }
+})();
+</script>
+</body>
+</html>

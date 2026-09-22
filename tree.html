@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Family Tree — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  .tree-toolbar {
+    background: var(--paper-light);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+    position: sticky; top: 0; z-index: 5;
+  }
+  .tree-toolbar .wrap { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .tree-toolbar input[type=search] { max-width: 320px; }
+  .tree-stage {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 64px - 68px);
+    min-height: 500px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(35,44,61,0.05), transparent 60%),
+      var(--paper);
+  }
+  #tree-svg { width: 100%; height: 100%; cursor: grab; }
+  #tree-svg:active { cursor: grabbing; }
+  .link { fill: none; stroke: var(--line); stroke-width: 1.5px; }
+  .node circle {
+    stroke-width: 2px;
+    cursor: pointer;
+  }
+  .node text {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    fill: var(--ink);
+    pointer-events: none;
+  }
+  .node.placeholder text { fill: #8a8371; font-style: italic; }
+  .node.highlight circle { stroke: var(--brass); stroke-width: 3px; }
+
+  .panel {
+    position: absolute;
+    top: 0; right: 0;
+    width: 340px;
+    max-width: 88vw;
+    height: 100%;
+    background: var(--paper-light);
+    border-left: 1px solid var(--line);
+    box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+    padding: 24px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform .2s ease;
+  }
+  .panel.open { transform: translateX(0); }
+  .panel .close-btn {
+    position: absolute; top: 14px; right: 14px;
+    background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ink);
+  }
+  .panel h2 { font-family: var(--font-display); font-weight: 500; font-size: 24px; margin: 4px 0 6px; }
+  .panel .chain { font-size: 13px; color: #6b6656; margin-bottom: 18px; }
+  .panel dl { margin: 0; }
+  .panel dt { font-size: 12px; font-weight: 600; color: #6b6656; margin-top: 14px; }
+  .panel dd { margin: 3px 0 0; }
+  .panel .photos { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .panel .photos img { width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
+
+  .legend { font-size: 13px; color: #6b6656; display: flex; gap: 18px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tree.html" class="active">Family Tree</a></li>
+      <li><a href="map.html">Map &amp; Village</a></li>
+      <li><a href="audit.html">Changelog</a></li>
+      <li><a href="admin.html">Edit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="tree-toolbar">
+  <div class="wrap">
+    <input type="search" id="search-box" placeholder="Search a name…" aria-label="Search the family tree">
+    <span class="legend">
+      <span><i style="background:var(--indigo)"></i> named</span>
+      <span><i style="background:#c9bd9f"></i> unnamed / placeholder</span>
+    </span>
+    <span class="muted" style="font-size:13px; margin-left:auto;">Click a node to expand it. Click the name for details.</span>
+  </div>
+</div>
+
+<div class="tree-stage">
+  <svg id="tree-svg"></svg>
+  <aside class="panel" id="panel">
+    <button class="close-btn" id="panel-close" aria-label="Close">&times;</button>
+    <div id="panel-body"></div>
+  </aside>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+(async function () {
+  const people = await PandeyData.loadPeople();
+  const byId = PandeyData.byId(people);
+
+  // Build a hierarchy usable by d3.hierarchy: find roots (parentId null)
+  function buildNode(p) {
+    return {
+      id: p.id,
+      data: p,
+      children: people.filter(c => c.parentId === p.id).map(buildNode)
+    };
+  }
+  const roots = people.filter(p => !p.parentId).map(buildNode);
+  const virtualRoot = { id: '__root__', data: { name: 'Sukhdev\'s Line' }, children: roots };
+
+  const svg = d3.select('#tree-svg');
+  const g = svg.append('g');
+
+  const zoom = d3.zoom().scaleExtent([0.3, 2.5]).on('zoom', (event) => {
+    g.attr('transform', event.transform);
+  });
+  svg.call(zoom);
+
+  const root = d3.hierarchy(virtualRoot, d => d.children);
+  root.x0 = 0;
+  root.y0 = 0;
+
+  // collapse everything beyond depth 2 initially so the first paint is legible
+  root.descendants().forEach(d => {
+    if (d.depth > 2 && d.children) {
+      d._children = d.children;
+      d.children = null;
+    }
+  });
+
+  const nodeHeight = 26;
+  const levelWidth = 170;
+  const treeLayout = d3.tree().nodeSize([nodeHeight, levelWidth]);
+
+  let i = 0;
+
+  function color(d) {
+    if (d.data.id === '__root__') return 'var(--indigo)';
+    return d.data.data && d.data.data.unnamedPlaceholder ? '#c9bd9f' : 'var(--indigo)';
+  }
+
+  function update(source) {
+    treeLayout(root);
+    const nodes = root.descendants();
+    const links = root.links();
+
+    let minX = Infinity, maxX = -Infinity;
+    nodes.forEach(d => { minX = Math.min(minX, d.x); maxX = Math.max(maxX, d.x); });
+
+    const node = g.selectAll('g.node').data(nodes, d => d.id || (d.id = ++i));
+
+    const nodeEnter = node.enter().append('g')
+      .attr('class', d => 'node' + (d.data.data && d.data.data.unnamedPlaceholder ? ' placeholder' : ''))
+      .attr('transform', () => `translate(${source.y0},${source.x0})`)
+      .on('click', (event, d) => {
+        if (d.children || d._children) {
+          if (d.children) { d._children = d.children; d.children = null; }
+          else { d.children = d._children; d._children = null; }
+          update(d);
+        }
+      });
+
+    nodeEnter.append('circle')
+      .attr('r', 5)
+      .attr('fill', d => d._children ? color(d) : 'var(--paper)')
+      .attr('stroke', d => color(d));
+
+    nodeEnter.append('text')
+      .attr('dy', 4)
+      .attr('x', d => d.children || d._children ? -10 : 10)
+      .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
+      .text(d => d.data.id === '__root__' ? '' : PandeyData.displayName(d.data.data))
+      .on('click', (event, d) => {
+        event.stopPropagation();
+        if (d.data.id !== '__root__') openPanel(d.data.data);
+      });
+
+    const nodeUpdate = nodeEnter.merge(node);
+    nodeUpdate.transition().duration(180)
+      .attr('transform', d => `translate(${d.y},${d.x})`);
+    nodeUpdate.select('circle')
+      .attr('fill', d => d._children ? color(d) : 'var(--paper)')
+      .attr('stroke', d => color(d));
+
+    node.exit().transition().duration(120)
+      .attr('transform', () => `translate(${source.y},${source.x})`)
+      .remove();
+
+    const link = g.selectAll('path.link').data(links, d => d.target.id);
+    const linkEnter = link.enter().insert('path', 'g')
+      .attr('class', 'link')
+      .attr('d', () => {
+        const o = { x: source.x0, y: source.y0 };
+        return diagonal(o, o);
+      });
+    linkEnter.merge(link).transition().duration(180)
+      .attr('d', d => diagonal(d.source, d.target));
+    link.exit().remove();
+
+    nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+  }
+
+  function diagonal(s, t) {
+    return `M${s.y},${s.x} C${(s.y+t.y)/2},${s.x} ${(s.y+t.y)/2},${t.x} ${t.y},${t.x}`;
+  }
+
+  update(root);
+
+  // center the initial view
+  const stage = document.querySelector('.tree-stage');
+  svg.call(zoom.transform, d3.zoomIdentity.translate(70, stage.clientHeight / 2).scale(0.9));
+
+  // ---------- Detail panel ----------
+  const panel = document.getElementById('panel');
+  const panelBody = document.getElementById('panel-body');
+  document.getElementById('panel-close').addEventListener('click', () => panel.classList.remove('open'));
+
+  function openPanel(p) {
+    const chain = PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ');
+    const photos = (p.photos || []).map(src => `<img src="${src}" alt="">`).join('');
+    const pastLoc = (p.pastLocations || []).map(l => `${l.place}${l.year ? ' (' + l.year + ')' : ''}`).join(', ');
+    panelBody.innerHTML = `
+      <h2>${PandeyData.displayName(p)}</h2>
+      <div class="chain">${chain}</div>
+      ${p.unnamedPlaceholder ? '<span class="badge badge-placeholder">Name not recorded</span>' : ''}
+      <dl>
+        ${p.occupation ? `<dt>Occupation</dt><dd>${p.occupation}</dd>` : ''}
+        ${p.birthYear ? `<dt>Born</dt><dd>${p.birthYear}</dd>` : ''}
+        ${p.currentLocation ? `<dt>Current location</dt><dd>${p.currentLocation}</dd>` : ''}
+        ${pastLoc ? `<dt>Past locations</dt><dd>${pastLoc}</dd>` : ''}
+        ${p.bio ? `<dt>Notes</dt><dd>${p.bio}</dd>` : ''}
+        ${p.notes ? `<dt>Chart notes</dt><dd class="muted">${p.notes}</dd>` : ''}
+      </dl>
+      ${photos ? `<dt style="font-size:12px;font-weight:600;color:#6b6656;margin-top:14px;">Photos</dt><div class="photos">${photos}</div>` : ''}
+      <p style="margin-top:22px;"><a class="btn btn-outline-dark btn-sm" href="admin.html?person=${p.id}">Add details for this person</a></p>
+    `;
+    panel.classList.add('open');
+  }
+
+  // ---------- Search ----------
+  document.getElementById('search-box').addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    g.selectAll('g.node').classed('highlight', false);
+    if (!q) return;
+    const match = people.find(p => !p.unnamedPlaceholder && p.name.toLowerCase().includes(q));
+    if (!match) return;
+    // expand ancestors so the node is visible
+    const chain = PandeyData.ancestorChain(people, match.id);
+    chain.forEach(anc => {
+      root.descendants().forEach(d => {
+        if (d.data.id === anc.id && d._children) {
+          d.children = d._children; d._children = null;
+        }
+      });
+    });
+    update(root);
+    setTimeout(() => {
+      const target = root.descendants().find(d => d.data.id === match.id);
+      if (target) {
+        svg.transition().duration(300).call(
+          zoom.transform,
+          d3.zoomIdentity.translate(stage.clientWidth/2 - target.y, stage.clientHeight/2 - target.x).scale(1)
+        );
+        g.selectAll('g.node').filter(d => d.data.id === match.id).classed('highlight', true);
+      }
+    }, 200);
+  });
+})();
+</script>
+</body>
+</html>

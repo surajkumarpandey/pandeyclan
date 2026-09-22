@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changelog — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filters input, .filters select { max-width: 220px; }
+  table { width: 100%; border-collapse: collapse; background: var(--paper-light); border: 1px solid var(--line); }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; }
+  th { font-family: var(--font-body); font-weight: 600; color: #4a4738; background: rgba(35,44,61,0.03); }
+  tr:last-child td { border-bottom: none; }
+  .diff-old { color: #b5432f; text-decoration: line-through; }
+  .diff-new { color: var(--pine); font-weight: 600; }
+  .empty-state { padding: 60px 0; text-align: center; color: #6b6656; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="map.html">Map &amp; Village</a></li>
+      <li><a href="audit.html" class="active">Changelog</a></li>
+      <li><a href="admin.html">Edit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="section wrap">
+  <h1 class="section-title">Changelog</h1>
+  <p class="section-lede">Every edit made to this record, in one place — who changed what, and when.</p>
+
+  <div class="filters">
+    <input type="search" id="f-search" placeholder="Search person, editor, or field…">
+    <select id="f-editor"><option value="">All editors</option></select>
+  </div>
+
+  <div id="table-wrap"></div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+(async function () {
+  let entries = [];
+  try {
+    const res = await fetch('data/audit-log.json?_=' + Date.now());
+    entries = await res.json();
+  } catch (e) { entries = []; }
+  entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  const editorSelect = document.getElementById('f-editor');
+  [...new Set(entries.map(e => e.editorName))].sort().forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    editorSelect.appendChild(opt);
+  });
+
+  function render() {
+    const q = document.getElementById('f-search').value.trim().toLowerCase();
+    const editorFilter = editorSelect.value;
+    const rows = entries.filter(e => {
+      if (editorFilter && e.editorName !== editorFilter) return false;
+      if (!q) return true;
+      return [e.personName, e.editorName, e.field].some(v => (v || '').toLowerCase().includes(q));
+    });
+
+    const wrap = document.getElementById('table-wrap');
+    if (!rows.length) {
+      wrap.innerHTML = `<div class="empty-state">No changes recorded yet. Once someone edits a person's details from the Edit page, it will show up here.</div>`;
+      return;
+    }
+    wrap.innerHTML = `
+      <table>
+        <thead><tr><th>When</th><th>Who</th><th>Person</th><th>Field</th><th>Change</th></tr></thead>
+        <tbody>
+          ${rows.map(e => `
+            <tr>
+              <td>${new Date(e.timestamp).toLocaleString()}</td>
+              <td>${e.editorName || 'Unknown'}</td>
+              <td>${e.personName || e.personId || ''}</td>
+              <td>${e.field || ''}</td>
+              <td><span class="diff-old">${escapeHtml(e.oldValue ?? '(empty)')}</span> &rarr; <span class="diff-new">${escapeHtml(e.newValue ?? '(empty)')}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  document.getElementById('f-search').addEventListener('input', render);
+  editorSelect.addEventListener('change', render);
+  render();
+})();
+</script>
+</body>
+</html>

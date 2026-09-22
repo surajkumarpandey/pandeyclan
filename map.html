@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map &amp; Village — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  .village-strip {
+    background: var(--indigo);
+    color: var(--paper-light);
+    padding: 44px 0;
+  }
+  .village-strip h1 { font-family: var(--font-display); font-weight: 500; font-size: 32px; margin: 0 0 10px; }
+  .village-strip p { max-width: 68ch; color: rgba(246,242,232,0.82); margin: 0; }
+  .village-strip a { color: var(--brass-light); }
+  #map { width: 100%; height: 68vh; min-height: 420px; }
+  .map-note {
+    background: var(--paper-light);
+    border-top: 1px solid var(--line);
+    padding: 14px 0;
+    font-size: 13.5px;
+    color: #6b6656;
+  }
+  .leaflet-popup-content { font-family: var(--font-body); font-size: 14px; }
+  .leaflet-popup-content b { font-family: var(--font-display); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="tree.html">Family Tree</a></li>
+      <li><a href="map.html" class="active">Map &amp; Village</a></li>
+      <li><a href="audit.html">Changelog</a></li>
+      <li><a href="admin.html">Edit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="village-strip">
+  <div class="wrap">
+    <h1>Bairati, Almora — the ancestral village</h1>
+    <p>Set in the Kumaon Himalayas of Uttarakhand, once part of the Katyuri and later Chand kingdoms. <a href="https://maps.app.goo.gl/AtZsa3H4NLkJ7oMK9?g_st=ic" target="_blank" rel="noopener">Open in Google Maps</a>. Every other pin below is a place the family has since lived or moved to — add yours from the Edit page.</p>
+  </div>
+</div>
+
+<div id="map"></div>
+<div class="map-note wrap">
+  Locations are approximate, generated from place names. If a pin looks wrong, correct the person's location from the Edit page and it will update here.
+</div>
+
+<script src="js/common.js"></script>
+<script>
+(async function () {
+  const people = await PandeyData.loadPeople();
+  const map = L.map('map').setView([29.62, 79.62], 8); // roughly centered on Almora district
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const brassIcon = L.divIcon({
+    className: '',
+    html: '<div style="width:16px;height:16px;border-radius:50%;background:#9c5a2c;border:2px solid #f6f2e8;box-shadow:0 0 0 1px #9c5a2c;"></div>',
+    iconSize: [16, 16], iconAnchor: [8, 8]
+  });
+  const indigoIcon = L.divIcon({
+    className: '',
+    html: '<div style="width:12px;height:12px;border-radius:50%;background:#232c3d;border:2px solid #f6f2e8;"></div>',
+    iconSize: [12, 12], iconAnchor: [6, 6]
+  });
+
+  // Bairati, Almora — approximate coordinate. If you have the exact
+  // point from the shared Google Maps pin, update lat/lng below.
+  const BAIRATI = { lat: 29.596, lng: 79.665, label: 'Bairati, Almora — ancestral village' };
+  L.marker([BAIRATI.lat, BAIRATI.lng], { icon: brassIcon }).addTo(map)
+    .bindPopup(`<b>${BAIRATI.label}</b>`);
+
+  // ---------- Collect place names from people.json ----------
+  const placeToPeople = {}; // place string -> [names]
+  people.forEach(p => {
+    if (p.currentLocation) {
+      (placeToPeople[p.currentLocation] ||= []).push(PandeyData.displayName(p) + ' (current)');
+    }
+    (p.pastLocations || []).forEach(l => {
+      if (l.place) (placeToPeople[l.place] ||= []).push(PandeyData.displayName(p) + (l.year ? ` (${l.year})` : ' (past)'));
+    });
+  });
+  const places = Object.keys(placeToPeople);
+
+  // ---------- Geocode via Nominatim, one at a time, with local caching ----------
+  const CACHE_KEY = 'pandey_geocode_cache_v1';
+  const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+
+  async function geocode(place) {
+    if (cache[place]) return cache[place];
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(place)}`,
+        { headers: { 'Accept-Language': 'en' } }
+      );
+      const data = await res.json();
+      const result = data[0] ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
+      cache[place] = result;
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+      return result;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  for (const place of places) {
+    const coords = await geocode(place);
+    if (coords) {
+      L.marker([coords.lat, coords.lng], { icon: indigoIcon }).addTo(map)
+        .bindPopup(`<b>${place}</b><br>${placeToPeople[place].join('<br>')}`);
+    }
+    await new Promise(r => setTimeout(r, 1100)); // respect Nominatim's 1 req/sec limit
+  }
+})();
+</script>
+</body>
+</html>
