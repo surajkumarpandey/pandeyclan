@@ -7,5 +7,23 @@
     "field": "removed",
     "oldValue": "Son",
     "newValue": "(removed)"
+  },
+  {
+    "timestamp": "2026-09-22T06:38:50.650Z",
+    "editorName": "suraj",
+    "personId": "suraj",
+    "personName": "Suraj",
+    "field": "bio",
+    "oldValue": "",
+    "newValue": "Data Scientist working at NGI.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)"
+  },
+  {
+    "timestamp": "2026-09-22T06:38:50.650Z",
+    "editorName": "suraj",
+    "personId": "suraj",
+    "personName": "Suraj",
+    "field": "locations",
+    "oldValue": "12 place(s)",
+    "newValue": "12 place(s)"
   }
 ]
