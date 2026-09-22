@@ -109,7 +109,7 @@ the site's own **Bairati Village** page (`village.html`). Short version:
 
 - **bhulekh.uk.gov.in** — जनपद अल्मोड़ा, तहसील चौखुटिया, ग्राम बैरती.
 - Search by *khatedar ka naam* (owner's name), ideally in Hindi — try the
-  earliest ancestor first (Sukhdev Ji or one of his sons), since land records
+  earliest ancestor first (Sukhdev or one of his sons), since land records
   often still list an earlier generation as the registered holder.
 - **bhunaksha.uk.gov.in** shows plot boundaries once you have a khasra number.
 - This is CAPTCHA-gated with no public API, so it's a manual visit, not
