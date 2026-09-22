@@ -34,7 +34,6 @@
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
       <li><a href="archive.html" class="active" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
-      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
@@ -44,7 +43,7 @@
   <div class="aipan-border" style="margin-bottom:22px;"></div>
   <div class="wrap">
     <h1 data-i18n="archive.title">Family Archive</h1>
-    <p data-i18n="archive.lede">Things that don't belong to one person or one generation — old photographs, documents, objects, anything worth keeping. Add whatever you have from the Edit page.</p>
+    <p data-i18n="archive.lede">Things that don't belong to one person or one generation — old photographs, documents, objects, anything worth keeping.</p>
   </div>
 </div>
 
@@ -56,7 +55,6 @@
   <div class="aipan-border"></div>
   <div class="wrap">
     <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
-    <span><a href="admin.html">Add something to the archive</a></span>
   </div>
 </footer>
 
@@ -73,7 +71,7 @@
 
   const grid = document.getElementById('archive-grid');
   if (!items.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Nothing here yet. <a href="admin.html">Add the first item</a>.</div>`;
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Nothing here yet.</div>`;
     return;
   }
   grid.innerHTML = items.map(item => `
