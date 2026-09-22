@@ -1792,10 +1792,12 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "birthYear": null,
+    "birthYear": "2024",
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/mrityunjay_1790060014223.jpg"
+    ],
     "bio": "",
     "occupation": null
   }
