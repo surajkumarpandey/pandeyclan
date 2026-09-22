@@ -511,7 +511,7 @@
   },
   {
     "id": "devidutt_small",
-    "name": "Devi Dutt",
+    "name": "Devidutt Pandey",
     "gender": "M",
     "parentId": "shibu",
     "generation": 12,
@@ -523,7 +523,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "devidutt_small_daughter_6",
