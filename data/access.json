@@ -1,3 +1,9 @@
 {
-  "editors": []
+  "editors": [{
+  "salt": "e+1Wea5BAu+MYqWuCFl1LQ==",
+  "iv": "jshG4QsrX6lhdTFL",
+  "cipher": "6PvxLQumKFJbed1He0EguQXlUE9/17/esGx3mS+xjYlSlt8zJihY4+6cdL61aCnehHzHSPrTvRDYV4pHuAZ60HuCRiHiyNLWk72FNUdB1lLmxPw5mrA6MomJ1SX2hP5KlISrOP7MD0QaKBxZiQ==",
+  "_label": "suraj",
+  "role": "superuser"
+}]
 }
