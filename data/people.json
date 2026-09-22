@@ -1066,14 +1066,14 @@
     "photos": [
       "uploads/suraj_pandey.jpg"
     ],
-    "bio": "",
+    "bio": "Data Scientist working at NGI.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)",
     "occupation": null,
     "locations": [
       {
         "place": "Bairati, Almora",
         "type": "origin",
         "year": null,
-        "note": "Ancestral village"
+        "note": null
       },
       {
         "place": "Delhi",
