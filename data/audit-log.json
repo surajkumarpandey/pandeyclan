@@ -25,5 +25,23 @@
     "field": "locations",
     "oldValue": "12 place(s)",
     "newValue": "12 place(s)"
+  },
+  {
+    "timestamp": "2026-09-22T06:52:06.467Z",
+    "editorName": "suraj",
+    "personId": "suraj",
+    "personName": "Suraj",
+    "field": "occupation",
+    "oldValue": "",
+    "newValue": "Data Scientist"
+  },
+  {
+    "timestamp": "2026-09-22T06:52:06.467Z",
+    "editorName": "suraj",
+    "personId": "suraj",
+    "personName": "Suraj",
+    "field": "birthYear",
+    "oldValue": "",
+    "newValue": "1992"
   }
 ]
