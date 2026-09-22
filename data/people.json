@@ -251,7 +251,7 @@
   },
   {
     "id": "anrjunjyu",
-    "name": "Anrjunjyu",
+    "name": "Arjunjyu Pandey",
     "gender": "M",
     "parentId": "danjyu",
     "generation": 7,
@@ -263,7 +263,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "deepu",
