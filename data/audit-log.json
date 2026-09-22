@@ -97,5 +97,23 @@
     "field": "bio",
     "oldValue": "Data Scientist working at NGI.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)",
     "newValue": "Data Scientist.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)"
+  },
+  {
+    "timestamp": "2026-09-22T12:51:37.375Z",
+    "editorName": "suraj",
+    "personId": "taradutt",
+    "personName": "Tara Dutt",
+    "field": "occupation",
+    "oldValue": "",
+    "newValue": "Ex Army, Farmer"
+  },
+  {
+    "timestamp": "2026-09-22T12:51:37.375Z",
+    "editorName": "suraj",
+    "personId": "taradutt",
+    "personName": "Tara Dutt",
+    "field": "photos",
+    "oldValue": "0 photo(s)",
+    "newValue": "1 photo(s)"
   }
 ]
