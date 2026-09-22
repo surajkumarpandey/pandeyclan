@@ -13,6 +13,13 @@
       "cipher": "/kKj5KxVzUObBiRU2uZ6UCNIqtVb1Po4ZUvB80mmrYLpo1/yoeip3iO6oZAxf3f4Q4nhyWaMo7TDPxsmLg+a7+Cd3P+hXvC7/JLxl257VNVKjPevjH3nP5oP70h3oqeNDVrZ3ldn2Ja9HaP/aw==",
       "_label": "pandey",
       "role": "editor"
+    },
+    {
+      "salt": "+zFPfeRUi4OmvjgR0MUw7g==",
+      "iv": "KWocgNalXO/o8sS2",
+      "cipher": "qIIfa+ELzuFG5vm79G3utpb2Dc/A78obvEKkVEIdnjKdApB0xUENW08ZPxg04ABORNzmbgOWwcoEcfXTPj1NIPOtG3x74OpoHtOELMgmR+cGME7Mq18Z48vjDszt5yoddjFWSaectEDPE8VcCg==",
+      "_label": "pandey",
+      "role": "editor"
     }
   ]
 }
