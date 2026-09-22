@@ -1055,12 +1055,13 @@
   {
     "id": "suraj",
     "name": "Suraj",
+    "fullName": "Suraj Kumar Pandey"
     "gender": "M",
     "parentId": "ashok",
     "generation": 13,
     "tree": "A",
     "unnamedPlaceholder": false,
-    "notes": "Suraj Kumar Pandey",
+    "notes": "null",
     "birthYear": "1992",
     "deathYear": null,
     "photos": [
