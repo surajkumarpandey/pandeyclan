@@ -248,11 +248,6 @@
     const statusEl = document.getElementById('save-gen-status');
     statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
     try {
-      const { content, sha } = await PandeyGitHub.getFile('data/generations.json', token);
-      const gens = content ? JSON.parse(content) : [];
-      const idx = gens.findIndex(g => g.generation === currentGeneration.generation);
-      const before = idx >= 0 ? { ...gens[idx] } : { title: '', description: '', photos: [] };
-
       const newPhotoUrls = [];
       for (const photo of pendingGenPhotos) {
         const base64 = photo.dataUrl.split(',')[1];
@@ -260,25 +255,33 @@
         await PandeyGitHub.putFileRaw(path, base64, `Add photo for Generation ${currentGeneration.generation}`, token);
         newPhotoUrls.push(path);
       }
+      const titleVal = document.getElementById('g-title').value.trim();
+      const descVal = document.getElementById('g-description').value.trim();
 
-      const updated = {
-        generation: currentGeneration.generation,
-        title: document.getElementById('g-title').value.trim(),
-        description: document.getElementById('g-description').value.trim(),
-        photos: [...(before.photos || []), ...newPhotoUrls]
-      };
-      if (idx >= 0) gens[idx] = updated; else gens.push(updated);
-      await PandeyGitHub.putFile('data/generations.json', JSON.stringify(gens, null, 2), `Edit Generation ${currentGeneration.generation} story — by ${editorName}`, token, sha);
+      let before, updated;
+      await PandeyGitHub.readModifyWriteJSON('data/generations.json', (gens) => {
+        gens = gens || [];
+        const idx = gens.findIndex(g => g.generation === currentGeneration.generation);
+        before = idx >= 0 ? { ...gens[idx] } : { title: '', description: '', photos: [] };
+        updated = {
+          generation: currentGeneration.generation,
+          title: titleVal, description: descVal,
+          photos: [...(before.photos || []), ...newPhotoUrls]
+        };
+        if (idx >= 0) gens[idx] = updated; else gens.push(updated);
+        return gens;
+      }, `Edit Generation ${currentGeneration.generation} story — by ${editorName}`, token);
 
       const diffs = [];
       if ((before.title || '') !== updated.title) diffs.push({ field: 'title', oldValue: before.title, newValue: updated.title });
       if ((before.description || '') !== updated.description) diffs.push({ field: 'description', oldValue: before.description, newValue: updated.description });
       if ((before.photos || []).length !== updated.photos.length) diffs.push({ field: 'photos', oldValue: `${(before.photos||[]).length} photo(s)`, newValue: `${updated.photos.length} photo(s)` });
       if (diffs.length) {
-        const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
-        const log = auditRes.content ? JSON.parse(auditRes.content) : [];
-        diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: `generation-${currentGeneration.generation}`, personName: `Generation ${currentGeneration.generation}`, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
-        await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log Generation ${currentGeneration.generation} story edit by ${editorName}`, token, auditRes.sha);
+        await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
+          log = log || [];
+          diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: `generation-${currentGeneration.generation}`, personName: `Generation ${currentGeneration.generation}`, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
+          return log;
+        }, `Log Generation ${currentGeneration.generation} story edit by ${editorName}`, token);
       }
 
       pendingGenPhotos = [];
@@ -296,14 +299,15 @@
     if (!name || !pw) { statusEl.textContent = 'Enter a name and password.'; statusEl.className = 'status-msg error'; return; }
     statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
     try {
-      const { content, sha } = await PandeyGitHub.getFile('data/access.json', token);
-      const access = JSON.parse(content);
       const entry = await PandeyCrypto.encryptToken(token, pw);
       entry._label = name;
       entry.role = 'editor';
-      access.editors = access.editors || [];
-      access.editors.push(entry);
-      await PandeyGitHub.putFile('data/access.json', JSON.stringify(access, null, 2), `Add editor: ${name} — by ${editorName}`, token, sha);
+      await PandeyGitHub.readModifyWriteJSON('data/access.json', (access) => {
+        access = access || { editors: [] };
+        access.editors = access.editors || [];
+        access.editors.push(entry);
+        return access;
+      }, `Add editor: ${name} — by ${editorName}`, token);
       statusEl.textContent = `Added. Give ${name} the password you just set.`; statusEl.className = 'status-msg ok';
       document.getElementById('new-editor-name').value = '';
       document.getElementById('new-editor-password').value = '';
@@ -316,21 +320,23 @@
   async function renderEditorList() {
     const listEl = document.getElementById('editor-list');
     listEl.innerHTML = 'Loading…';
-    const { content, sha } = await PandeyGitHub.getFile('data/access.json', token);
-    const access = JSON.parse(content);
+    const { content } = await PandeyGitHub.getFile('data/access.json', token);
+    const access = content ? JSON.parse(content) : { editors: [] };
     listEl.innerHTML = (access.editors || []).map((e, idx) => `
       <div class="editor-row">
         <span>${e._label || 'Unnamed'} ${e.role === 'superuser' ? '<span class="badge badge-superuser">superuser</span>' : ''}</span>
-        ${e.role === 'superuser' ? '' : `<button class="btn btn-outline-dark btn-sm" data-idx="${idx}">Remove</button>`}
+        ${e.role === 'superuser' ? '' : `<button class="btn btn-outline-dark btn-sm" data-label="${e._label || ''}">Remove</button>`}
       </div>
     `).join('') || '<p class="muted">No editors yet.</p>';
-    listEl.querySelectorAll('button[data-idx]').forEach(btn => {
+    listEl.querySelectorAll('button[data-label]').forEach(btn => {
       btn.addEventListener('click', async () => {
-        const idx = parseInt(btn.dataset.idx, 10);
-        const { content, sha } = await PandeyGitHub.getFile('data/access.json', token);
-        const access = JSON.parse(content);
-        const removed = access.editors.splice(idx, 1)[0];
-        await PandeyGitHub.putFile('data/access.json', JSON.stringify(access, null, 2), `Remove editor: ${removed._label || 'unnamed'} — by ${editorName}`, token, sha);
+        const label = btn.dataset.label;
+        await PandeyGitHub.readModifyWriteJSON('data/access.json', (access) => {
+          access = access || { editors: [] };
+          const idx = (access.editors || []).findIndex(e => (e._label || '') === label && e.role !== 'superuser');
+          if (idx >= 0) access.editors.splice(idx, 1);
+          return access;
+        }, `Remove editor: ${label || 'unnamed'} — by ${editorName}`, token);
         renderEditorList();
       });
     });
@@ -451,24 +457,27 @@
     if (!name) { statusEl.textContent = 'Enter a name.'; statusEl.className = 'status-msg error'; return; }
     statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
     try {
-      const { content, sha } = await PandeyGitHub.getFile('data/people.json', token);
-      const latestPeople = JSON.parse(content);
-      const existingIds = new Set(latestPeople.map(x => x.id));
-      const parent = latestPeople.find(x => x.id === currentPerson.id);
-      const newId = uniqueId(slugify(name), existingIds);
-      const newPerson = {
-        id: newId, name, gender, parentId: parent.id,
-        generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
-        unnamedPlaceholder: false, notes: null,
-        birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
-      };
-      latestPeople.push(newPerson);
-      await PandeyGitHub.putFile('data/people.json', JSON.stringify(latestPeople, null, 2), `Add ${name} as child of ${PandeyData.displayName(parent)} — by ${editorName}`, token, sha);
+      let newPerson, parentName;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const existingIds = new Set(latestPeople.map(x => x.id));
+        const parent = latestPeople.find(x => x.id === currentPerson.id);
+        parentName = PandeyData.displayName(parent);
+        const newId = uniqueId(slugify(name), existingIds);
+        newPerson = {
+          id: newId, name, gender, parentId: parent.id,
+          generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
+          unnamedPlaceholder: false, notes: null,
+          birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
+        };
+        latestPeople.push(newPerson);
+        return latestPeople;
+      }, `Add ${name} as child of ${parentName || currentPerson.name} — by ${editorName}`, token);
 
-      const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
-      const log = auditRes.content ? JSON.parse(auditRes.content) : [];
-      log.push({ timestamp: new Date().toISOString(), editorName, personId: newId, personName: name, field: 'added', oldValue: '', newValue: `added as child of ${PandeyData.displayName(parent)}` });
-      await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log: added ${name} — by ${editorName}`, token, auditRes.sha);
+      await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
+        log = log || [];
+        log.push({ timestamp: new Date().toISOString(), editorName, personId: newPerson.id, personName: name, field: 'added', oldValue: '', newValue: `added as child of ${parentName}` });
+        return log;
+      }, `Log: added ${name} — by ${editorName}`, token);
 
       people.push(newPerson);
       statusEl.textContent = `Added ${name}.`; statusEl.className = 'status-msg ok';
@@ -486,17 +495,21 @@
     if (!confirm(`Remove ${PandeyData.displayName(currentPerson)} from the tree? This can't be undone from the site.`)) return;
     statusEl.textContent = 'Removing…'; statusEl.className = 'status-msg';
     try {
-      const { content, sha } = await PandeyGitHub.getFile('data/people.json', token);
-      const latestPeople = JSON.parse(content);
-      const idx = latestPeople.findIndex(x => x.id === currentPerson.id);
-      if (idx === -1) { statusEl.textContent = 'Already removed.'; statusEl.className = 'status-msg error'; return; }
-      const removed = latestPeople.splice(idx, 1)[0];
-      await PandeyGitHub.putFile('data/people.json', JSON.stringify(latestPeople, null, 2), `Remove ${removed.name || removed.id} — by ${editorName}`, token, sha);
+      let removed;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const idx = latestPeople.findIndex(x => x.id === currentPerson.id);
+        if (idx === -1) { removed = null; return latestPeople; }
+        removed = latestPeople.splice(idx, 1)[0];
+        return latestPeople;
+      }, `Remove ${currentPerson.name || currentPerson.id} — by ${editorName}`, token);
 
-      const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
-      const log = auditRes.content ? JSON.parse(auditRes.content) : [];
-      log.push({ timestamp: new Date().toISOString(), editorName, personId: removed.id, personName: removed.name, field: 'removed', oldValue: removed.name, newValue: '(removed)' });
-      await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log: removed ${removed.name || removed.id} — by ${editorName}`, token, auditRes.sha);
+      if (!removed) { statusEl.textContent = 'Already removed.'; statusEl.className = 'status-msg error'; return; }
+
+      await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
+        log = log || [];
+        log.push({ timestamp: new Date().toISOString(), editorName, personId: removed.id, personName: removed.name, field: 'removed', oldValue: removed.name, newValue: '(removed)' });
+        return log;
+      }, `Log: removed ${removed.name || removed.id} — by ${editorName}`, token);
 
       people.splice(people.findIndex(x => x.id === removed.id), 1);
       document.getElementById('form-area').innerHTML = '<p class="muted">Select someone from the list to edit their details.</p>';
@@ -554,45 +567,48 @@
     const statusEl = document.getElementById('save-status');
     statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
     try {
-      const { content, sha } = await PandeyGitHub.getFile('data/people.json', token);
-      const latestPeople = JSON.parse(content);
-      const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
-      const before = { ...latestPeople[idx] };
-
       const newPhotoUrls = [];
       for (const photo of pendingPhotos) {
         const base64 = photo.dataUrl.split(',')[1];
         const path = `uploads/${photo.filename}`;
-        await PandeyGitHub.putFileRaw(path, base64, `Add photo for ${before.name || before.id}`, token);
+        await PandeyGitHub.putFileRaw(path, base64, `Add photo for ${currentPerson.name || currentPerson.id}`, token);
         newPhotoUrls.push(path);
       }
 
       const nameVal = document.getElementById('f-name').value.trim();
-      const updated = {
-        ...latestPeople[idx],
-        name: nameVal || latestPeople[idx].name,
-        unnamedPlaceholder: nameVal ? false : latestPeople[idx].unnamedPlaceholder,
-        occupation: document.getElementById('f-occupation').value.trim() || null,
-        birthYear: document.getElementById('f-birthyear').value.trim() || null,
-        bio: document.getElementById('f-bio').value.trim(),
-        locations: [...document.querySelectorAll('#loc-rows .loc-row')].map(row => ({
-          place: row.querySelector('.loc-place').value.trim(),
-          type: row.querySelector('.loc-type').value,
-          year: row.querySelector('.loc-year').value.trim() || null,
-          note: null
-        })).filter(l => l.place),
-        photos: [...(latestPeople[idx].photos || []), ...newPhotoUrls]
-      };
-      latestPeople[idx] = updated;
+      const locVal = [...document.querySelectorAll('#loc-rows .loc-row')].map(row => ({
+        place: row.querySelector('.loc-place').value.trim(),
+        type: row.querySelector('.loc-type').value,
+        year: row.querySelector('.loc-year').value.trim() || null,
+        note: null
+      })).filter(l => l.place);
+      const occVal = document.getElementById('f-occupation').value.trim() || null;
+      const birthVal = document.getElementById('f-birthyear').value.trim() || null;
+      const bioVal = document.getElementById('f-bio').value.trim();
 
-      await PandeyGitHub.putFile('data/people.json', JSON.stringify(latestPeople, null, 2), `Edit ${updated.name || updated.id} — by ${editorName}`, token, sha);
+      let before, updated;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
+        before = { ...latestPeople[idx] };
+        updated = {
+          ...latestPeople[idx],
+          name: nameVal || latestPeople[idx].name,
+          unnamedPlaceholder: nameVal ? false : latestPeople[idx].unnamedPlaceholder,
+          occupation: occVal, birthYear: birthVal, bio: bioVal,
+          locations: locVal,
+          photos: [...(latestPeople[idx].photos || []), ...newPhotoUrls]
+        };
+        latestPeople[idx] = updated;
+        return latestPeople;
+      }, `Edit ${nameVal || currentPerson.name || currentPerson.id} — by ${editorName}`, token);
 
       const diffs = diffFields(before, updated);
       if (diffs.length) {
-        const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
-        const log = auditRes.content ? JSON.parse(auditRes.content) : [];
-        diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: updated.id, personName: updated.name, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
-        await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log edit to ${updated.name || updated.id} by ${editorName}`, token, auditRes.sha);
+        await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
+          log = log || [];
+          diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: updated.id, personName: updated.name, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
+          return log;
+        }, `Log edit to ${updated.name || updated.id} by ${editorName}`, token);
       }
 
       people[people.findIndex(p => p.id === updated.id)] = updated;

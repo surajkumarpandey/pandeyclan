@@ -23,11 +23,17 @@
 
   .ridge-stats {
     background: var(--maroon-deep);
-    display: flex; justify-content: space-around; text-align: center;
     padding: 30px 0 40px; color: var(--paper-light);
   }
-  .ridge-stats .num { font-family: var(--font-display); font-size: 34px; color: var(--gold-light); display: block; }
-  .ridge-stats .label { font-size: 13.5px; color: rgba(255,251,243,0.72); }
+  .ridge-stats .stat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+  }
+  .ridge-stats .stat-item { text-align: center; }
+  .ridge-stats .num { font-family: var(--font-display); font-size: 34px; color: var(--gold-light); display: block; line-height: 1.15; }
+  .ridge-stats .label { display: block; font-size: 13.5px; color: rgba(255,251,243,0.72); margin-top: 4px; }
+  @media (max-width: 640px) {
+    .ridge-stats .stat-grid { grid-template-columns: 1fr; gap: 18px; }
+  }
 
   .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
   .intro-grid p { color: #5a3a2e; }
@@ -93,10 +99,10 @@
 </header>
 
 <div class="ridge-stats">
-  <div class="wrap" style="display:flex; justify-content:space-around;">
-    <div><span class="num" id="stat-people">—</span><span class="label" data-i18n="home.stat.people">people recorded</span></div>
-    <div><span class="num" id="stat-gens">—</span><span class="label" data-i18n="home.stat.gens">generations traced</span></div>
-    <div><span class="num">1</span><span class="label" data-i18n="home.stat.village">ancestral village — Bairati, Almora</span></div>
+  <div class="wrap stat-grid">
+    <div class="stat-item"><span class="num" id="stat-people">—</span><span class="label" data-i18n="home.stat.people">people recorded</span></div>
+    <div class="stat-item"><span class="num" id="stat-gens">—</span><span class="label" data-i18n="home.stat.gens">generations traced</span></div>
+    <div class="stat-item"><span class="num">1</span><span class="label" data-i18n="home.stat.village">ancestral village — Bairati, Almora</span></div>
   </div>
 </div>
 

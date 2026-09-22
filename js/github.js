@@ -9,8 +9,8 @@
    ============================================================ */
 
 const GH_CONFIG = {
-  owner: 'surajkumarpandey',   // <-- change this
-  repo: 'pandeyclan',  // <-- change this if you name the repo differently
+  owner: 'YOUR-GITHUB-USERNAME',   // <-- change this
+  repo: 'pandey-clan-of-bairati',  // <-- change this if you name the repo differently
   branch: 'main'
 };
 
@@ -28,7 +28,7 @@ const PandeyGitHub = (() => {
   async function getFile(path, token) {
     const res = await fetch(
       `${API}/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${path}?ref=${GH_CONFIG.branch}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+      { cache: 'no-store', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
     );
     if (res.status === 404) return { content: null, sha: null };
     if (!res.ok) throw new Error(`GitHub read failed (${res.status}): ${await res.text()}`);
@@ -40,7 +40,7 @@ const PandeyGitHub = (() => {
   async function getFileRaw(path, token) {
     const res = await fetch(
       `${API}/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${path}?ref=${GH_CONFIG.branch}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+      { cache: 'no-store', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
     );
     if (res.status === 404) return { content: null, sha: null };
     if (!res.ok) throw new Error(`GitHub read failed (${res.status}): ${await res.text()}`);
@@ -95,10 +95,39 @@ const PandeyGitHub = (() => {
   /** Quick check that a token actually works and can write to this repo. */
   async function verifyToken(token) {
     const res = await fetch(`${API}/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}`, {
+      cache: 'no-store',
       headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
     });
     return res.ok;
   }
 
-  return { getFile, getFileRaw, putFile, putFileRaw, verifyToken };
+  /**
+   * Read a JSON file, apply `mutateFn(parsedContent) => newParsedContent`,
+   * and write it back. If GitHub rejects the write because the file moved
+   * on since we read it (a 409 — someone else saved, or a cached response
+   * slipped through), this re-reads the latest version and retries the
+   * same mutation against it, up to `maxRetries` times, instead of just
+   * failing. Returns the final written content.
+   */
+  async function readModifyWriteJSON(path, mutateFn, message, token, maxRetries = 2) {
+    let lastErr;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      const { content, sha } = await getFile(path, token);
+      const parsed = content ? JSON.parse(content) : null;
+      const updated = mutateFn(parsed);
+      const newContent = JSON.stringify(updated, null, 2);
+      try {
+        await putFile(path, newContent, message, token, sha);
+        return updated;
+      } catch (e) {
+        lastErr = e;
+        if (!String(e.message).includes('409')) throw e;
+        // 409: someone else's write landed between our read and our write.
+        // Loop again — fetch fresh, reapply the same mutation, retry.
+      }
+    }
+    throw lastErr;
+  }
+
+  return { getFile, getFileRaw, putFile, putFileRaw, verifyToken, readModifyWriteJSON };
 })();

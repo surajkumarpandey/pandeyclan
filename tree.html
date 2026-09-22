@@ -62,7 +62,7 @@
   .node circle.avatar-ring { stroke-width: 2px; cursor: pointer; transition: stroke-width .12s; }
   .node image { cursor: pointer; }
   .node:hover circle.avatar-ring { stroke-width: 3.5px; }
-  .node text { font-family: var(--font-body); font-size: 10px; fill: var(--ink); cursor: pointer; text-anchor: middle; }
+  .node text { font-family: var(--font-body); font-size: 9.5px; fill: var(--ink); cursor: pointer; text-anchor: middle; }
   .node.placeholder text { fill: #a3826f; font-style: italic; }
   .node.dim { opacity: 0.15; }
   .node.highlight circle.avatar-ring { stroke: var(--gold) !important; stroke-width: 4px; }
@@ -158,7 +158,7 @@
   const root = d3.hierarchy(buildNode(rootPerson), d => d.children);
   const maxDepth = d3.max(root.descendants(), d => d.depth);
 
-  const DX = 66;   // horizontal spacing between siblings
+  const DX = 108;  // horizontal spacing between siblings — wide enough for labels like "Daughter" not to collide
   const DY = 148;  // vertical spacing between generations
   const MARGIN_TOP = 60, MARGIN_SIDE = 60;
 
