@@ -39,7 +39,6 @@
       <li><a href="village.html" class="active" data-i18n="nav.village">Bairati Village</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
-      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
@@ -50,18 +49,25 @@
   <div class="wrap">
     <h1 data-i18n="village.title">Bairati, Almora — the ancestral village</h1>
     <p>In the Kumaon Himalayas of Uttarakhand, once part of the Katyuri and later Chand kingdoms. <a href="https://maps.app.goo.gl/AtZsa3H4NLkJ7oMK9?g_st=ic" target="_blank" rel="noopener">Open in Google Maps</a> · <a href="map.html">See it on the journeys map</a></p>
+    <p id="v-intro" style="margin-top:14px; display:none;"></p>
   </div>
 </div>
 
 <main class="section wrap two-col">
   <div>
     <h2 class="section-title">The region</h2>
-    <p>Almora was the seat of the Katyuri dynasty from around the 9th century, then capital of the Chand kings from 1560 onward — the political and cultural heart of Kumaon for centuries. Unlike Shimla or Nainital, Almora was never built up by the British; it's a hill station shaped entirely by Kumaoni hands, known for its temples, its stone-and-wood architecture, and its folk music.</p>
-    <p>Bairati itself is small enough that it doesn't appear in indexed histories — which is normal for a hamlet, not a gap in research. What's known of it lives in the family's own memory, and in the land records below.</p>
+    <div id="v-history">
+      <p>Almora was the seat of the Katyuri dynasty from around the 9th century, then capital of the Chand kings from 1560 onward — the political and cultural heart of Kumaon for centuries. Unlike Shimla or Nainital, Almora was never built up by the British; it's a hill station shaped entirely by Kumaoni hands, known for its temples, its stone-and-wood architecture, and its folk music.</p>
+      <p>Bairati itself is small enough that it doesn't appear in indexed histories — which is normal for a hamlet, not a gap in research. What's known of it lives in the family's own memory, and in the land records below.</p>
+    </div>
 
     <h2 class="section-title" style="margin-top:44px;">Aipan — the art of this land</h2>
-    <p>Aipan is the ritual floor-and-wall art of Kumaon: geometric patterns — lotuses, chowkis, temple motifs, borders of triangles and dots — drawn freehand in rice-paste white (<em>biswar</em>) on a base of red ochre (<em>geru</em>). Traditionally made at thresholds, in worship spaces, and for festivals and ceremonies, it's one of the most recognisable visual traditions of this region. This site's colour palette and border patterns are drawn from it.</p>
+    <div id="v-aipan">
+      <p>Aipan is the ritual floor-and-wall art of Kumaon: geometric patterns — lotuses, chowkis, temple motifs, borders of triangles and dots — drawn freehand in rice-paste white (<em>biswar</em>) on a base of red ochre (<em>geru</em>). Traditionally made at thresholds, in worship spaces, and for festivals and ceremonies, it's one of the most recognisable visual traditions of this region. This site's colour palette and border patterns are drawn from it.</p>
+    </div>
     <p>Have an old photo of the village, the house, or anything else worth keeping? The <a href="archive.html">Family Archive</a> is the place for it.</p>
+
+    <div id="v-photos" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;"></div>
   </div>
 
   <aside class="card">
@@ -71,7 +77,16 @@
       <tr><th>जनपद (District)</th><td>अल्मोड़ा — Almora</td></tr>
       <tr><th>तहसील (Tehsil)</th><td>चौखुटिया — Chaukhutiya</td></tr>
       <tr><th>ग्राम (Village)</th><td>बैरती — Bairati</td></tr>
-     </aside>
+    </table>
+    <ol class="steps">
+      <li>Go to <strong>bhulekh.uk.gov.in</strong> (the official portal — I can't fetch it automatically for you, it blocks automated access and needs a CAPTCHA, so this is a manual visit).</li>
+      <li>Select district <strong>अल्मोड़ा</strong>, tehsil <strong>चौखुटिया</strong>, village <strong>बैरती</strong>.</li>
+      <li>Choose search by <strong>Khatedar ka naam</strong> (owner's name) — enter it in Hindi/Devanagari for best results. If you don't have a khasra number, the name search is the way in.</li>
+      <li>Try the earliest ancestor first — Shri Sukhdev, or one of his sons. Land records often still list an earlier generation's name as the registered holder, even now.</li>
+      <li>Once you find a khata, note the khasra numbers — <strong>bhunaksha.uk.gov.in</strong> will show the actual plot boundaries on a map for the same district/tehsil/village.</li>
+    </ol>
+    <p class="muted" style="font-size:13px;">Whatever you find is worth passing along to be added to the relevant person's record.</p>
+  </aside>
 </main>
 
 <footer class="site-footer">
@@ -84,5 +99,30 @@
 
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
+<script>
+(async function () {
+  try {
+    const res = await fetch('data/village.json?_=' + Date.now());
+    const v = await res.json();
+    if (v.intro) {
+      const el = document.getElementById('v-intro');
+      el.textContent = v.intro;
+      el.style.display = 'block';
+    }
+    if (v.history) {
+      document.getElementById('v-history').innerHTML = v.history.split('\n\n').map(p => `<p>${p}</p>`).join('');
+    }
+    if (v.aipan) {
+      document.getElementById('v-aipan').innerHTML = v.aipan.split('\n\n').map(p => `<p>${p}</p>`).join('');
+    }
+    if (v.photos && v.photos.length) {
+      document.getElementById('v-photos').innerHTML = v.photos.map(src =>
+        `<img src="${src}" style="width:130px; height:130px; object-fit:cover; border-radius:3px; border:1px solid var(--line);">`
+      ).join('');
+    }
+  } catch (e) { /* keep the static defaults already on the page */ }
+})();
+</script>
 </body>
 </html>
+q
