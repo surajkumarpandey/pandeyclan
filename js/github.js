@@ -9,8 +9,8 @@
    ============================================================ */
 
 const GH_CONFIG = {
-  owner: 'surajkumarpandey',   // <-- change this
-  repo: 'pandeyclan',  // <-- change this if you name the repo differently
+  owner: 'YOUR-GITHUB-USERNAME',   // <-- change this
+  repo: 'pandey-clan-of-bairati',  // <-- change this if you name the repo differently
   branch: 'main'
 };
 

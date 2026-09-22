@@ -149,6 +149,44 @@ they live now), `lived` (a place they were based for a stretch), or `visited`
 (everywhere else). The Journeys Map (`map.html`) reads this to draw both the
 whole family's footprint and any one person's individual path.
 
+## 7. Updating the site later — without losing live data
+
+Every file in this project falls into one of two kinds, and it matters which:
+
+**Code — safe to replace anytime.** All the `.html` files, `css/`, `js/`,
+and `assets/img/`. These are just the site's design and logic. When I (or
+you) improve something here, the new version can overwrite the old one with
+no loss — nothing personal to your family lives in these files.
+
+**Data — never overwrite once the site is live.** `data/people.json`,
+`data/generations.json`, `data/access.json`, `data/audit-log.json`, and
+everything in `uploads/`. The moment someone signs in and saves an edit,
+these files hold real information that exists *only* in your GitHub repo —
+not on my end, and not anywhere else. A generic starter copy of these (like
+the one this project first shipped with) will always look older than what's
+actually live once real edits start happening.
+
+**So, from now on:** when I hand you an update, I'll tell you exactly which
+files changed and — unless I explicitly say a data file changed and explain
+why — you only need to replace those specific files or folders, never the
+whole `data/` directory or `uploads/`. If you're ever unsure, the safe move
+is always: upload only the files named, leave everything else in the repo
+untouched.
+
+If you ever want a copy of your current live data as a backup (recommended
+occasionally, and definitely before any update you're unsure about): open
+`data/people.json` etc. on GitHub.com and download them, or just download
+the whole repo as a zip from the green "Code" button. That's your real,
+current, authoritative copy — always more current than anything in a fresh
+package from me.
+
+**One more built-in safeguard:** every save from the Edit page reads the
+file fresh, then writes it back referencing the exact version it read. If
+two people happen to save around the same moment, GitHub will reject the
+second write rather than silently overwrite the first — that editor will
+see an error and can just try again. Nothing gets quietly lost; a conflict
+just requires a retry.
+
 Edits made this way don't get logged to the changelog automatically (that only
 happens through `admin.html`) — GitHub's own commit history covers direct edits
 like these.

@@ -115,6 +115,7 @@
 <script>
 (async function () {
   const people = await PandeyData.loadPeople();
+  const rootPersonId = (people.find(p => !p.parentId) || {}).id;
   let token = null;
   let editorName = '';
   let currentPerson = null;
@@ -369,6 +370,10 @@
     const p = currentPerson;
     const area = document.getElementById('form-area');
     const locRows = (p.locations || []).map((l, idx) => locRow(l, idx)).join('');
+    const children = people.filter(c => c.parentId === p.id)
+      .sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+    const childRows = children.map(c => `<div class="editor-row"><a href="#" class="child-link" data-id="${c.id}">${PandeyData.displayName(c)}</a></div>`).join('')
+      || '<p class="muted" style="font-size:13.5px;">No children recorded yet.</p>';
     area.innerHTML = `
       <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 4px;">${PandeyData.displayName(p)}</h2>
       <p class="muted" style="margin:0 0 24px;">${PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ')}</p>
@@ -394,6 +399,25 @@
 
       <button class="btn btn-gold" id="save-btn">Save changes</button>
       <span id="save-status" class="status-msg"></span>
+
+      <hr style="margin:32px 0; border:none; border-top:1px solid var(--line);">
+
+      <h3 style="font-family:var(--font-display); font-size:19px; margin:0 0 12px;">Children</h3>
+      <div id="child-list">${childRows}</div>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:end;">
+        <div class="field" style="margin:0; flex:1; min-width:140px;"><label>Add a child — name</label><input type="text" id="new-child-name"></div>
+        <div class="field" style="margin:0; min-width:110px;"><label>Gender</label><select id="new-child-gender"><option value="unknown">Unknown</option><option value="M">Male</option><option value="F">Female</option></select></div>
+        <button class="btn btn-outline-dark btn-sm" id="add-child-btn" style="margin-bottom:16px;">+ Add child</button>
+      </div>
+      <span id="add-child-status" class="status-msg"></span>
+
+      ${p.id !== rootPersonId ? `
+      <hr style="margin:32px 0; border:none; border-top:1px solid var(--line);">
+      <h3 style="font-family:var(--font-display); font-size:19px; margin:0 0 10px; color:var(--ochre-deep);">Remove this person</h3>
+      <p class="muted" style="font-size:13.5px;">Only possible if they have no children recorded. This can't be undone from the site (though it stays in the repository's history).</p>
+      <button class="btn btn-outline-dark btn-sm" id="delete-person-btn" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Remove ${PandeyData.displayName(p)}</button>
+      <span id="delete-status" class="status-msg"></span>
+      ` : `<p class="muted" style="font-size:13px; margin-top:24px;">The root ancestor can't be removed from here.</p>`}
     `;
 
     document.getElementById('add-loc').addEventListener('click', () => {
@@ -403,6 +427,83 @@
     wireLocRemovers();
     document.getElementById('photo-input').addEventListener('change', handlePhotoSelect);
     document.getElementById('save-btn').addEventListener('click', savePerson);
+    document.getElementById('add-child-btn').addEventListener('click', addChild);
+    document.querySelectorAll('.child-link').forEach(a => {
+      a.addEventListener('click', (e) => { e.preventDefault(); loadPersonForm(a.dataset.id); });
+    });
+    const deleteBtn = document.getElementById('delete-person-btn');
+    if (deleteBtn) deleteBtn.addEventListener('click', deletePerson);
+  }
+
+  function slugify(name) {
+    return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'person';
+  }
+  function uniqueId(base, existingIds) {
+    let id = base, i = 1;
+    while (existingIds.has(id)) id = `${base}-${++i}`;
+    return id;
+  }
+
+  async function addChild() {
+    const name = document.getElementById('new-child-name').value.trim();
+    const gender = document.getElementById('new-child-gender').value;
+    const statusEl = document.getElementById('add-child-status');
+    if (!name) { statusEl.textContent = 'Enter a name.'; statusEl.className = 'status-msg error'; return; }
+    statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
+    try {
+      const { content, sha } = await PandeyGitHub.getFile('data/people.json', token);
+      const latestPeople = JSON.parse(content);
+      const existingIds = new Set(latestPeople.map(x => x.id));
+      const parent = latestPeople.find(x => x.id === currentPerson.id);
+      const newId = uniqueId(slugify(name), existingIds);
+      const newPerson = {
+        id: newId, name, gender, parentId: parent.id,
+        generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
+        unnamedPlaceholder: false, notes: null,
+        birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
+      };
+      latestPeople.push(newPerson);
+      await PandeyGitHub.putFile('data/people.json', JSON.stringify(latestPeople, null, 2), `Add ${name} as child of ${PandeyData.displayName(parent)} — by ${editorName}`, token, sha);
+
+      const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
+      const log = auditRes.content ? JSON.parse(auditRes.content) : [];
+      log.push({ timestamp: new Date().toISOString(), editorName, personId: newId, personName: name, field: 'added', oldValue: '', newValue: `added as child of ${PandeyData.displayName(parent)}` });
+      await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log: added ${name} — by ${editorName}`, token, auditRes.sha);
+
+      people.push(newPerson);
+      statusEl.textContent = `Added ${name}.`; statusEl.className = 'status-msg ok';
+      loadPersonForm(currentPerson.id);
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not add: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  async function deletePerson() {
+    const hasChildren = people.some(x => x.parentId === currentPerson.id);
+    const statusEl = document.getElementById('delete-status');
+    if (hasChildren) { statusEl.textContent = 'This person has children recorded — remove or reassign them first.'; statusEl.className = 'status-msg error'; return; }
+    if (!confirm(`Remove ${PandeyData.displayName(currentPerson)} from the tree? This can't be undone from the site.`)) return;
+    statusEl.textContent = 'Removing…'; statusEl.className = 'status-msg';
+    try {
+      const { content, sha } = await PandeyGitHub.getFile('data/people.json', token);
+      const latestPeople = JSON.parse(content);
+      const idx = latestPeople.findIndex(x => x.id === currentPerson.id);
+      if (idx === -1) { statusEl.textContent = 'Already removed.'; statusEl.className = 'status-msg error'; return; }
+      const removed = latestPeople.splice(idx, 1)[0];
+      await PandeyGitHub.putFile('data/people.json', JSON.stringify(latestPeople, null, 2), `Remove ${removed.name || removed.id} — by ${editorName}`, token, sha);
+
+      const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
+      const log = auditRes.content ? JSON.parse(auditRes.content) : [];
+      log.push({ timestamp: new Date().toISOString(), editorName, personId: removed.id, personName: removed.name, field: 'removed', oldValue: removed.name, newValue: '(removed)' });
+      await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log: removed ${removed.name || removed.id} — by ${editorName}`, token, auditRes.sha);
+
+      people.splice(people.findIndex(x => x.id === removed.id), 1);
+      document.getElementById('form-area').innerHTML = '<p class="muted">Select someone from the list to edit their details.</p>';
+      renderPersonList(document.getElementById('person-search').value);
+    } catch (e) {
+      statusEl.textContent = 'Could not remove: ' + e.message; statusEl.className = 'status-msg error';
+    }
   }
 
   function locRow(l, idx) {
