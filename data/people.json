@@ -233,7 +233,7 @@
   },
   {
     "id": "premnidhi",
-    "name": "Premnidhi",
+    "name": "Premnidhi Pandey",
     "gender": "M",
     "parentId": "danjyu",
     "generation": 7,
@@ -245,7 +245,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "anrjunjyu",
