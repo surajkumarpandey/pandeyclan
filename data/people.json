@@ -547,7 +547,7 @@
   },
   {
     "id": "devidutt_big",
-    "name": "Devi Dutt",
+    "name": "Devi Dutt Pandey II",
     "gender": "M",
     "parentId": "harikishan_1",
     "generation": 15,
@@ -559,7 +559,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "laxmidutt",
