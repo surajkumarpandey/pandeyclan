@@ -41,6 +41,7 @@
       <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
       <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
       <li><a href="admin.html" class="active" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
@@ -73,6 +74,7 @@
     <div class="tabs" id="tabs">
       <button id="tab-people" class="active">People</button>
       <button id="tab-generations">Generation stories</button>
+      <button id="tab-archive">Archive</button>
       <button id="tab-editors" class="hidden">Manage editors</button>
     </div>
 
@@ -81,6 +83,16 @@
         <ul id="generation-ul"></ul>
       </div>
       <div id="generation-form-area"><p class="muted">Select a generation from the list to add its story.</p></div>
+    </div>
+
+    <div id="archive-panel" class="hidden editor-layout">
+      <div class="person-list">
+        <ul id="archive-ul"></ul>
+      </div>
+      <div id="archive-form-area">
+        <p class="muted">Select an item to edit it, or add a new one below.</p>
+        <button class="btn btn-gold btn-sm" id="new-archive-item-btn" style="margin-top:10px;">+ Add a new item</button>
+      </div>
     </div>
 
     <div id="people-panel" class="editor-layout">
@@ -159,14 +171,122 @@
   // ---------- Tabs ----------
   document.getElementById('tab-people').addEventListener('click', () => switchTab('people'));
   document.getElementById('tab-generations').addEventListener('click', () => { switchTab('generations'); renderGenerationList(); });
+  document.getElementById('tab-archive').addEventListener('click', () => { switchTab('archive'); renderArchiveList(); });
   document.getElementById('tab-editors').addEventListener('click', () => { switchTab('editors'); renderEditorList(); });
   function switchTab(tab) {
     document.getElementById('tab-people').classList.toggle('active', tab === 'people');
     document.getElementById('tab-generations').classList.toggle('active', tab === 'generations');
+    document.getElementById('tab-archive').classList.toggle('active', tab === 'archive');
     document.getElementById('tab-editors').classList.toggle('active', tab === 'editors');
     document.getElementById('people-panel').classList.toggle('hidden', tab !== 'people');
     document.getElementById('generations-panel').classList.toggle('hidden', tab !== 'generations');
+    document.getElementById('archive-panel').classList.toggle('hidden', tab !== 'archive');
     document.getElementById('editors-panel').classList.toggle('hidden', tab !== 'editors');
+  }
+
+  // ---------- Family Archive ----------
+  let currentArchiveItem = null;
+  let pendingArchivePhotos = [];
+
+  async function renderArchiveList() {
+    const ul = document.getElementById('archive-ul');
+    const { content } = await PandeyGitHub.getFile('data/archive.json', token);
+    const items = content ? JSON.parse(content) : [];
+    ul.innerHTML = items.map((it, idx) => `<li><a href="#" data-idx="${idx}">${it.title || 'Untitled'}</a></li>`).join('') || '<li class="muted" style="padding:10px 14px; font-size:13.5px;">Nothing yet.</li>';
+    ul.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        loadArchiveForm(items[parseInt(a.dataset.idx, 10)]);
+      });
+    });
+  }
+
+  document.getElementById('new-archive-item-btn').addEventListener('click', () => loadArchiveForm(null));
+
+  function loadArchiveForm(item) {
+    currentArchiveItem = item || { id: null, title: '', description: '', photos: [] };
+    pendingArchivePhotos = [];
+    const area = document.getElementById('archive-form-area');
+    area.innerHTML = `
+      <h2 style="font-family:var(--font-display); font-weight:600; font-size:22px; margin:0 0 16px;">${item ? 'Edit item' : 'New item'}</h2>
+      <div class="field"><label>Title</label><input type="text" id="a-title" value="${currentArchiveItem.title || ''}" placeholder="e.g. Old house in Bairati"></div>
+      <div class="field"><label>Description</label><textarea id="a-description">${currentArchiveItem.description || ''}</textarea></div>
+      <div class="field">
+        <label>Photos</label>
+        <div class="photo-grid" id="a-photo-grid">${(currentArchiveItem.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+        <input type="file" id="a-photo-input" accept="image/*" multiple style="margin-top:10px;">
+      </div>
+      <button class="btn btn-gold" id="save-archive-btn">Save item</button>
+      <span id="save-archive-status" class="status-msg"></span>
+    `;
+    document.getElementById('a-photo-input').addEventListener('change', handleArchivePhotoSelect);
+    document.getElementById('save-archive-btn').addEventListener('click', saveArchiveItem);
+  }
+
+  function handleArchivePhotoSelect(e) {
+    [...e.target.files].forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const filename = `archive_${Date.now()}.jpg`;
+          pendingArchivePhotos.push({ dataUrl, filename });
+          document.getElementById('a-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function saveArchiveItem() {
+    const statusEl = document.getElementById('save-archive-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const newPhotoUrls = [];
+      for (const photo of pendingArchivePhotos) {
+        const base64 = photo.dataUrl.split(',')[1];
+        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, base64, `Add archive photo`, token);
+        newPhotoUrls.push(`uploads/${photo.filename}`);
+      }
+      const titleVal = document.getElementById('a-title').value.trim();
+      const descVal = document.getElementById('a-description').value.trim();
+      if (!titleVal) { statusEl.textContent = 'Give it a title.'; statusEl.className = 'status-msg error'; return; }
+
+      await PandeyGitHub.readModifyWriteJSON('data/archive.json', (items) => {
+        items = items || [];
+        if (currentArchiveItem.id) {
+          const idx = items.findIndex(i => i.id === currentArchiveItem.id);
+          if (idx >= 0) {
+            items[idx] = { ...items[idx], title: titleVal, description: descVal, photos: [...(items[idx].photos || []), ...newPhotoUrls] };
+          }
+        } else {
+          items.push({ id: 'archive-' + Date.now(), title: titleVal, description: descVal, photos: newPhotoUrls, addedAt: new Date().toISOString(), addedBy: editorName });
+        }
+        return items;
+      }, `${currentArchiveItem.id ? 'Edit' : 'Add'} archive item: ${titleVal} — by ${editorName}`, token);
+
+      await PandeyGitHub.readModifyWriteJSON('data/audit-log.json', (log) => {
+        log = log || [];
+        log.push({ timestamp: new Date().toISOString(), editorName, personId: 'archive', personName: titleVal, field: currentArchiveItem.id ? 'archive item edited' : 'archive item added', oldValue: '', newValue: titleVal });
+        return log;
+      }, `Log archive change: ${titleVal} by ${editorName}`, token);
+
+      pendingArchivePhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+      renderArchiveList();
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
   }
 
   // ---------- Generation stories ----------
@@ -384,7 +504,8 @@
       <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 4px;">${PandeyData.displayName(p)}</h2>
       <p class="muted" style="margin:0 0 24px;">${PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ')}</p>
 
-      <div class="field"><label>Full name</label><input type="text" id="f-name" value="${p.unnamedPlaceholder ? '' : (p.name || '')}" placeholder="${p.unnamedPlaceholder ? 'Add their real name if known' : ''}"></div>
+      <div class="field"><label>Name</label><input type="text" id="f-name" value="${p.unnamedPlaceholder ? '' : (p.name || '')}" placeholder="${p.unnamedPlaceholder ? 'Add their real name if known' : ''}"></div>
+      <div class="field"><label>Full name (optional, if longer than the name above)</label><input type="text" id="f-fullname" value="${p.fullName || ''}" placeholder="e.g. Suraj Kumar Pandey"></div>
       <div class="field"><label>Occupation</label><input type="text" id="f-occupation" value="${p.occupation || ''}"></div>
       <div class="field"><label>Birth year</label><input type="text" id="f-birthyear" value="${p.birthYear || ''}"></div>
 
@@ -394,7 +515,7 @@
         <button type="button" class="btn btn-outline-dark btn-sm" id="add-loc">+ Add a place</button>
       </div>
 
-      <div class="field"><label>Notes / short bio</label><textarea id="f-bio">${p.bio || ''}</textarea></div>
+      <div class="field"><label>Description</label><textarea id="f-bio">${p.bio || ''}</textarea></div>
 
       <div class="field">
         <label>Photos</label>
@@ -466,7 +587,7 @@
         newPerson = {
           id: newId, name, gender, parentId: parent.id,
           generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
-          unnamedPlaceholder: false, notes: null,
+          unnamedPlaceholder: false, notes: null, fullName: null,
           birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
         };
         latestPeople.push(newPerson);
@@ -576,6 +697,7 @@
       }
 
       const nameVal = document.getElementById('f-name').value.trim();
+      const fullNameVal = document.getElementById('f-fullname').value.trim() || null;
       const locVal = [...document.querySelectorAll('#loc-rows .loc-row')].map(row => ({
         place: row.querySelector('.loc-place').value.trim(),
         type: row.querySelector('.loc-type').value,
@@ -593,6 +715,7 @@
         updated = {
           ...latestPeople[idx],
           name: nameVal || latestPeople[idx].name,
+          fullName: fullNameVal,
           unnamedPlaceholder: nameVal ? false : latestPeople[idx].unnamedPlaceholder,
           occupation: occVal, birthYear: birthVal, bio: bioVal,
           locations: locVal,
