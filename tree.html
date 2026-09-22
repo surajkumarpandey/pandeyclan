@@ -10,54 +10,76 @@
   .tree-toolbar {
     background: var(--paper-light);
     border-bottom: 1px solid var(--line);
-    padding: 16px 0;
-    position: sticky; top: 0; z-index: 5;
+    padding: 14px 0;
+    position: sticky; top: 0; z-index: 6;
   }
   .tree-toolbar .wrap { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-  .tree-toolbar input[type=search] { max-width: 320px; }
-  .tree-stage {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 64px - 68px);
-    min-height: 560px;
-    overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #FFFBF3 0%, var(--paper) 70%);
+  .tree-toolbar input[type=search] { max-width: 300px; }
+  .legend { font-size: 13px; color: #8a6a58; display: flex; gap: 16px; flex-wrap: wrap; margin-left: auto; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  .tree-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    align-items: start;
   }
-  #tree-svg { width: 100%; height: 100%; cursor: grab; }
-  #tree-svg:active { cursor: grabbing; }
+  .story-sidebar {
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 28px 22px;
+    border-right: 1px solid var(--line);
+    background: var(--paper-light);
+  }
+  .story-sidebar .gen-num { font-family: var(--font-display); font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .story-sidebar h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; margin: 0 0 12px; }
+  .story-sidebar p { font-size: 14.5px; color: #5a3a2e; line-height: 1.6; }
+  .story-sidebar .empty { color: #a3826f; font-style: italic; font-size: 14px; }
+  .story-sidebar .story-photos { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+  .story-sidebar .story-photos img { width: 64px; height: 64px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
 
-  .gen-ring { fill: none; stroke: var(--ochre); stroke-opacity: 0.10; stroke-width: 1; }
-  .gen-ring-label { fill: var(--ochre); opacity: 0.35; font-size: 10px; font-family: var(--font-body); }
+  .tree-scroll-wrap {
+    overflow-x: auto;
+    background-image: url('assets/img/tree-backdrop.jpg');
+    background-repeat: repeat;
+    background-size: 900px auto;
+    background-color: var(--paper);
+  }
+  .tree-canvas { position: relative; }
 
-  .link { fill: none; stroke: var(--line-dark); stroke-opacity: 0.45; stroke-width: 1.3px; }
-  .link.dim { stroke-opacity: 0.12; }
+  .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; }
+  .gen-label-tag {
+    position: absolute; left: 14px;
+    font-family: var(--font-display); font-size: 12.5px; font-weight: 600;
+    color: var(--ochre); opacity: 0.55; letter-spacing: 0.3px;
+  }
+
+  .link { fill: none; stroke: var(--line-dark); stroke-opacity: 0.5; stroke-width: 1.4px; }
+  .link.dim { stroke-opacity: 0.1; }
 
   .node circle.avatar-ring { stroke-width: 2px; cursor: pointer; transition: stroke-width .12s; }
   .node image { cursor: pointer; }
   .node:hover circle.avatar-ring { stroke-width: 3.5px; }
-  .node text {
-    font-family: var(--font-body); font-size: 10.5px; fill: var(--ink); cursor: pointer;
-  }
+  .node text { font-family: var(--font-body); font-size: 10px; fill: var(--ink); cursor: pointer; text-anchor: middle; }
   .node.placeholder text { fill: #a3826f; font-style: italic; }
-  .node.dim { opacity: 0.18; }
+  .node.dim { opacity: 0.15; }
   .node.highlight circle.avatar-ring { stroke: var(--gold) !important; stroke-width: 4px; }
 
-  .root-node circle { stroke: var(--gold); stroke-width: 3px; fill: var(--maroon); }
-  .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 15px; fill: var(--maroon-deep); }
+  .root-node circle.avatar-ring { stroke: var(--gold); stroke-width: 3px; }
+  .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: var(--maroon-deep); }
 
   .panel {
-    position: absolute; top: 0; right: 0; width: 340px; max-width: 88vw; height: 100%;
+    position: fixed; top: 0; right: 0; width: 340px; max-width: 88vw; height: 100%;
     background: var(--paper-light); border-left: 1px solid var(--line);
     box-shadow: -8px 0 24px rgba(60,20,15,0.12); padding: 24px; overflow-y: auto;
-    transform: translateX(100%); transition: transform .2s ease;
+    transform: translateX(100%); transition: transform .2s ease; z-index: 20;
   }
   .panel.open { transform: translateX(0); }
   .panel .close-btn { position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ink); }
   .panel .avatar-lg { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold); margin-bottom: 14px; }
-  .panel .avatar-lg-placeholder {
-    width: 88px; height: 88px; border-radius: 50%; margin-bottom: 14px;
-    background: var(--ochre); opacity: 0.25;
-  }
+  .panel .avatar-lg-placeholder { width: 88px; height: 88px; border-radius: 50%; margin-bottom: 14px; background: var(--ochre); opacity: 0.25; }
   .panel h2 { font-family: var(--font-display); font-weight: 600; font-size: 24px; margin: 4px 0 6px; }
   .panel .chain { font-size: 13px; color: #8a6a58; margin-bottom: 18px; }
   .panel dl { margin: 0; }
@@ -66,13 +88,9 @@
   .panel .photos { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .panel .photos img { width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
 
-  .legend { font-size: 13px; color: #8a6a58; display: flex; gap: 18px; flex-wrap: wrap; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .zoom-controls { display: flex; gap: 6px; margin-left: auto; }
-  .zoom-controls button {
-    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line-dark);
-    background: var(--paper-light); color: var(--maroon); font-size: 16px; cursor: pointer;
+  @media (max-width: 800px) {
+    .tree-body { grid-template-columns: 1fr; }
+    .story-sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
   }
 </style>
 </head>
@@ -100,29 +118,38 @@
     <span class="legend">
       <span><i style="background:var(--maroon)"></i> <span data-i18n="tree.legend.named">named</span></span>
       <span><i style="background:#E7C9A8"></i> <span data-i18n="tree.legend.placeholder">unnamed / placeholder</span></span>
-      <span><i style="background:var(--gold); border-radius:50%;"></i> has a photo</span>
+      <span><i style="background:var(--gold);"></i> has a photo</span>
     </span>
-    <div class="zoom-controls">
-      <button id="zoom-in" aria-label="Zoom in">+</button>
-      <button id="zoom-out" aria-label="Zoom out">&minus;</button>
-      <button id="zoom-reset" aria-label="Reset view" style="width:auto; border-radius:15px; padding:0 10px; font-size:12px;">Reset</button>
+  </div>
+</div>
+
+<div class="tree-body">
+  <aside class="story-sidebar" id="story-sidebar">
+    <p class="muted" style="font-size:13.5px;">Scroll down through the tree — this panel follows along with a bit about each generation.</p>
+  </aside>
+
+  <div class="tree-scroll-wrap">
+    <div class="tree-canvas" id="tree-canvas">
+      <svg id="tree-svg"></svg>
     </div>
   </div>
 </div>
 
-<div class="tree-stage">
-  <svg id="tree-svg"></svg>
-  <aside class="panel" id="panel">
-    <button class="close-btn" id="panel-close" aria-label="Close">&times;</button>
-    <div id="panel-body"></div>
-  </aside>
-</div>
+<aside class="panel" id="panel">
+  <button class="close-btn" id="panel-close" aria-label="Close">&times;</button>
+  <div id="panel-body"></div>
+</aside>
 
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
 <script>
 (async function () {
-  const people = await PandeyData.loadPeople();
+  const [people, generations] = await Promise.all([
+    PandeyData.loadPeople(),
+    fetch('data/generations.json?_=' + Date.now()).then(r => r.json()).catch(() => [])
+  ]);
+  const genById = {};
+  generations.forEach(g => { genById[g.generation] = g; });
 
   function buildNode(p) {
     return { id: p.id, data: p, children: people.filter(c => c.parentId === p.id).map(buildNode) };
@@ -131,97 +158,100 @@
   const root = d3.hierarchy(buildNode(rootPerson), d => d.children);
   const maxDepth = d3.max(root.descendants(), d => d.depth);
 
-  const DR = 92; // px per generation ring
-  const radius = maxDepth * DR;
+  const DX = 66;   // horizontal spacing between siblings
+  const DY = 148;  // vertical spacing between generations
+  const MARGIN_TOP = 60, MARGIN_SIDE = 60;
 
-  const treeLayout = d3.tree()
-    .size([2 * Math.PI, radius])
-    .separation((a, b) => (a.parent === b.parent ? 1.1 : 2.4) / a.depth || 1);
+  const treeLayout = d3.tree().nodeSize([DX, DY]);
   treeLayout(root);
 
-  const svg = d3.select('#tree-svg');
-  const g = svg.append('g');
+  let minX = Infinity, maxX = -Infinity;
+  root.each(d => { minX = Math.min(minX, d.x); maxX = Math.max(maxX, d.x); });
+  const totalWidth = (maxX - minX) + MARGIN_SIDE * 2;
+  const totalHeight = maxDepth * DY + MARGIN_TOP * 2;
+  const offsetX = -minX + MARGIN_SIDE;
 
-  // ---------- Generation guide rings (the "mandala" backdrop) ----------
-  const ringsLayer = g.append('g').attr('class', 'rings-layer');
-  for (let gen = 1; gen <= maxDepth; gen++) {
-    ringsLayer.append('circle').attr('class', 'gen-ring').attr('r', gen * DR);
+  const canvas = document.getElementById('tree-canvas');
+  canvas.style.width = totalWidth + 'px';
+  canvas.style.height = totalHeight + 'px';
+
+  const svg = d3.select('#tree-svg').attr('width', totalWidth).attr('height', totalHeight);
+  const g = svg.append('g').attr('transform', `translate(${offsetX},${MARGIN_TOP})`);
+
+  // ---------- Generation row labels + scroll-observer markers ----------
+  for (let gen = 1; gen <= maxDepth + 1; gen++) {
+    const y = (gen - 1) * DY + MARGIN_TOP;
+    const marker = document.createElement('div');
+    marker.className = 'gen-marker';
+    marker.dataset.gen = gen;
+    marker.style.top = y + 'px';
+    marker.style.height = DY + 'px';
+    canvas.appendChild(marker);
+
+    const tag = document.createElement('div');
+    tag.className = 'gen-label-tag';
+    tag.style.top = (y + 6) + 'px';
+    tag.textContent = (genById[gen] && genById[gen].title) || `Generation ${gen}`;
+    canvas.appendChild(tag);
   }
-  ringsLayer.append('text').attr('class', 'gen-ring-label').attr('x', 4).attr('y', -maxDepth * DR + 12)
-    .text(`${maxDepth} generations out`);
 
   // ---------- Links ----------
-  const linkGen = d3.linkRadial().angle(d => d.x).radius(d => d.y);
-  const linksLayer = g.append('g').attr('class', 'links-layer');
-  const linkSel = linksLayer.selectAll('path.link')
-    .data(root.links())
-    .join('path')
-    .attr('class', 'link')
-    .attr('d', linkGen);
+  const linkGen = d3.linkVertical().x(d => d.x).y(d => d.y);
+  const linkSel = g.append('g').attr('class', 'links-layer')
+    .selectAll('path.link').data(root.links()).join('path').attr('class', 'link').attr('d', linkGen);
 
   // ---------- Nodes ----------
-  const AVATAR_R = 9;
-  const ROOT_R = 24;
-
-  const nodesLayer = g.append('g').attr('class', 'nodes-layer');
-  const nodeSel = nodesLayer.selectAll('g.node')
-    .data(root.descendants())
-    .join('g')
+  const R = 11, ROOT_R = 20;
+  const nodeSel = g.append('g').attr('class', 'nodes-layer')
+    .selectAll('g.node').data(root.descendants()).join('g')
     .attr('class', d => 'node' + (d.data.data.unnamedPlaceholder ? ' placeholder' : '') + (d.depth === 0 ? ' root-node' : ''))
-    .attr('transform', d => d.depth === 0 ? 'translate(0,0)' : `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`);
+    .attr('transform', d => `translate(${d.x},${d.y})`);
 
   nodeSel.each(function (d) {
     const sel = d3.select(this);
     const p = d.data.data;
-    const r = d.depth === 0 ? ROOT_R : AVATAR_R;
+    const r = d.depth === 0 ? ROOT_R : R;
     const hasPhoto = p.photos && p.photos.length;
     const ringColor = p.unnamedPlaceholder ? '#C9A98A' : (hasPhoto ? 'var(--gold)' : 'var(--maroon)');
 
     if (hasPhoto) {
       const clipId = 'clip-' + d.data.id;
       sel.append('clipPath').attr('id', clipId).append('circle').attr('r', r);
-      sel.append('image')
-        .attr('href', p.photos[0])
+      sel.append('image').attr('href', p.photos[0])
         .attr('x', -r).attr('y', -r).attr('width', r * 2).attr('height', r * 2)
-        .attr('clip-path', `url(#${clipId})`)
-        .attr('preserveAspectRatio', 'xMidYMid slice');
+        .attr('clip-path', `url(#${clipId})`).attr('preserveAspectRatio', 'xMidYMid slice');
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', 'none').attr('stroke', ringColor);
     } else {
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r)
-        .attr('fill', d.depth === 0 ? 'var(--maroon)' : '#FFFBF3')
-        .attr('stroke', ringColor);
+        .attr('fill', d.depth === 0 ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
     }
 
-    const label = sel.append('text')
-      .text(PandeyData.displayName(p))
-      .attr('dy', '0.32em');
-
-    if (d.depth === 0) {
-      label.attr('x', 0).attr('y', r + 16).attr('text-anchor', 'middle');
-    } else if (d.x < Math.PI) {
-      label.attr('x', r + 6).attr('text-anchor', 'start');
-    } else {
-      label.attr('x', -(r + 6)).attr('text-anchor', 'end').attr('transform', 'rotate(180)');
-    }
+    sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 13);
   });
 
   nodeSel.on('click', (event, d) => { event.stopPropagation(); openPanel(d.data.data); });
 
-  // ---------- Zoom / pan ----------
-  const zoom = d3.zoom().scaleExtent([0.15, 3]).on('zoom', (event) => g.attr('transform', event.transform));
-  svg.call(zoom);
-  const stage = document.querySelector('.tree-stage');
-
-  function fitView(duration = 0) {
-    const scale = Math.min(1, (Math.min(stage.clientWidth, stage.clientHeight) * 0.92) / (radius * 2));
-    const t = d3.zoomIdentity.translate(stage.clientWidth / 2, stage.clientHeight / 2).scale(scale);
-    (duration ? svg.transition().duration(duration) : svg).call(zoom.transform, t);
+  // ---------- Sticky generation story, driven by scroll position ----------
+  const sidebar = document.getElementById('story-sidebar');
+  function renderStory(gen) {
+    const story = genById[gen];
+    const photos = story && story.photos && story.photos.length
+      ? `<div class="story-photos">${story.photos.map(src => `<img src="${src}">`).join('')}</div>` : '';
+    sidebar.innerHTML = `
+      <div class="gen-num">GENERATION ${gen}</div>
+      <h2>${(story && story.title) || 'Generation ' + gen}</h2>
+      ${photos}
+      ${story && story.description ? `<p>${story.description}</p>` : `<p class="empty">No story added for this generation yet.</p>`}
+      <a class="btn btn-outline-dark btn-sm" href="admin.html?generation=${gen}">Add to this generation's story</a>
+    `;
   }
-  requestAnimationFrame(() => fitView());
+  renderStory(1);
 
-  document.getElementById('zoom-in').addEventListener('click', () => svg.transition().duration(150).call(zoom.scaleBy, 1.3));
-  document.getElementById('zoom-out').addEventListener('click', () => svg.transition().duration(150).call(zoom.scaleBy, 1 / 1.3));
-  document.getElementById('zoom-reset').addEventListener('click', () => fitView(300));
+  const markers = document.querySelectorAll('.gen-marker');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) renderStory(parseInt(entry.target.dataset.gen, 10)); });
+  }, { root: null, rootMargin: '-42% 0px -42% 0px', threshold: 0 });
+  markers.forEach(m => observer.observe(m));
 
   // ---------- Detail panel ----------
   const panel = document.getElementById('panel');
@@ -231,9 +261,7 @@
   function openPanel(p) {
     const chain = PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ');
     const photos = (p.photos || []).map(src => `<img src="${src}" alt="">`).join('');
-    const avatarHtml = (p.photos && p.photos.length)
-      ? `<img class="avatar-lg" src="${p.photos[0]}" alt="">`
-      : `<div class="avatar-lg-placeholder"></div>`;
+    const avatarHtml = (p.photos && p.photos.length) ? `<img class="avatar-lg" src="${p.photos[0]}" alt="">` : `<div class="avatar-lg-placeholder"></div>`;
     const current = (p.locations || []).find(l => l.type === 'current');
     const others = (p.locations || []).filter(l => l.type !== 'current' && l.type !== 'origin');
     const othersStr = others.map(l => `${l.place}${l.type ? ' (' + l.type + (l.year ? ', ' + l.year : '') + ')' : ''}`).join(', ');
@@ -259,7 +287,7 @@
     panel.classList.add('open');
   }
 
-  // ---------- Search: dim everything except the ancestor path to the match ----------
+  // ---------- Search ----------
   document.getElementById('search-box').addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();
     nodeSel.classed('highlight', false).classed('dim', false);
@@ -272,16 +300,10 @@
     const ancestorIds = new Set();
     let n = match;
     while (n) { ancestorIds.add(n.data.id); n = n.parent; }
-
     nodeSel.classed('dim', d => !ancestorIds.has(d.data.id));
     linkSel.classed('dim', d => !ancestorIds.has(d.target.data.id));
-    nodeSel.filter(d => d.data.id === match.data.id).classed('highlight', true);
-
-    const angle = match.x, r = match.y;
-    const px = r * Math.sin(angle), py = -r * Math.cos(angle);
-    const scale = 1;
-    const t = d3.zoomIdentity.translate(stage.clientWidth / 2 - px * scale, stage.clientHeight / 2 - py * scale).scale(scale);
-    svg.transition().duration(350).call(zoom.transform, t);
+    const matchEl = nodeSel.filter(d => d.data.id === match.data.id).classed('highlight', true).node();
+    if (matchEl && matchEl.scrollIntoView) matchEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
   });
 })();
 </script>

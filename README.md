@@ -18,6 +18,8 @@ css/style.css   shared design
 js/             crypto.js, github.js, common.js — see "How editing works" below
 data/
   people.json     the family tree data — 105 people, 14 generations
+  generations.json  a title/story/photos entry per generation, shown in
+                     the sidebar as you scroll the tree
   audit-log.json  starts empty; fills in as people edit
   access.json     starts empty; you add editor entries via setup.html
 uploads/        photos land here once uploaded

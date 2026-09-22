@@ -72,7 +72,15 @@
 
     <div class="tabs" id="tabs">
       <button id="tab-people" class="active">People</button>
+      <button id="tab-generations">Generation stories</button>
       <button id="tab-editors" class="hidden">Manage editors</button>
+    </div>
+
+    <div id="generations-panel" class="hidden editor-layout">
+      <div class="person-list">
+        <ul id="generation-ul"></ul>
+      </div>
+      <div id="generation-form-area"><p class="muted">Select a generation from the list to add its story.</p></div>
     </div>
 
     <div id="people-panel" class="editor-layout">
@@ -149,12 +157,134 @@
 
   // ---------- Tabs ----------
   document.getElementById('tab-people').addEventListener('click', () => switchTab('people'));
+  document.getElementById('tab-generations').addEventListener('click', () => { switchTab('generations'); renderGenerationList(); });
   document.getElementById('tab-editors').addEventListener('click', () => { switchTab('editors'); renderEditorList(); });
   function switchTab(tab) {
     document.getElementById('tab-people').classList.toggle('active', tab === 'people');
+    document.getElementById('tab-generations').classList.toggle('active', tab === 'generations');
     document.getElementById('tab-editors').classList.toggle('active', tab === 'editors');
     document.getElementById('people-panel').classList.toggle('hidden', tab !== 'people');
+    document.getElementById('generations-panel').classList.toggle('hidden', tab !== 'generations');
     document.getElementById('editors-panel').classList.toggle('hidden', tab !== 'editors');
+  }
+
+  // ---------- Generation stories ----------
+  let currentGeneration = null;
+  let pendingGenPhotos = [];
+
+  async function renderGenerationList() {
+    const ul = document.getElementById('generation-ul');
+    const { content } = await PandeyGitHub.getFile('data/generations.json', token);
+    const gens = content ? JSON.parse(content) : [];
+    ul.innerHTML = gens.map(g => `<li><a href="#" data-gen="${g.generation}">${g.title || 'Generation ' + g.generation}</a></li>`).join('');
+    ul.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        ul.querySelectorAll('a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        loadGenerationForm(parseInt(a.dataset.gen, 10), gens);
+      });
+    });
+    if (preselectGen) {
+      const target = ul.querySelector(`a[data-gen="${preselectGen}"]`);
+      if (target) target.click();
+    }
+  }
+
+  function existingGenThumb(src) { return `<div class="thumb"><img src="${src}"><button class="remove" data-src="${src}">&times;</button></div>`; }
+
+  function loadGenerationForm(genNum, gens) {
+    currentGeneration = gens.find(g => g.generation === genNum) || { generation: genNum, title: '', description: '', photos: [] };
+    pendingGenPhotos = [];
+    const area = document.getElementById('generation-form-area');
+    area.innerHTML = `
+      <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 20px;">Generation ${genNum}</h2>
+      <div class="field"><label>Title</label><input type="text" id="g-title" value="${currentGeneration.title || ''}"></div>
+      <div class="field"><label>Story</label><textarea id="g-description" style="min-height:160px;">${currentGeneration.description || ''}</textarea></div>
+      <div class="field">
+        <label>Photos</label>
+        <div class="photo-grid" id="g-photo-grid">${(currentGeneration.photos || []).map(existingGenThumb).join('')}</div>
+        <input type="file" id="g-photo-input" accept="image/*" multiple style="margin-top:10px;">
+      </div>
+      <button class="btn btn-gold" id="save-gen-btn">Save generation story</button>
+      <span id="save-gen-status" class="status-msg"></span>
+    `;
+    document.getElementById('g-photo-input').addEventListener('change', handleGenPhotoSelect);
+    document.getElementById('save-gen-btn').addEventListener('click', saveGeneration);
+    wireGenPhotoRemovers();
+  }
+
+  function handleGenPhotoSelect(e) {
+    [...e.target.files].forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const filename = `gen${currentGeneration.generation}_${Date.now()}.jpg`;
+          pendingGenPhotos.push({ dataUrl, filename });
+          document.getElementById('g-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"><button class="remove" data-pending="${filename}">&times;</button></div>`);
+          wireGenPhotoRemovers();
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  function wireGenPhotoRemovers() {
+    document.querySelectorAll('#g-photo-grid .remove').forEach(btn => {
+      btn.onclick = () => { if (btn.dataset.pending) pendingGenPhotos = pendingGenPhotos.filter(p => p.filename !== btn.dataset.pending); btn.closest('.thumb').remove(); };
+    });
+  }
+
+  async function saveGeneration() {
+    const statusEl = document.getElementById('save-gen-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const { content, sha } = await PandeyGitHub.getFile('data/generations.json', token);
+      const gens = content ? JSON.parse(content) : [];
+      const idx = gens.findIndex(g => g.generation === currentGeneration.generation);
+      const before = idx >= 0 ? { ...gens[idx] } : { title: '', description: '', photos: [] };
+
+      const newPhotoUrls = [];
+      for (const photo of pendingGenPhotos) {
+        const base64 = photo.dataUrl.split(',')[1];
+        const path = `uploads/${photo.filename}`;
+        await PandeyGitHub.putFileRaw(path, base64, `Add photo for Generation ${currentGeneration.generation}`, token);
+        newPhotoUrls.push(path);
+      }
+
+      const updated = {
+        generation: currentGeneration.generation,
+        title: document.getElementById('g-title').value.trim(),
+        description: document.getElementById('g-description').value.trim(),
+        photos: [...(before.photos || []), ...newPhotoUrls]
+      };
+      if (idx >= 0) gens[idx] = updated; else gens.push(updated);
+      await PandeyGitHub.putFile('data/generations.json', JSON.stringify(gens, null, 2), `Edit Generation ${currentGeneration.generation} story — by ${editorName}`, token, sha);
+
+      const diffs = [];
+      if ((before.title || '') !== updated.title) diffs.push({ field: 'title', oldValue: before.title, newValue: updated.title });
+      if ((before.description || '') !== updated.description) diffs.push({ field: 'description', oldValue: before.description, newValue: updated.description });
+      if ((before.photos || []).length !== updated.photos.length) diffs.push({ field: 'photos', oldValue: `${(before.photos||[]).length} photo(s)`, newValue: `${updated.photos.length} photo(s)` });
+      if (diffs.length) {
+        const auditRes = await PandeyGitHub.getFile('data/audit-log.json', token);
+        const log = auditRes.content ? JSON.parse(auditRes.content) : [];
+        diffs.forEach(d => log.push({ timestamp: new Date().toISOString(), editorName, personId: `generation-${currentGeneration.generation}`, personName: `Generation ${currentGeneration.generation}`, field: d.field, oldValue: d.oldValue, newValue: d.newValue }));
+        await PandeyGitHub.putFile('data/audit-log.json', JSON.stringify(log, null, 2), `Log Generation ${currentGeneration.generation} story edit by ${editorName}`, token, auditRes.sha);
+      }
+
+      pendingGenPhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
   }
 
   // ---------- Manage editors (superuser only) ----------
@@ -227,6 +357,7 @@
 
   const params = new URLSearchParams(location.search);
   const preselect = params.get('person');
+  const preselectGen = params.get('generation');
 
   // ---------- Edit form ----------
   let pendingPhotos = [];
@@ -385,6 +516,13 @@
   if (preselect) {
     const observer = new MutationObserver(() => {
       if (!document.getElementById('editor-view').classList.contains('hidden')) { loadPersonForm(preselect); observer.disconnect(); }
+    });
+    observer.observe(document.getElementById('editor-view'), { attributes: true });
+  } else if (preselectGen) {
+    const observer = new MutationObserver(() => {
+      if (!document.getElementById('editor-view').classList.contains('hidden')) {
+        switchTab('generations'); renderGenerationList(); observer.disconnect();
+      }
     });
     observer.observe(document.getElementById('editor-view'), { attributes: true });
   }

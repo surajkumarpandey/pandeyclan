@@ -106,9 +106,11 @@
 
   let layerGroup = L.layerGroup().addTo(map);
   function clearLayer() { layerGroup.clearLayers(); }
+  let renderToken = 0; // guards against overlapping async renders drawing on top of each other
 
   // ---------- Whole-family aggregate mode ----------
   async function renderFamilyMode() {
+    const myToken = ++renderToken;
     clearLayer();
     const byPlace = {}; // place -> { types:Set, people: [{name,type}] }
     people.forEach(p => {
@@ -121,6 +123,7 @@
     const places = Object.keys(byPlace);
     for (const place of places) {
       const coords = await geocode(place);
+      if (myToken !== renderToken) return; // a newer render has started; abandon this one
       if (!coords) continue;
       const entry = byPlace[place];
       const hasOrigin = entry.people.some(x => x.type === 'origin');
@@ -137,18 +140,21 @@
 
   // ---------- Single-person journey mode ----------
   async function renderPersonMode(personId) {
+    const myToken = ++renderToken;
     clearLayer();
     const p = people.find(x => x.id === personId);
     if (!p || !p.locations || !p.locations.length) return;
     const points = [];
     for (const loc of p.locations) {
       const coords = await geocode(loc.place);
+      if (myToken !== renderToken) return; // a newer render has started; abandon this one
       if (!coords) continue;
       points.push({ ...loc, ...coords });
       const icon = dot(COLORS[loc.type] || COLORS.visited, loc.type === 'origin' || loc.type === 'current' ? 16 : 12);
       L.marker([coords.lat, coords.lng], { icon }).addTo(layerGroup)
         .bindPopup(`<b>${loc.place}</b><br>${loc.type}${loc.year ? ' · ' + loc.year : ''}${loc.note ? '<br>' + loc.note : ''}`);
     }
+    if (myToken !== renderToken) return;
     if (points.length > 1) {
       L.polyline(points.map(pt => [pt.lat, pt.lng]), { color: '#8C2F1F', weight: 2, dashArray: '5,7', opacity: 0.7 }).addTo(layerGroup);
     }
@@ -182,7 +188,8 @@
   const params = new URLSearchParams(location.search);
   const preselect = params.get('person');
   if (preselect && withJourneys.some(p => p.id === preselect)) {
-    personBtn.click();
+    personBtn.classList.add('active'); familyBtn.classList.remove('active');
+    personSelect.classList.remove('hidden');
     personSelect.value = preselect;
     renderPersonMode(preselect);
   } else {

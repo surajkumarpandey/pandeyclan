@@ -15,12 +15,11 @@
     overflow: hidden;
     position: relative;
   }
-  .hero .wrap { padding: 84px 28px 0; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: end; }
+  .hero .wrap { padding: 84px 28px 64px; display: block; max-width: 640px; }
   .hero h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(36px, 5.6vw, 60px); line-height: 1.08; margin: 0 0 22px; }
   .hero h1 .place { font-style: italic; color: var(--gold-light); }
   .hero p.lede { font-size: 18px; color: rgba(255,251,243,0.92); max-width: 46ch; margin: 0 0 32px; }
-  .hero .ctas { display: flex; gap: 14px; margin-bottom: 56px; flex-wrap: wrap; }
-  .hero-art { width: 100%; height: auto; }
+  .hero .ctas { display: flex; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
 
   .ridge-stats {
     background: var(--maroon-deep);
@@ -55,7 +54,7 @@
   .how-it-grows li { margin-bottom: 10px; }
 
   @media (max-width: 800px) {
-    .hero .wrap { grid-template-columns: 1fr; padding-top: 56px; }
+    .hero .wrap { padding-top: 56px; }
     .intro-grid, .explore-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -89,23 +88,6 @@
         <a class="btn btn-outline" href="map.html" data-i18n="home.cta.map">See where everyone has been</a>
       </div>
     </div>
-    <svg class="hero-art" viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs>
-        <radialGradient id="skyGlow" cx="50%" cy="30%" r="60%">
-          <stop offset="0%" stop-color="#F0B75C" stop-opacity="0.7"/>
-          <stop offset="100%" stop-color="#F0B75C" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-      <circle cx="330" cy="70" r="70" fill="url(#skyGlow)"/>
-      <path d="M0,220 L45,150 L80,190 L130,110 L170,175 L210,95 L250,180 L300,130 L340,200 L420,140 L420,300 L0,300 Z" fill="#3E1218" opacity="0.85"/>
-      <path d="M0,260 L60,200 L110,230 L160,170 L220,235 L280,180 L330,240 L420,190 L420,300 L0,300 Z" fill="#5C1F27"/>
-      <!-- temple silhouette, nod to the aipan tradition drawn at thresholds -->
-      <g fill="#FBF2E3" opacity="0.85">
-        <rect x="196" y="240" width="28" height="40"/>
-        <polygon points="196,240 210,205 224,240"/>
-        <rect x="206" y="196" width="8" height="14"/>
-      </g>
-    </svg>
   </div>
   <div class="aipan-border" style="transform:scaleY(-1);"></div>
 </header>
