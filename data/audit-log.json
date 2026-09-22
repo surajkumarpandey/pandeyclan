@@ -52,5 +52,23 @@
     "field": "added",
     "oldValue": "",
     "newValue": "added as child of Suraj"
+  },
+  {
+    "timestamp": "2026-09-22T06:53:44.054Z",
+    "editorName": "suraj",
+    "personId": "mrityunjay",
+    "personName": "Mrityunjay",
+    "field": "birthYear",
+    "oldValue": "",
+    "newValue": "2024"
+  },
+  {
+    "timestamp": "2026-09-22T06:53:44.054Z",
+    "editorName": "suraj",
+    "personId": "mrityunjay",
+    "personName": "Mrityunjay",
+    "field": "photos",
+    "oldValue": "0 photo(s)",
+    "newValue": "1 photo(s)"
   }
 ]
