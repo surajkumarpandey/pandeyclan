@@ -371,7 +371,7 @@
   },
   {
     "id": "shripati",
-    "name": "Shripati",
+    "name": "Shreepati Pandey",
     "gender": "M",
     "parentId": "narayan",
     "generation": 9,
@@ -383,7 +383,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "bhagirath",
