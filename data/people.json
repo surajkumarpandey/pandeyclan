@@ -1061,13 +1061,13 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": "Suraj Kumar Pandey",
-    "birthYear": null,
+    "birthYear": "1992",
     "deathYear": null,
     "photos": [
       "uploads/suraj_pandey.jpg"
     ],
     "bio": "Data Scientist working at NGI.\nPast credentials: \nPhD IIT Guwahati,\nOfficer IT (SPMCIL under ministry of Finance)",
-    "occupation": null,
+    "occupation": "Data Scientist",
     "locations": [
       {
         "place": "Bairati, Almora",
