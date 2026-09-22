@@ -55,7 +55,7 @@
   },
   {
     "id": "bhramdas",
-    "name": "Bhramdas",
+    "name": "Brahmdas Pandey",
     "gender": "M",
     "parentId": "gunankar",
     "generation": 3,
@@ -67,7 +67,9 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null
   },
   {
     "id": "samapati",
