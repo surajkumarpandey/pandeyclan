@@ -15,9 +15,9 @@
   }
   .tree-toolbar .wrap { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
   .tree-toolbar input[type=search] { max-width: 300px; }
-  .legend { font-size: 13px; color: #8a6a58; display: flex; gap: 16px; flex-wrap: wrap; margin-left: auto; }
+  .legend { font-size: 13.5px; color: var(--maroon-deep); font-weight: 600; display: flex; gap: 16px; flex-wrap: wrap; margin-left: auto; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.15); }
 
   .tree-body {
     display: grid;
@@ -42,7 +42,7 @@
 
   .tree-scroll-wrap {
     overflow-x: auto;
-    background-image: url('assets/img/0EA9FA8C-FE47-47FA-A7C3-C82FE4981CF5.png');
+    background-image: url('assets/img/tree-backdrop.jpg');
     background-repeat: repeat;
     background-size: 620px auto;
     background-color: var(--paper);
@@ -57,10 +57,19 @@
     background: rgba(255,251,243,0.82); padding: 2px 9px; border-radius: 999px;
   }
 
-  .link { fill: none; stroke: var(--maroon); stroke-opacity: 0.92; stroke-width: 2.6px; filter: drop-shadow(0 0 2px rgba(255,251,243,0.8)); }
-  .link.dim { stroke-opacity: 0.12; }
+  .link {
+    fill: none; stroke: var(--gold); stroke-opacity: 0.95; stroke-width: 2.4px; stroke-linejoin: miter;
+    filter: drop-shadow(0 0 3px rgba(224,149,42,0.9)) drop-shadow(0 0 7px rgba(224,149,42,0.5));
+  }
+  .link.dim { stroke-opacity: 0.1; filter: none; }
 
-  .node circle.avatar-ring { stroke-width: 3px; cursor: pointer; transition: stroke-width .12s; filter: drop-shadow(0 1px 4px rgba(46,15,10,0.45)); }
+  .sun-halo { fill: var(--gold); opacity: 0.28; pointer-events: none; }
+  .sun-halo.root-halo { opacity: 0.4; }
+
+  .node circle.avatar-ring {
+    stroke-width: 3px; cursor: pointer; transition: stroke-width .12s;
+    filter: drop-shadow(0 0 4px rgba(224,149,42,0.7)) drop-shadow(0 1px 4px rgba(46,15,10,0.4));
+  }
   .node image { cursor: pointer; }
   .node:hover circle.avatar-ring { stroke-width: 4.5px; }
   .node text {
@@ -69,9 +78,10 @@
   }
   .node.placeholder text { fill: #7a4a30; }
   .node.dim { opacity: 0.15; }
+  .node.dim .sun-halo { opacity: 0.05; }
   .node.highlight circle.avatar-ring { stroke: var(--gold) !important; stroke-width: 4px; }
 
-  .root-node circle.avatar-ring { stroke: var(--gold); stroke-width: 3px; }
+  .root-node circle.avatar-ring { stroke: var(--gold); stroke-width: 3.5px; }
   .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: var(--maroon-deep); }
 
   .panel {
@@ -96,6 +106,15 @@
     .tree-body { grid-template-columns: 1fr; }
     .story-sidebar { position: static; height: auto; border-left: none; border-top: 1px solid var(--line); }
   }
+
+  @media print {
+    .site-nav, .tree-toolbar, .story-sidebar, .panel { display: none !important; }
+    .tree-body { display: block; }
+    .tree-scroll-wrap { overflow: visible !important; background-image: none !important; }
+    body { background: #fff; }
+    .gen-label-tag { background: none; }
+    @page { size: landscape; margin: 10mm; }
+  }
 </style>
 </head>
 <body>
@@ -111,7 +130,6 @@
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
-      <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
@@ -125,6 +143,7 @@
       <span><i style="background:#E7C9A8"></i> <span data-i18n="tree.legend.placeholder">unnamed / placeholder</span></span>
       <span><i style="background:var(--gold);"></i> has a photo</span>
     </span>
+    <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn">Download as PDF</button>
   </div>
 </div>
 
@@ -178,7 +197,7 @@
 
   let minX = Infinity, maxX = -Infinity;
   root.each(d => { minX = Math.min(minX, d.x); maxX = Math.max(maxX, d.x); });
-  const totalWidth = (maxX - minX) + MARGIN_SIDE * 2;
+  const totalWidth = (maxX - minX) + MARGIN_SIDE * 2 + 200; // extra room for spouse nodes drawn beside their partner
   const totalHeight = maxDepth * DY + MARGIN_TOP * 2;
   const offsetX = -minX + MARGIN_SIDE;
 
@@ -214,26 +233,61 @@
   }
 
   // ---------- Links ----------
-  const linkGen = d3.linkVertical().x(d => d.x).y(d => d.y);
+  // Angular (elbow) connectors instead of smooth curves — drop straight down,
+  // step sideways, drop straight down again. Pairs better with the aipan
+  // geometric aesthetic than a soft bezier curve.
+  //
+  // Where a person has a spouse recorded, children hang from the MIDPOINT
+  // between the couple rather than from one parent alone — so first work out
+  // that midpoint for anyone who has one.
+  const spouseGap = Math.max(DX * 0.62, R * 2.6);
+  const midXMap = new Map();       // person id -> x used as the link's source
+  const spouseRenderList = [];     // spouses to draw once nodes are in place
+  root.each(d => {
+    const p = d.data.data;
+    if (p.spouseId) {
+      const spouse = people.find(x => x.id === p.spouseId);
+      if (spouse && spouse.parentId === null) {
+        const spouseX = d.x + spouseGap;
+        midXMap.set(d.data.id, (d.x + spouseX) / 2);
+        spouseRenderList.push({ person: spouse, x: spouseX, y: d.y, partnerX: d.x, partnerY: d.y });
+      }
+    }
+  });
+
+  function elbowLink(d) {
+    const sx = midXMap.has(d.source.data.id) ? midXMap.get(d.source.data.id) : d.source.x;
+    const midY = (d.source.y + d.target.y) / 2;
+    return `M${sx},${d.source.y} V${midY} H${d.target.x} V${d.target.y}`;
+  }
+  const linkGen = elbowLink;
   const linkSel = g.append('g').attr('class', 'links-layer')
     .selectAll('path.link').data(root.links()).join('path').attr('class', 'link').attr('d', linkGen);
 
   // ---------- Nodes ----------
   const R = 20, ROOT_R = 34;
-  const nodeSel = g.append('g').attr('class', 'nodes-layer')
-    .selectAll('g.node').data(root.descendants()).join('g')
-    .attr('class', d => 'node' + (d.data.data.unnamedPlaceholder ? ' placeholder' : '') + (d.depth === 0 ? ' root-node' : ''))
-    .attr('transform', d => `translate(${d.x},${d.y})`);
 
-  nodeSel.each(function (d) {
-    const sel = d3.select(this);
-    const p = d.data.data;
-    const r = d.depth === 0 ? ROOT_R : R;
+  // A wavy, sun-ray halo behind each avatar — the "divine" edge the family
+  // asked for, evoking Indian sun/mandala iconography rather than a plain ring.
+  function sunHaloPath(r, rays, amp) {
+    const steps = rays * 6;
+    let d = '';
+    for (let i = 0; i <= steps; i++) {
+      const angle = (i / steps) * Math.PI * 2;
+      const rr = r + Math.sin(angle * rays) * amp;
+      const x = (rr * Math.cos(angle)).toFixed(1), y = (rr * Math.sin(angle)).toFixed(1);
+      d += (i === 0 ? 'M' : 'L') + x + ',' + y;
+    }
+    return d + 'Z';
+  }
+
+  function drawAvatar(sel, p, r, isRoot) {
     const hasPhoto = p.photos && p.photos.length;
     const ringColor = p.unnamedPlaceholder ? '#B8804A' : (hasPhoto ? 'var(--gold)' : 'var(--maroon)');
-
+    sel.append('path').attr('class', 'sun-halo' + (isRoot ? ' root-halo' : ''))
+      .attr('d', sunHaloPath(r * 1.35, isRoot ? 16 : 10, r * 0.22));
     if (hasPhoto) {
-      const clipId = 'clip-' + d.data.id;
+      const clipId = 'clip-' + p.id + '-' + Math.random().toString(36).slice(2, 6);
       sel.append('clipPath').attr('id', clipId).append('circle').attr('r', r);
       sel.append('image').attr('href', p.photos[0])
         .attr('x', -r).attr('y', -r).attr('width', r * 2).attr('height', r * 2)
@@ -241,10 +295,32 @@
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', 'none').attr('stroke', ringColor);
     } else {
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r)
-        .attr('fill', d.depth === 0 ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
+        .attr('fill', isRoot ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
     }
-
     sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
+  }
+
+  const nodeSel = g.append('g').attr('class', 'nodes-layer')
+    .selectAll('g.node').data(root.descendants()).join('g')
+    .attr('class', d => 'node' + (d.data.data.unnamedPlaceholder ? ' placeholder' : '') + (d.depth === 0 ? ' root-node' : ''))
+    .attr('transform', d => `translate(${d.x},${d.y})`);
+
+  nodeSel.each(function (d) {
+    drawAvatar(d3.select(this), d.data.data, d.depth === 0 ? ROOT_R : R, d.depth === 0);
+  });
+
+  // ---------- Spouses: rendered beside their partner, with a marriage
+  // connector, using the same halo/avatar treatment ----------
+  const spouseLayer = g.append('g').attr('class', 'spouse-layer');
+  spouseRenderList.forEach(({ person, x, y, partnerX, partnerY }) => {
+    spouseLayer.append('line').attr('class', 'link')
+      .attr('x1', partnerX).attr('y1', partnerY).attr('x2', x).attr('y2', y);
+    const sSel = spouseLayer.append('g')
+      .attr('class', 'node' + (person.unnamedPlaceholder ? ' placeholder' : ''))
+      .attr('transform', `translate(${x},${y})`)
+      .style('cursor', 'pointer')
+      .on('click', (event) => { event.stopPropagation(); openPanel(person); });
+    drawAvatar(sSel, person, R, false);
   });
 
   nodeSel.on('click', (event, d) => { event.stopPropagation(); openPanel(d.data.data); });
@@ -260,7 +336,6 @@
       <h2>${(story && story.title) || 'Generation ' + gen}</h2>
       ${photos}
       ${story && story.description ? `<p>${story.description}</p>` : `<p class="empty">No story added for this generation yet.</p>`}
-      <a class="btn btn-outline-dark btn-sm" href="admin.html?generation=${gen}">Add to this generation's story</a>
     `;
   }
   renderStory(1);
@@ -276,6 +351,13 @@
   const panelBody = document.getElementById('panel-body');
   document.getElementById('panel-close').addEventListener('click', () => panel.classList.remove('open'));
 
+  function formatBirthDate(birthDate, birthYearFallback) {
+    if (!birthDate) return birthYearFallback || '';
+    const d = new Date(birthDate + 'T00:00:00');
+    if (isNaN(d)) return birthDate;
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
   function openPanel(p) {
     const chain = PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ');
     const photos = (p.photos || []).map(src => `<img src="${src}" alt="">`).join('');
@@ -283,6 +365,7 @@
     const current = (p.locations || []).find(l => l.type === 'current');
     const others = (p.locations || []).filter(l => l.type !== 'current' && l.type !== 'origin');
     const othersStr = others.map(l => `${l.place}${l.year ? ' (' + l.year + ')' : ''}`).join(', ');
+    const spouse = p.spouseId ? people.find(x => x.id === p.spouseId) : null;
     panelBody.innerHTML = `
       ${avatarHtml}
       <h2>${PandeyData.displayName(p)}</h2>
@@ -290,23 +373,24 @@
       ${p.unnamedPlaceholder ? '<span class="badge badge-placeholder">Name not recorded</span>' : ''}
       <dl>
         ${p.fullName ? `<dt>Full name</dt><dd>${p.fullName}</dd>` : ''}
+        ${spouse ? `<dt>Spouse</dt><dd>${PandeyData.displayName(spouse)}</dd>` : ''}
         ${p.occupation ? `<dt>Occupation</dt><dd>${p.occupation}</dd>` : ''}
-        ${p.birthYear ? `<dt>Born</dt><dd>${p.birthYear}</dd>` : ''}
+        ${(p.birthDate || p.birthYear) ? `<dt>Born</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}</dd>` : ''}
         ${current ? `<dt>Current location</dt><dd>${current.place}</dd>` : ''}
         ${othersStr ? `<dt>Places visited</dt><dd>${othersStr}</dd>` : ''}
         ${p.bio ? `<dt>Description</dt><dd>${p.bio}</dd>` : ''}
         ${p.notes ? `<dt>Note</dt><dd class="muted">${p.notes}</dd>` : ''}
       </dl>
       ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">Photos</dt><div class="photos">${photos}</div>` : ''}
-      <p style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-outline-dark btn-sm" href="admin.html?person=${p.id}">Add details</a>
-        ${(p.locations || []).length ? `<a class="btn btn-outline-dark btn-sm" href="map.html?person=${p.id}">See their journey</a>` : ''}
-      </p>
+      ${p.audioMessage ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">Voice message</dt><audio controls src="${p.audioMessage}" style="width:100%; margin-top:6px;"></audio>` : ''}
+      ${(p.locations || []).length ? `<p style="margin-top:22px;"><a class="btn btn-outline-dark btn-sm" href="map.html?person=${p.id}">See their journey</a></p>` : ''}
     `;
     panel.classList.add('open');
   }
 
   // ---------- Search ----------
+  document.getElementById('download-pdf-btn').addEventListener('click', () => window.print());
+
   document.getElementById('search-box').addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();
     nodeSel.classed('highlight', false).classed('dim', false);
