@@ -1055,7 +1055,8 @@
         "year": null,
         "note": null
       }
-    ]
+    ],
+    "spouseId": "hemlata-pant"
   },
   {
     "id": "suraj",
@@ -1804,6 +1805,26 @@
     "photos": [
       "uploads/mrityunjay_1790060014223.jpg"
     ],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "hemlata-pant",
+    "name": "Hemlata Pant",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "spouseId": "ashok",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
     "bio": "",
     "occupation": null
   }
