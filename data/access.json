@@ -1,18 +1,10 @@
 {
   "editors": [
     {
-      "salt": "e+1Wea5BAu+MYqWuCFl1LQ==",
-      "iv": "jshG4QsrX6lhdTFL",
-      "cipher": "6PvxLQumKFJbed1He0EguQXlUE9/17/esGx3mS+xjYlSlt8zJihY4+6cdL61aCnehHzHSPrTvRDYV4pHuAZ60HuCRiHiyNLWk72FNUdB1lLmxPw5mrA6MomJ1SX2hP5KlISrOP7MD0QaKBxZiQ==",
-      "_label": "suraj",
-      "role": "superuser"
-    },
-    {
-      "salt": "+zFPfeRUi4OmvjgR0MUw7g==",
-      "iv": "KWocgNalXO/o8sS2",
-      "cipher": "qIIfa+ELzuFG5vm79G3utpb2Dc/A78obvEKkVEIdnjKdApB0xUENW08ZPxg04ABORNzmbgOWwcoEcfXTPj1NIPOtG3x74OpoHtOELMgmR+cGME7Mq18Z48vjDszt5yoddjFWSaectEDPE8VcCg==",
-      "_label": "pandey",
-      "role": "editor"
-    }
+  "salt": "67jutB+RtECanAC3RbcIDg==",
+  "iv": "gLaV+7POsDZ2pLKS",
+  "cipher": "3iVQcuFAAuBfNT4CSPg1JVtRW+I1H4Xu4+0bD5zfB16NJhuz4tZqi0DCxMFdAjYch7mEKuXN5gZyLveRI0+2X6PPHM0UwmTQSFbFXR+T+C8jj9ku/M4doQxj9WRmb5+mXBPQKHTnbZMm5CtR6w==",
+  "role": "superuser"
+}
   ]
 }
