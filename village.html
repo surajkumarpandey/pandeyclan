@@ -17,9 +17,6 @@
   .village-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
   .village-hero a { color: var(--gold-light); }
   .two-col { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start; }
-  .prompt-card { background: var(--paper-light); border: 1px solid var(--line); border-left: 4px solid var(--gold); padding: 20px 22px; margin-bottom: 16px; }
-  .prompt-card h4 { margin: 0 0 8px; font-family: var(--font-display); font-size: 17px; }
-  .prompt-card p { font-size: 14px; color: #5a3a2e; margin: 0; font-style: italic; }
   .bhulekh-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
   .bhulekh-table td, .bhulekh-table th { padding: 9px 14px; border: 1px solid var(--line); font-size: 14.5px; text-align: left; }
   .bhulekh-table th { background: rgba(179,64,42,0.06); width: 160px; }
@@ -40,6 +37,7 @@
       <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
       <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
       <li><a href="village.html" class="active" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Changelog</a></li>
       <li><a href="admin.html" data-i18n="nav.admin">Edit</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
@@ -63,24 +61,7 @@
 
     <h2 class="section-title" style="margin-top:44px;">Aipan — the art of this land</h2>
     <p>Aipan is the ritual floor-and-wall art of Kumaon: geometric patterns — lotuses, chowkis, temple motifs, borders of triangles and dots — drawn freehand in rice-paste white (<em>biswar</em>) on a base of red ochre (<em>geru</em>). Traditionally made at thresholds, in worship spaces, and for festivals and ceremonies, it's one of the most recognisable visual traditions of this region. This site's colour palette and border patterns are drawn from it.</p>
-    <p>The borders on this page are a simple version I drew directly in code. For real photographic or richly detailed aipan artwork — for a hero image, a printed banner, or the site's favicon — here are prompts you can use with an image generator (Midjourney, DALL·E, Stable Diffusion, etc.):</p>
-
-    <div class="prompt-card">
-      <h4>Aipan hero texture</h4>
-      <p>"Traditional Kumaoni aipan folk art pattern, hand-painted with white rice-paste (biswar) on a deep red ochre (geru) background, geometric lotus and temple motifs, symmetrical border design, flat vector illustration style, high detail, no text"</p>
-    </div>
-    <div class="prompt-card">
-      <h4>Village landscape</h4>
-      <p>"A traditional Kumaoni hill village at golden hour, terraced fields, stone and slate-roofed houses, pine and deodar forest, Himalayan ridgeline in the background, warm evening light, painterly illustration, Uttarakhand"</p>
-    </div>
-    <div class="prompt-card">
-      <h4>Threshold aipan close-up</h4>
-      <p>"Close-up of a hand-drawn aipan design on a stone doorstep, white rice-flour paste on red ochre ground, traditional Kumaoni ritual art, soft natural light, shallow depth of field, photorealistic"</p>
-    </div>
-    <div class="prompt-card">
-      <h4>Site favicon / emblem</h4>
-      <p>"A single simple aipan-style lotus emblem, white line art on a round red-ochre background, minimal geometric folk-art icon, flat design, centred, suitable as a small app icon"</p>
-    </div>
+    <p>Have an old photo of the village, the house, or anything else worth keeping? The <a href="archive.html">Family Archive</a> is the place for it.</p>
   </div>
 
   <aside class="card">
@@ -95,7 +76,7 @@
       <li>Go to <strong>bhulekh.uk.gov.in</strong> (the official portal — I can't fetch it automatically for you, it blocks automated access and needs a CAPTCHA, so this is a manual visit).</li>
       <li>Select district <strong>अल्मोड़ा</strong>, tehsil <strong>चौखुटिया</strong>, village <strong>बैरती</strong>.</li>
       <li>Choose search by <strong>Khatedar ka naam</strong> (owner's name) — enter it in Hindi/Devanagari for best results. If you don't have a khasra number, the name search is the way in.</li>
-      <li>Try the earliest ancestor first — Sukhdev Ji, or one of his sons. Land records often still list an earlier generation's name as the registered holder, even now.</li>
+      <li>Try the earliest ancestor first — Shri Sukhdev, or one of his sons. Land records often still list an earlier generation's name as the registered holder, even now.</li>
       <li>Once you find a khata, note the khasra numbers — <strong>bhunaksha.uk.gov.in</strong> will show the actual plot boundaries on a map for the same district/tehsil/village.</li>
     </ol>
     <p class="muted" style="font-size:13px;">Whatever you find is worth adding to the relevant person's <code>bio</code> or <code>locations</code> field from the Edit page.</p>
