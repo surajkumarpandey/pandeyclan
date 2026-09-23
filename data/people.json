@@ -1680,19 +1680,25 @@
   },
   {
     "id": "manoj_umesh_daughter_34",
-    "name": "Daughter",
+    "name": "Awani",
     "gender": "F",
     "parentId": "manoj_umesh",
     "generation": 19,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": "Awani Pandey",
+    "fatherName": "Manoj Kumar Pandey",
+    "motherName": "Preeti Pandey",
+    "birthDate": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "visvesh",
