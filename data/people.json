@@ -965,7 +965,7 @@
     "occupation": null,
     "locations": [],
     "spouseId": "baby-pandey",
-    "sortOrder": 1
+    "sortOrder": 0
   },
   {
     "id": "ashok",
@@ -1048,7 +1048,7 @@
     "audioMessages": [
       "uploads/ashok_voice_1790103072510.wav"
     ],
-    "sortOrder": 0
+    "sortOrder": 1
   },
   {
     "id": "suraj",
