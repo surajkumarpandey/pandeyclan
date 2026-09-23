@@ -138,7 +138,6 @@
       <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
       <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
-      <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
   </div>
@@ -194,7 +193,9 @@
   generations.forEach(g => { genById[g.generation] = g; });
 
   function buildNode(p) {
-    return { id: p.id, data: p, children: people.filter(c => c.parentId === p.id).map(buildNode) };
+    const children = people.filter(c => c.parentId === p.id)
+      .sort((a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999) || PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+    return { id: p.id, data: p, children: children.map(buildNode) };
   }
   const rootPerson = people.find(p => !p.parentId);
   const root = d3.hierarchy(buildNode(rootPerson), d => d.children);
