@@ -1,0 +1,126 @@
+{
+  "history": "Kumaon's recorded history as a seat of power begins with the Katyuri dynasty, who ruled from around the 9th century CE. Their era left behind an extraordinary number of temples — the Katyuris were prolific temple-builders, and clusters of their stonework survive across Almora district to this day.\n\nBy the 16th century, power passed to the Chand dynasty. King Kalyan Chand founded the town of Almora in 1568 as his capital, and it remained the political and cultural centre of Kumaon for over two centuries under Chand rule. In 1790, the Gorkhas of Nepal took control of the region; the British East India Company then took it from them in 1815, after the Anglo-Nepalese War.\n\nThrough all of this, Almora and the hills around it — Bairati included — stayed culturally distinct: a Kumaoni-speaking world of terraced hill-farming, temple architecture, and the rice-paste aipan art still practiced today.",
+  "whyBairati": "Bairati sits within Chaukhutiya (also spelled Chaukhutia) tehsil of Almora district — and Chaukhutiya itself turns out to have real archaeological weight. In a 2016–17 excavation, a group of small temples dating to around the 9th century CE was uncovered there, built in the same era as the Katyuri dynasty's rise. Some had lost their roofs to time, but the shivalingas inside were found still intact.\n\nChaukhutiya is also a natural crossroads: roads from here run toward Ramnagar, toward Karanprayag, and toward Ranikhet and Almora — very likely why a family settled and stayed here across so many generations.",
+  "places": [
+    {
+      "name": "Dwarahat",
+      "distance": "On the same road as Chaukhutiya",
+      "description": "A town famous for its clusters of Katyuri-era stone temples — one of the richest concentrations of early medieval temple architecture in the region."
+    },
+    {
+      "name": "Ranikhet",
+      "distance": "~48 km from Almora",
+      "description": "A hill station built around a cantonment, known for Himalayan views, a golf course, and a quieter pace than Nainital."
+    },
+    {
+      "name": "Someshwar",
+      "distance": "~35 km from Almora",
+      "description": "An ancient Shiva temple built by Raja Som Chand of the Chand dynasty — a direct link to the same rulers who founded Almora."
+    },
+    {
+      "name": "Jageshwar",
+      "distance": "~36 km from Almora",
+      "description": "A major Shiva temple complex with over 100 shrines dating from the 9th–13th centuries, set in dense deodar forest."
+    },
+    {
+      "name": "Kasar Devi Temple",
+      "distance": "~8 km from Almora",
+      "description": "A hilltop temple that became a gathering point for spiritual seekers in the 1960s–70s, visited by figures like Bob Dylan and Cat Stevens."
+    },
+    {
+      "name": "Binsar Wildlife Sanctuary",
+      "distance": "~30 km from Almora",
+      "description": "A forested sanctuary with panoramic Himalayan views, home to leopards, barking deer, and the Himalayan monal."
+    },
+    {
+      "name": "Kainchi Dham",
+      "distance": "~45 km from Almora",
+      "description": "An ashram on the Nainital–Almora road founded by Neem Karoli Baba in 1962, drawing large crowds for its annual June gathering."
+    },
+    {
+      "name": "Almora town itself",
+      "distance": "The district headquarters",
+      "description": "Bright End Corner for sunrise/sunset views, the Nanda Devi temple, and Lal Bazaar for local crafts and woollens."
+    }
+  ],
+  "songs": [
+    {
+      "name": "Bedu Pako Baro Masa",
+      "description": "The best-known Kumaoni folk song, composed in the early 1950s from an older village tradition by Mohan Upreti, B. M. Shah and lyricist Brijendra Lal Shah. Now the official regimental song of the Kumaon Regiment of the Indian Army."
+    },
+    {
+      "name": "Harela geet",
+      "description": "Songs sung at Harela, the monsoon sowing festival, celebrating the sowing of seeds and the arrival of the rains — sung while the Harela grass shoots are cut and offered."
+    },
+    {
+      "name": "Girda's songs",
+      "description": "Girish Tiwari 'Girda' (1945–2010) was Kumaon's best-known modern folk poet-singer, whose songs of the land and its people are still sung at gatherings across the region today."
+    }
+  ],
+  "temples": [
+    {
+      "name": "Jageshwar Dham",
+      "description": "Over 100 shrines dedicated to Shiva, dating from the 9th–13th centuries, in dense deodar forest near Almora."
+    },
+    {
+      "name": "Nanda Devi Temple, Almora",
+      "description": "In the heart of Almora town, dedicated to Nanda Devi, the kuldevi (family deity) of the Chand dynasty."
+    },
+    {
+      "name": "Baijnath Temples",
+      "description": "A cluster of Katyuri-era temples (12th–13th century) to Shiva, Ganesha and Parvati, on the Gomti river."
+    },
+    {
+      "name": "Patal Bhuvaneshwar",
+      "description": "An underground limestone cave temple, sacred in Kumaon, believed visited by Adi Shankaracharya."
+    },
+    {
+      "name": "Someshwar Mahadev Temple",
+      "description": "Built by Raja Som Chand of the Chand dynasty, ~35 km from Almora."
+    },
+    {
+      "name": "Kasar Devi Temple",
+      "description": "A hilltop shakti-peeth-style temple near Almora, believed to date to the 2nd century CE."
+    },
+    {
+      "name": "Chaukhutiya temple ruins",
+      "description": "A cluster of 9th-century temples uncovered in a 2016–17 excavation right in Bairati's own tehsil."
+    }
+  ],
+  "food": [
+    {
+      "name": "Kafuli",
+      "description": "Green leafy vegetables (spinach, fenugreek) cooked down with rice flour — the official State Food of Uttarakhand."
+    },
+    {
+      "name": "Bhatt ki Churkani / Bhatt ki Dal",
+      "description": "Black soybean (bhatt), a Kumaoni staple, blended with rice paste or slow-cooked in a tomato gravy."
+    },
+    {
+      "name": "Chainsoo",
+      "description": "Roasted, ground black gram dal cooked into a thick, protein-rich gravy."
+    },
+    {
+      "name": "Aloo ke Gutke",
+      "description": "Spicy pan-fried potatoes with mustard seeds and jakhiya — the closest thing Kumaon has to street food."
+    },
+    {
+      "name": "Jhangora ki Kheer",
+      "description": "A pudding made from barnyard millet, milk and sugar."
+    },
+    {
+      "name": "Bal Mithai",
+      "description": "Almora's signature sweet — roasted khoya fudge coated in white sugar balls, sometimes called the region's own 'chocolate'."
+    },
+    {
+      "name": "Singori",
+      "description": "A khoya-based sweet wrapped in a malu leaf, which perfumes it as it sets."
+    },
+    {
+      "name": "Bhang ki Chutney",
+      "description": "A tangy chutney of roasted hemp seeds, garlic and lemon, served with almost any Kumaoni thali."
+    }
+  ],
+  "panchangUrl": "https://vedpanchang.com/as/city/almora",
+  "photos": []
+}
