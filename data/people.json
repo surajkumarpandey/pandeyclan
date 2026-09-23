@@ -1949,7 +1949,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 0
   },
   {
     "id": "garima",
@@ -1969,7 +1970,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 1
   },
   {
     "id": "mohit",
