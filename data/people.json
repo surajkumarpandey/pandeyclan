@@ -1169,7 +1169,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "meena-pandey"
   },
   {
     "id": "dev",
@@ -2031,6 +2032,26 @@
     "notes": null,
     "fullName": null,
     "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "meena-pandey",
+    "name": "Meena Pandey",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "spouseId": "khajan",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
