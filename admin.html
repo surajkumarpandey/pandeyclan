@@ -58,6 +58,7 @@
       <button id="tab-generations">Generation stories</button>
       <button id="tab-archive">Archive</button>
       <button id="tab-village">Village page</button>
+      <button id="tab-backup">Backup &amp; Restore</button>
     </div>
 
     <div id="people-panel" class="editor-layout">
@@ -93,6 +94,23 @@
         </div>
         <button class="btn btn-gold" id="save-village-btn">Save village page</button>
         <span id="save-village-status" class="status-msg"></span>
+      </div>
+    </div>
+
+    <div id="backup-panel" class="hidden">
+      <div class="card" style="max-width:640px;">
+        <h3 style="margin-top:0; font-family:var(--font-display);">Download a backup</h3>
+        <p class="muted" style="font-size:14px;">Saves the family tree exactly as it is right now — every person, their details, and how they connect — as one file on your device. Keep these safe; each one is a full snapshot you can return to.</p>
+        <button class="btn btn-gold btn-sm" id="download-backup-btn">Download tree backup</button>
+        <span id="download-backup-status" class="status-msg"></span>
+      </div>
+
+      <div class="card" style="max-width:640px; margin-top:20px;">
+        <h3 style="margin-top:0; font-family:var(--font-display);">Restore from a backup</h3>
+        <p class="muted" style="font-size:14px;">Replaces the entire live tree with whatever is in the file you choose — including undoing any edits made since that backup was taken. There's no undo for this beyond restoring an even older backup, so be sure before you confirm.</p>
+        <input type="file" id="restore-file-input" accept="application/json" style="margin-bottom:10px; display:block;">
+        <button class="btn btn-outline-dark btn-sm" id="restore-backup-btn" style="border-color:var(--ochre-deep); color:var(--ochre-deep);" disabled>Restore this backup</button>
+        <span id="restore-backup-status" class="status-msg"></span>
       </div>
     </div>
   </div>
@@ -145,7 +163,7 @@
   document.getElementById('signout-btn').addEventListener('click', () => location.reload());
 
   // ---------- Tabs ----------
-  const TABS = ['people', 'generations', 'archive', 'village'];
+  const TABS = ['people', 'generations', 'archive', 'village', 'backup'];
   TABS.forEach(t => document.getElementById('tab-' + t).addEventListener('click', () => {
     switchTab(t);
     if (t === 'generations') renderGenerationList();
@@ -800,6 +818,68 @@
       statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
     }
   }
+
+  // ================= BACKUP & RESTORE =================
+  document.getElementById('download-backup-btn').addEventListener('click', async () => {
+    const statusEl = document.getElementById('download-backup-status');
+    statusEl.textContent = 'Preparing…'; statusEl.className = 'status-msg';
+    try {
+      const { content } = await PandeyGitHub.getFile('data/people.json', token);
+      const blob = new Blob([content], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `pandey-tree-backup-${stamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      statusEl.textContent = 'Downloaded.'; statusEl.className = 'status-msg ok';
+    } catch (e) {
+      statusEl.textContent = 'Could not download: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  });
+
+  let pendingRestoreData = null;
+  document.getElementById('restore-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    const btn = document.getElementById('restore-backup-btn');
+    const statusEl = document.getElementById('restore-backup-status');
+    pendingRestoreData = null;
+    btn.disabled = true;
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (!Array.isArray(parsed) || !parsed.length || !parsed[0].id) {
+          statusEl.textContent = 'That doesn\'t look like a tree backup file.'; statusEl.className = 'status-msg error';
+          return;
+        }
+        pendingRestoreData = parsed;
+        statusEl.textContent = `Ready to restore ${parsed.length} people from ${file.name}.`; statusEl.className = 'status-msg';
+        btn.disabled = false;
+      } catch (err) {
+        statusEl.textContent = 'Could not read that file — is it a valid backup?'; statusEl.className = 'status-msg error';
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('restore-backup-btn').addEventListener('click', async () => {
+    if (!pendingRestoreData) return;
+    const statusEl = document.getElementById('restore-backup-status');
+    if (!confirm(`This will replace the ENTIRE live tree (all ${people.length} people currently on the site) with the ${pendingRestoreData.length} people in this backup file. This cannot be undone except by restoring another backup. Continue?`)) return;
+    statusEl.textContent = 'Restoring…'; statusEl.className = 'status-msg';
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', () => pendingRestoreData, `Restore tree from backup — by superadmin`, token);
+      statusEl.textContent = 'Restored. Reloading…'; statusEl.className = 'status-msg ok';
+      setTimeout(() => location.reload(), 1200);
+    } catch (e) {
+      statusEl.textContent = 'Could not restore: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  });
 
   const params = new URLSearchParams(location.search);
   const preselect = params.get('person');
