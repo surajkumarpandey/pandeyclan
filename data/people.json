@@ -964,7 +964,8 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "baby-pandey"
+    "spouseId": "baby-pandey",
+    "sortOrder": 2
   },
   {
     "id": "ashok",
@@ -1046,7 +1047,8 @@
     "audioMessage": null,
     "audioMessages": [
       "uploads/ashok_voice_1790103072510.wav"
-    ]
+    ],
+    "sortOrder": 0
   },
   {
     "id": "suraj",
@@ -1171,7 +1173,8 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "meena-pandey"
+    "spouseId": "meena-pandey",
+    "sortOrder": 3
   },
   {
     "id": "dev",
@@ -1219,7 +1222,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "sortOrder": 1
   },
   {
     "id": "chetan",
