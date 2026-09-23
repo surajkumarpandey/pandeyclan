@@ -18,10 +18,19 @@
   .person-list li a { display: block; padding: 9px 14px; font-size: 14px; text-decoration: none; color: var(--ink); border-bottom: 1px solid rgba(0,0,0,0.05); }
   .person-list li a:hover, .person-list li a.active { background: rgba(179,64,42,0.1); }
   .person-list li.placeholder a { color: #8a6a58; font-style: italic; }
-  .loc-row { display: grid; grid-template-columns: 1.6fr 1fr 0.7fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .loc-row { display: grid; grid-template-columns: 1.6fr 1fr 0.7fr auto; gap: 8px; align-items: center; }
+  .loc-row-wrap { margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+  .loc-check-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .loc-check-status { font-size: 12.5px; color: #8a6a58; }
+  .loc-check-status.ok { color: var(--pine); }
+  .loc-check-status.error { color: #b5432f; }
   .photo-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
   .photo-grid .thumb { position: relative; width: 84px; height: 84px; }
   .photo-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
+  .photo-grid .thumb .remove {
+    position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--ochre-deep); color: #fff; border: 2px solid var(--paper-light); cursor: pointer; font-size: 13px; line-height: 1;
+  }
   .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
   .tabs button { background: none; border: 1px solid var(--line-dark); padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--maroon); }
   .tabs button.active { background: var(--maroon); color: var(--paper-light); border-color: var(--maroon); }
@@ -196,13 +205,17 @@
   document.getElementById('person-search').addEventListener('input', (e) => renderPersonList(e.target.value));
 
   let pendingPhotos = [];
-  let pendingAudio = null;
+  let pendingAudioList = [];
+  let removedPhotos = new Set();
+  let removedAudio = new Set();
   const LOC_TYPES = ['origin', 'current', 'lived', 'visited'];
 
   function loadPersonForm(id) {
     currentPerson = people.find(p => p.id === id);
     pendingPhotos = [];
-    pendingAudio = null;
+    pendingAudioList = [];
+    removedPhotos = new Set();
+    removedAudio = new Set();
     const p = currentPerson;
     const area = document.getElementById('form-area');
     const locRows = (p.locations || []).map(l => locRow(l)).join('');
@@ -230,13 +243,17 @@
 
       <div class="field">
         <label>Photos</label>
-        <div class="photo-grid" id="photo-grid">${(p.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+        <div class="photo-grid" id="photo-grid">${(p.photos || []).map(src => `<div class="thumb"><img src="${src}"><button type="button" class="remove" data-existing="${src}">&times;</button></div>`).join('')}</div>
         <input type="file" id="photo-input" accept="image/*" multiple style="margin-top:10px;">
       </div>
 
       <div class="field">
-        <label>Voice message (up to 5 MB)</label>
-        ${p.audioMessage ? `<audio controls src="${p.audioMessage}" style="width:100%; margin-bottom:8px;"></audio><button type="button" class="btn btn-outline-dark btn-sm" id="remove-audio-btn">Remove voice message</button>` : ''}
+        <label>Voice messages (up to 5 MB each, add as many as you like)</label>
+        <div id="audio-list">${(p.audioMessages || (p.audioMessage ? [p.audioMessage] : [])).map(src => `
+          <div class="editor-row" data-existing-audio="${src}">
+            <audio controls src="${src}" style="width:100%; max-width:320px;"></audio>
+            <button type="button" class="btn btn-outline-dark btn-sm remove-audio-existing" data-src="${src}">Remove</button>
+          </div>`).join('')}</div>
         <input type="file" id="audio-input" accept="audio/*" style="margin-top:10px; display:block;">
         <p class="muted" id="audio-file-note" style="font-size:12.5px; margin-top:6px;"></p>
       </div>
@@ -295,9 +312,12 @@
     document.getElementById('add-loc').addEventListener('click', () => {
       document.getElementById('loc-rows').insertAdjacentHTML('beforeend', locRow({}));
       wireLocRemovers();
+      wireLocCheckers();
     });
     wireLocRemovers();
+    wireLocCheckers();
     document.getElementById('photo-input').addEventListener('change', handlePhotoSelect);
+    document.getElementById('audio-input').setAttribute('multiple', 'multiple');
     document.getElementById('audio-input').addEventListener('change', handleAudioSelect);
     document.getElementById('save-btn').addEventListener('click', savePerson);
     document.getElementById('add-child-btn').addEventListener('click', addChild);
@@ -308,19 +328,65 @@
     if (addSpouseBtn) addSpouseBtn.addEventListener('click', addSpouse);
     const unlinkBtn = document.getElementById('unlink-spouse-btn');
     if (unlinkBtn) unlinkBtn.addEventListener('click', unlinkSpouse);
-    const removeAudioBtn = document.getElementById('remove-audio-btn');
-    if (removeAudioBtn) removeAudioBtn.addEventListener('click', removeAudioMessage);
+    wirePhotoRemovers();
+    wireAudioRemovers();
+  }
+
+  function wirePhotoRemovers() {
+    document.querySelectorAll('#photo-grid .remove').forEach(btn => {
+      btn.onclick = () => {
+        if (btn.dataset.existing) removedPhotos.add(btn.dataset.existing);
+        if (btn.dataset.pending) pendingPhotos = pendingPhotos.filter(x => x.filename !== btn.dataset.pending);
+        btn.closest('.thumb').remove();
+      };
+    });
+  }
+  function wireAudioRemovers() {
+    document.querySelectorAll('.remove-audio-existing').forEach(btn => {
+      btn.onclick = () => { removedAudio.add(btn.dataset.src); btn.closest('[data-existing-audio]').remove(); };
+    });
+    document.querySelectorAll('.remove-audio-pending').forEach(btn => {
+      btn.onclick = () => { pendingAudioList = pendingAudioList.filter(x => x.filename !== btn.dataset.pending); btn.closest('[data-pending-audio]').remove(); };
+    });
   }
 
   function locRow(l) {
-    return `<div class="loc-row">
-      <input type="text" class="loc-place" placeholder="Place" value="${l.place || ''}">
-      <select class="loc-type">${LOC_TYPES.map(t => `<option value="${t}" ${l.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>
-      <input type="text" class="loc-year" placeholder="Year" value="${l.year || ''}">
-      <button type="button" class="btn btn-outline-dark btn-sm remove-loc">&times;</button>
+    const hasCoords = l.lat != null && l.lng != null;
+    return `<div class="loc-row-wrap" data-lat="${l.lat ?? ''}" data-lng="${l.lng ?? ''}">
+      <div class="loc-row">
+        <input type="text" class="loc-place" placeholder="Place" value="${l.place || ''}">
+        <select class="loc-type">${LOC_TYPES.map(t => `<option value="${t}" ${l.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>
+        <input type="text" class="loc-year" placeholder="Year" value="${l.year || ''}">
+        <button type="button" class="btn btn-outline-dark btn-sm remove-loc">&times;</button>
+      </div>
+      <div class="loc-check-row">
+        <button type="button" class="btn btn-outline-dark btn-sm check-loc-btn">Check on map</button>
+        <span class="loc-check-status ${hasCoords ? 'ok' : ''}">${hasCoords ? '✓ Location confirmed' : 'Not checked yet — the map will guess from the place name alone unless you check it'}</span>
+      </div>
     </div>`;
   }
-  function wireLocRemovers() { document.querySelectorAll('.remove-loc').forEach(btn => { btn.onclick = () => btn.closest('.loc-row').remove(); }); }
+  function wireLocRemovers() { document.querySelectorAll('.remove-loc').forEach(btn => { btn.onclick = () => btn.closest('.loc-row-wrap').remove(); }); }
+  function wireLocCheckers() {
+    document.querySelectorAll('.check-loc-btn').forEach(btn => {
+      btn.onclick = async () => {
+        const wrap = btn.closest('.loc-row-wrap');
+        const place = wrap.querySelector('.loc-place').value.trim();
+        const statusEl = wrap.querySelector('.loc-check-status');
+        if (!place) { statusEl.textContent = 'Type a place name first.'; statusEl.className = 'loc-check-status'; return; }
+        statusEl.textContent = 'Checking…'; statusEl.className = 'loc-check-status';
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(place)}`, { headers: { 'Accept-Language': 'en' } });
+          const data = await res.json();
+          if (!data[0]) { statusEl.textContent = 'No match found — try adding more detail (district, state, country).'; statusEl.className = 'loc-check-status error'; return; }
+          wrap.dataset.lat = data[0].lat; wrap.dataset.lng = data[0].lon;
+          statusEl.textContent = `✓ Found: ${data[0].display_name}`;
+          statusEl.className = 'loc-check-status ok';
+        } catch (e) {
+          statusEl.textContent = 'Could not check right now — try again.'; statusEl.className = 'loc-check-status error';
+        }
+      };
+    });
+  }
 
   function handlePhotoSelect(e) {
     [...e.target.files].forEach(file => {
@@ -337,7 +403,8 @@
           const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
           const filename = `${currentPerson.id}_${Date.now()}.jpg`;
           pendingPhotos.push({ dataUrl, filename });
-          document.getElementById('photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+          document.getElementById('photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"><button type="button" class="remove" data-pending="${filename}">&times;</button></div>`);
+          wirePhotoRemovers();
         };
         img.src = ev.target.result;
       };
@@ -347,41 +414,30 @@
 
   const MAX_AUDIO_BYTES = 5 * 1024 * 1024;
   function handleAudioSelect(e) {
-    const file = e.target.files[0];
     const note = document.getElementById('audio-file-note');
-    if (!file) return;
-    if (file.size > MAX_AUDIO_BYTES) {
-      note.textContent = `That file is ${(file.size / 1024 / 1024).toFixed(1)} MB — the limit is 5 MB. Try a shorter recording or a more compressed format (m4a/mp3).`;
-      note.style.color = '#b5432f';
-      e.target.value = '';
-      pendingAudio = null;
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const base64 = ev.target.result.split(',')[1];
-      const ext = (file.name.split('.').pop() || 'mp3').toLowerCase();
-      pendingAudio = { base64, filename: `${currentPerson.id}_voice_${Date.now()}.${ext}` };
-      note.textContent = `Ready to upload: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-      note.style.color = '';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async function removeAudioMessage() {
-    const statusEl = document.getElementById('save-status');
-    statusEl.textContent = 'Removing…'; statusEl.className = 'status-msg';
-    try {
-      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
-        const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
-        latestPeople[idx].audioMessage = null;
-        return latestPeople;
-      }, `Remove voice message for ${currentPerson.name} — by superadmin`, token);
-      people[people.findIndex(p => p.id === currentPerson.id)].audioMessage = null;
-      loadPersonForm(currentPerson.id);
-    } catch (e) {
-      statusEl.textContent = 'Could not remove: ' + e.message; statusEl.className = 'status-msg error';
-    }
+    [...e.target.files].forEach(file => {
+      if (file.size > MAX_AUDIO_BYTES) {
+        note.textContent = `"${file.name}" is ${(file.size / 1024 / 1024).toFixed(1)} MB — the limit is 5 MB per clip. Try a shorter recording or a more compressed format (m4a/mp3).`;
+        note.style.color = '#b5432f';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const base64 = ev.target.result.split(',')[1];
+        const ext = (file.name.split('.').pop() || 'mp3').toLowerCase();
+        const filename = `${currentPerson.id}_voice_${Date.now()}_${Math.random().toString(36).slice(2,5)}.${ext}`;
+        pendingAudioList.push({ base64, filename });
+        document.getElementById('audio-list').insertAdjacentHTML('beforeend', `
+          <div class="editor-row" data-pending-audio="${filename}">
+            <span>${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) — ready to upload</span>
+            <button type="button" class="btn btn-outline-dark btn-sm remove-audio-pending" data-pending="${filename}">Remove</button>
+          </div>`);
+        wireAudioRemovers();
+        note.textContent = ''; note.style.color = '';
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
   }
 
   async function savePerson() {
@@ -393,18 +449,20 @@
         await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add photo for ${currentPerson.name || currentPerson.id}`, token);
         newPhotoUrls.push(`uploads/${photo.filename}`);
       }
-      let audioPath;
-      if (pendingAudio) {
-        await PandeyGitHub.putFileRaw(`uploads/${pendingAudio.filename}`, pendingAudio.base64, `Add voice message for ${currentPerson.name || currentPerson.id}`, token);
-        audioPath = `uploads/${pendingAudio.filename}`;
+      const newAudioUrls = [];
+      for (const clip of pendingAudioList) {
+        await PandeyGitHub.putFileRaw(`uploads/${clip.filename}`, clip.base64, `Add voice message for ${currentPerson.name || currentPerson.id}`, token);
+        newAudioUrls.push(`uploads/${clip.filename}`);
       }
 
       const nameVal = document.getElementById('f-name').value.trim();
       const fullNameVal = document.getElementById('f-fullname').value.trim() || null;
       const genderVal = document.getElementById('f-gender').value;
-      const locVal = [...document.querySelectorAll('#loc-rows .loc-row')].map(row => ({
-        place: row.querySelector('.loc-place').value.trim(), type: row.querySelector('.loc-type').value,
-        year: row.querySelector('.loc-year').value.trim() || null, note: null
+      const locVal = [...document.querySelectorAll('#loc-rows .loc-row-wrap')].map(wrap => ({
+        place: wrap.querySelector('.loc-place').value.trim(), type: wrap.querySelector('.loc-type').value,
+        year: wrap.querySelector('.loc-year').value.trim() || null,
+        lat: wrap.dataset.lat ? parseFloat(wrap.dataset.lat) : null, lng: wrap.dataset.lng ? parseFloat(wrap.dataset.lng) : null,
+        note: null
       })).filter(l => l.place);
       const occVal = document.getElementById('f-occupation').value.trim() || null;
       const birthVal = document.getElementById('f-birthdate').value || null;
@@ -413,19 +471,24 @@
       let updated;
       await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
         const idx = latestPeople.findIndex(p => p.id === currentPerson.id);
+        const existing = latestPeople[idx];
+        const keptPhotos = (existing.photos || []).filter(src => !removedPhotos.has(src));
+        const existingAudioList = existing.audioMessages || (existing.audioMessage ? [existing.audioMessage] : []);
+        const keptAudio = existingAudioList.filter(src => !removedAudio.has(src));
         updated = {
-          ...latestPeople[idx], name: nameVal || latestPeople[idx].name, fullName: fullNameVal, gender: genderVal,
-          unnamedPlaceholder: nameVal ? false : latestPeople[idx].unnamedPlaceholder,
+          ...existing, name: nameVal || existing.name, fullName: fullNameVal, gender: genderVal,
+          unnamedPlaceholder: nameVal ? false : existing.unnamedPlaceholder,
           occupation: occVal, birthDate: birthVal, birthYear: null, bio: bioVal, locations: locVal,
-          photos: [...(latestPeople[idx].photos || []), ...newPhotoUrls],
-          audioMessage: audioPath !== undefined ? audioPath : latestPeople[idx].audioMessage
+          photos: [...keptPhotos, ...newPhotoUrls],
+          audioMessages: [...keptAudio, ...newAudioUrls],
+          audioMessage: null // superseded by audioMessages[]; kept as null for backward compatibility
         };
         latestPeople[idx] = updated;
         return latestPeople;
       }, `Edit ${nameVal || currentPerson.name || currentPerson.id} — by superadmin`, token);
 
       people[people.findIndex(p => p.id === updated.id)] = updated;
-      pendingPhotos = []; pendingAudio = null;
+      pendingPhotos = []; pendingAudioList = []; removedPhotos = new Set(); removedAudio = new Set();
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
       renderPersonList(document.getElementById('person-search').value);
     } catch (e) {
@@ -690,7 +753,10 @@
 
   // ================= ARCHIVE =================
   let currentArchiveItem = null;
-  let pendingArchivePhotos = [];
+  let pendingArchiveMedia = []; // { type, base64|dataUrl, filename }
+  let removedArchiveMedia = new Set();
+  const ARCHIVE_CAPS = { image: 15 * 1024 * 1024, audio: 5 * 1024 * 1024, video: 20 * 1024 * 1024 };
+
   async function renderArchiveList() {
     const ul = document.getElementById('archive-ul');
     const { content } = await PandeyGitHub.getFile('data/archive.json', token);
@@ -699,21 +765,49 @@
     ul.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadArchiveForm(items[parseInt(a.dataset.idx, 10)]); }));
   }
   document.getElementById('new-archive-item-btn').addEventListener('click', () => loadArchiveForm(null));
+
+  function existingMediaOf(item) {
+    // backward-compatible: old items only had photos[]; treat those as image media
+    if (item.media) return item.media;
+    return (item.photos || []).map(url => ({ type: 'image', url }));
+  }
+
+  function mediaThumb(m) {
+    if (m.type === 'audio') return `<div class="editor-row" data-existing-media="${m.url}"><audio controls src="${m.url}" style="width:220px;"></audio><button type="button" class="btn btn-outline-dark btn-sm remove-media-existing" data-src="${m.url}">Remove</button></div>`;
+    if (m.type === 'video') return `<div class="editor-row" data-existing-media="${m.url}"><video controls src="${m.url}" style="width:220px; max-height:140px;"></video><button type="button" class="btn btn-outline-dark btn-sm remove-media-existing" data-src="${m.url}">Remove</button></div>`;
+    return `<div class="thumb"><img src="${m.url}"><button type="button" class="remove" data-existing="${m.url}">&times;</button></div>`;
+  }
+
   function loadArchiveForm(item) {
-    currentArchiveItem = item || { id: null, title: '', description: '', photos: [] };
-    pendingArchivePhotos = [];
+    currentArchiveItem = item || { id: null, title: '', description: '' };
+    pendingArchiveMedia = [];
+    removedArchiveMedia = new Set();
+    const media = item ? existingMediaOf(item) : [];
+    const images = media.filter(m => m.type === 'image');
+    const avMedia = media.filter(m => m.type !== 'image');
     const area = document.getElementById('archive-form-area');
     area.innerHTML = `
       <h2 style="font-family:var(--font-display); font-weight:600; font-size:22px; margin:0 0 16px;">${item ? 'Edit item' : 'New item'}</h2>
       <div class="field"><label>Title</label><input type="text" id="a-title" value="${currentArchiveItem.title || ''}" placeholder="e.g. Old house in Bairati"></div>
       <div class="field"><label>Description</label><textarea id="a-description">${currentArchiveItem.description || ''}</textarea></div>
-      <div class="field"><label>Photos</label><div class="photo-grid" id="a-photo-grid">${(currentArchiveItem.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
-      <input type="file" id="a-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
+      <div class="field">
+        <label>Images</label>
+        <div class="photo-grid" id="a-photo-grid">${images.map(mediaThumb).join('')}</div>
+        <input type="file" id="a-photo-input" accept="image/*" multiple style="margin-top:10px;">
+        <p class="muted" style="font-size:12px; margin-top:4px;">Any size — resized automatically before upload.</p>
+      </div>
+      <div class="field">
+        <label>Audio &amp; video</label>
+        <div id="a-av-list">${avMedia.map(mediaThumb).join('')}</div>
+        <input type="file" id="a-av-input" accept="audio/*,video/*" multiple style="margin-top:10px; display:block;">
+        <p class="muted" id="a-av-note" style="font-size:12px; margin-top:4px;">Audio up to 5 MB per clip, video up to 20 MB per clip.</p>
+      </div>
       <button class="btn btn-gold" id="save-archive-btn">Save item</button>
       <span id="save-archive-status" class="status-msg"></span>
     `;
     document.getElementById('a-photo-input').addEventListener('change', (e) => {
       [...e.target.files].forEach(file => {
+        if (file.size > ARCHIVE_CAPS.image) { alert(`"${file.name}" is too large (over 15 MB).`); return; }
         const reader = new FileReader();
         reader.onload = (ev) => {
           const img = new Image();
@@ -723,25 +817,74 @@
             const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
             canvas.getContext('2d').drawImage(img, 0, 0, width, height);
             const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-            const filename = `archive_${Date.now()}.jpg`;
-            pendingArchivePhotos.push({ dataUrl, filename });
-            document.getElementById('a-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+            const filename = `archive_${Date.now()}_${Math.random().toString(36).slice(2,5)}.jpg`;
+            pendingArchiveMedia.push({ type: 'image', dataUrl, filename });
+            document.getElementById('a-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"><button type="button" class="remove" data-pending="${filename}">&times;</button></div>`);
+            wireArchiveMediaRemovers();
           };
           img.src = ev.target.result;
         };
         reader.readAsDataURL(file);
       });
     });
+    document.getElementById('a-av-input').addEventListener('change', (e) => {
+      const note = document.getElementById('a-av-note');
+      [...e.target.files].forEach(file => {
+        const type = file.type.startsWith('video') ? 'video' : 'audio';
+        const cap = ARCHIVE_CAPS[type];
+        if (file.size > cap) {
+          note.textContent = `"${file.name}" is ${(file.size/1024/1024).toFixed(1)} MB — the limit is ${cap/1024/1024} MB for ${type}.`;
+          note.style.color = '#b5432f';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const base64 = ev.target.result.split(',')[1];
+          const ext = (file.name.split('.').pop() || (type === 'video' ? 'mp4' : 'mp3')).toLowerCase();
+          const filename = `archive_${type}_${Date.now()}_${Math.random().toString(36).slice(2,5)}.${ext}`;
+          pendingArchiveMedia.push({ type, base64, filename });
+          const tag = type === 'video' ? 'video' : 'audio';
+          document.getElementById('a-av-list').insertAdjacentHTML('beforeend',
+            `<div class="editor-row" data-pending-media="${filename}"><${tag} controls src="${ev.target.result}" style="width:220px; max-height:140px;"></${tag}><button type="button" class="btn btn-outline-dark btn-sm remove-media-pending" data-pending="${filename}">Remove</button></div>`);
+          wireArchiveMediaRemovers();
+          note.textContent = ''; note.style.color = '';
+        };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    });
+    wireArchiveMediaRemovers();
     document.getElementById('save-archive-btn').addEventListener('click', saveArchiveItem);
   }
+
+  function wireArchiveMediaRemovers() {
+    document.querySelectorAll('#a-photo-grid .remove').forEach(btn => {
+      btn.onclick = () => {
+        if (btn.dataset.existing) removedArchiveMedia.add(btn.dataset.existing);
+        if (btn.dataset.pending) pendingArchiveMedia = pendingArchiveMedia.filter(m => m.filename !== btn.dataset.pending);
+        btn.closest('.thumb').remove();
+      };
+    });
+    document.querySelectorAll('.remove-media-existing').forEach(btn => {
+      btn.onclick = () => { removedArchiveMedia.add(btn.dataset.src); btn.closest('[data-existing-media]').remove(); };
+    });
+    document.querySelectorAll('.remove-media-pending').forEach(btn => {
+      btn.onclick = () => { pendingArchiveMedia = pendingArchiveMedia.filter(m => m.filename !== btn.dataset.pending); btn.closest('[data-pending-media]').remove(); };
+    });
+  }
+
   async function saveArchiveItem() {
     const statusEl = document.getElementById('save-archive-status');
     statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
     try {
-      const newPhotoUrls = [];
-      for (const photo of pendingArchivePhotos) {
-        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add archive photo`, token);
-        newPhotoUrls.push(`uploads/${photo.filename}`);
+      const newMedia = [];
+      for (const m of pendingArchiveMedia) {
+        if (m.type === 'image') {
+          await PandeyGitHub.putFileRaw(`uploads/${m.filename}`, m.dataUrl.split(',')[1], `Add archive image`, token);
+        } else {
+          await PandeyGitHub.putFileRaw(`uploads/${m.filename}`, m.base64, `Add archive ${m.type}`, token);
+        }
+        newMedia.push({ type: m.type, url: `uploads/${m.filename}` });
       }
       const titleVal = document.getElementById('a-title').value.trim();
       const descVal = document.getElementById('a-description').value.trim();
@@ -750,13 +893,16 @@
         items = items || [];
         if (currentArchiveItem.id) {
           const idx = items.findIndex(i => i.id === currentArchiveItem.id);
-          if (idx >= 0) items[idx] = { ...items[idx], title: titleVal, description: descVal, photos: [...(items[idx].photos || []), ...newPhotoUrls] };
+          if (idx >= 0) {
+            const keptMedia = existingMediaOf(items[idx]).filter(m => !removedArchiveMedia.has(m.url));
+            items[idx] = { id: items[idx].id, title: titleVal, description: descVal, media: [...keptMedia, ...newMedia], addedAt: items[idx].addedAt };
+          }
         } else {
-          items.push({ id: 'archive-' + Date.now(), title: titleVal, description: descVal, photos: newPhotoUrls, addedAt: new Date().toISOString() });
+          items.push({ id: 'archive-' + Date.now(), title: titleVal, description: descVal, media: newMedia, addedAt: new Date().toISOString() });
         }
         return items;
       }, `${currentArchiveItem.id ? 'Edit' : 'Add'} archive item: ${titleVal} — by superadmin`, token);
-      pendingArchivePhotos = [];
+      pendingArchiveMedia = []; removedArchiveMedia = new Set();
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
       renderArchiveList();
     } catch (e) {

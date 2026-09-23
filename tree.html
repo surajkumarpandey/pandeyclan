@@ -149,7 +149,7 @@
       <button id="zoom-reset-btn" style="width:auto; padding:0 10px; font-size:12px; border-radius:15px;">Reset</button>
       <button id="zoom-in-btn" aria-label="Zoom in">+</button>
     </div>
-    <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn">Download as PDF</button>
+    <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn" data-i18n="tree.download.pdf">Download as PDF</button>
   </div>
 </div>
 
@@ -163,7 +163,7 @@
   </div>
 
   <aside class="story-sidebar" id="story-sidebar">
-    <p class="muted" style="font-size:13.5px;">Scroll down through the tree — this panel follows along with a bit about each generation.</p>
+    <p class="muted" style="font-size:13.5px;" data-i18n="tree.sidebar.hint">Scroll down through the tree — this panel follows along with a bit about each generation.</p>
   </aside>
 </div>
 
@@ -364,7 +364,7 @@
       <div class="gen-num">GENERATION ${gen}</div>
       <h2>${(story && story.title) || 'Generation ' + gen}</h2>
       ${photos}
-      ${story && story.description ? `<p>${story.description}</p>` : `<p class="empty">No story added for this generation yet.</p>`}
+      ${story && story.description ? `<p>${story.description}</p>` : `<p class="empty">${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</p>`}
     `;
   }
   renderStory(1);
@@ -377,8 +377,9 @@
 
   // ---------- Detail panel ----------
   const panel = document.getElementById('panel');
+  let currentPanelPersonId = null;
   const panelBody = document.getElementById('panel-body');
-  document.getElementById('panel-close').addEventListener('click', () => panel.classList.remove('open'));
+  document.getElementById('panel-close').addEventListener('click', () => { panel.classList.remove('open'); currentPanelPersonId = null; });
 
   function formatBirthDate(birthDate, birthYearFallback) {
     if (!birthDate) return birthYearFallback || '';
@@ -388,6 +389,7 @@
   }
 
   function openPanel(p) {
+    const t = PandeyI18n.t;
     const chain = PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ');
     const photos = (p.photos || []).map(src => `<img src="${src}" alt="">`).join('');
     const avatarHtml = (p.photos && p.photos.length) ? `<img class="avatar-lg" src="${p.photos[0]}" alt="">` : `<div class="avatar-lg-placeholder"></div>`;
@@ -399,22 +401,23 @@
       ${avatarHtml}
       <h2>${PandeyData.displayName(p)}</h2>
       <div class="chain">${chain}</div>
-      ${p.unnamedPlaceholder ? '<span class="badge badge-placeholder">Name not recorded</span>' : ''}
+      ${p.unnamedPlaceholder ? `<span class="badge badge-placeholder">${t('tree.field.namenotrecorded', 'Name not recorded')}</span>` : ''}
       <dl>
-        ${p.fullName ? `<dt>Full name</dt><dd>${p.fullName}</dd>` : ''}
-        ${spouse ? `<dt>Spouse</dt><dd>${PandeyData.displayName(spouse)}</dd>` : ''}
-        ${p.occupation ? `<dt>Occupation</dt><dd>${p.occupation}</dd>` : ''}
-        ${(p.birthDate || p.birthYear) ? `<dt>Born</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}</dd>` : ''}
-        ${current ? `<dt>Current location</dt><dd>${current.place}</dd>` : ''}
-        ${othersStr ? `<dt>Places visited</dt><dd>${othersStr}</dd>` : ''}
-        ${p.bio ? `<dt>Description</dt><dd>${p.bio}</dd>` : ''}
-        ${p.notes ? `<dt>Note</dt><dd class="muted">${p.notes}</dd>` : ''}
+        ${p.fullName ? `<dt>${t('tree.field.fullname', 'Full name')}</dt><dd>${p.fullName}</dd>` : ''}
+        ${spouse ? `<dt>${t('tree.field.spouse', 'Spouse')}</dt><dd>${PandeyData.displayName(spouse)}</dd>` : ''}
+        ${p.occupation ? `<dt>${t('tree.field.occupation', 'Occupation')}</dt><dd>${p.occupation}</dd>` : ''}
+        ${(p.birthDate || p.birthYear) ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}</dd>` : ''}
+        ${current ? `<dt>${t('tree.field.currentlocation', 'Current location')}</dt><dd>${current.place}</dd>` : ''}
+        ${othersStr ? `<dt>${t('tree.field.placesvisited', 'Places visited')}</dt><dd>${othersStr}</dd>` : ''}
+        ${p.bio ? `<dt>${t('tree.field.description', 'Description')}</dt><dd>${p.bio}</dd>` : ''}
+        ${p.notes ? `<dt>${t('tree.field.note', 'Note')}</dt><dd class="muted">${p.notes}</dd>` : ''}
       </dl>
-      ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">Photos</dt><div class="photos">${photos}</div>` : ''}
-      ${p.audioMessage ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">Voice message</dt><audio controls src="${p.audioMessage}" style="width:100%; margin-top:6px;"></audio>` : ''}
-      ${(p.locations || []).length ? `<p style="margin-top:22px;"><a class="btn btn-outline-dark btn-sm" href="map.html?person=${p.id}">See their journey</a></p>` : ''}
+      ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.photos', 'Photos')}</dt><div class="photos">${photos}</div>` : ''}
+      ${p.audioMessage ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.voicemessage', 'Voice message')}</dt><audio controls src="${p.audioMessage}" style="width:100%; margin-top:6px;"></audio>` : ''}
+      ${(p.locations || []).length ? `<p style="margin-top:22px;"><a class="btn btn-outline-dark btn-sm" href="map.html?person=${p.id}">${t('tree.field.journey', "See their journey")}</a></p>` : ''}
     `;
     panel.classList.add('open');
+    currentPanelPersonId = p.id;
   }
 
   // ---------- Search ----------
@@ -436,6 +439,26 @@
     linkSel.classed('dim', d => !ancestorIds.has(d.target.data.id));
     const matchEl = nodeSel.filter(d => d.data.id === match.data.id).classed('highlight', true).node();
     if (matchEl && matchEl.scrollIntoView) matchEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  });
+
+  // ---------- Re-render language-dependent text when the toggle is clicked ----------
+  // (the Shri/Smt prefixes and placeholder labels on already-drawn SVG nodes,
+  // plus the open detail panel and sidebar, don't update on their own since
+  // they were built once at load time)
+  window.addEventListener('pandey-lang-changed', () => {
+    nodeSel.each(function (d) { d3.select(this).select('text').text(PandeyData.displayName(d.data.data)); });
+    spouseLayer.selectAll('g.node').each(function (_, i) {
+      const entry = spouseRenderList[i];
+      if (entry) d3.select(this).select('text').text(PandeyData.displayName(entry.person));
+    });
+    document.getElementById('search-box').setAttribute('placeholder', PandeyI18n.t('tree.search.placeholder', 'Search a name…'));
+    document.getElementById('download-pdf-btn').textContent = PandeyI18n.t('tree.download.pdf', 'Download as PDF');
+    if (currentPanelPersonId) {
+      const p = people.find(x => x.id === currentPanelPersonId);
+      if (p) openPanel(p);
+    }
+    const activeGen = document.querySelector('.gen-num');
+    if (activeGen) renderStory(parseInt(activeGen.textContent.replace('GENERATION ', ''), 10) || 1);
   });
 })();
 </script>

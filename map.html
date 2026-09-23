@@ -118,20 +118,23 @@
   async function renderFamilyMode() {
     const myToken = ++renderToken;
     clearLayer();
-    const byPlace = {}; // place -> { types:Set, people: [{name,type}] }
+    const byPlace = {}; // place -> { people: [...], lat, lng }
     people.forEach(p => {
       (p.locations || []).forEach(l => {
         if (!l.place) return;
         byPlace[l.place] ||= { people: [] };
         byPlace[l.place].people.push({ name: PandeyData.displayName(p), type: l.type, id: p.id });
+        if (l.lat != null && l.lng != null && byPlace[l.place].lat == null) {
+          byPlace[l.place].lat = l.lat; byPlace[l.place].lng = l.lng;
+        }
       });
     });
     const places = Object.keys(byPlace);
     for (const place of places) {
-      const coords = await geocode(place);
+      const entry = byPlace[place];
+      const coords = (entry.lat != null) ? { lat: entry.lat, lng: entry.lng } : await geocode(place);
       if (myToken !== renderToken) return; // a newer render has started; abandon this one
       if (!coords) continue;
-      const entry = byPlace[place];
       const hasOrigin = entry.people.some(x => x.type === 'origin');
       const count = entry.people.length;
       const radius = hasOrigin ? 16 : Math.min(10 + count * 2, 26);
@@ -152,7 +155,7 @@
     if (!p || !p.locations || !p.locations.length) return;
     const points = [];
     for (const loc of p.locations) {
-      const coords = await geocode(loc.place);
+      const coords = (loc.lat != null && loc.lng != null) ? { lat: loc.lat, lng: loc.lng } : await geocode(loc.place);
       if (myToken !== renderToken) return; // a newer render has started; abandon this one
       if (!coords) continue;
       points.push({ ...loc, ...coords });

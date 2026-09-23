@@ -74,15 +74,27 @@
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Nothing here yet.</div>`;
     return;
   }
-  grid.innerHTML = items.map(item => `
+  function mediaOf(item) {
+    if (item.media) return item.media;
+    return (item.photos || []).map(url => ({ type: 'image', url }));
+  }
+  grid.innerHTML = items.map(item => {
+    const media = mediaOf(item);
+    const cover = media.find(m => m.type === 'image');
+    const av = media.filter(m => m.type !== 'image');
+    return `
     <div class="archive-card">
-      ${item.photos && item.photos.length ? `<img src="${item.photos[0]}" alt="${item.title || ''}">` : ''}
+      ${cover ? `<img src="${cover.url}" alt="${item.title || ''}">` : ''}
       <div class="body">
         <h3>${item.title || 'Untitled'}</h3>
         <p>${item.description || ''}</p>
+        ${av.map(m => m.type === 'video'
+          ? `<video controls src="${m.url}" style="width:100%; margin-top:10px; border-radius:3px;"></video>`
+          : `<audio controls src="${m.url}" style="width:100%; margin-top:10px;"></audio>`
+        ).join('')}
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 })();
 </script>
 </body>
