@@ -565,7 +565,7 @@
   },
   {
     "id": "laxmidutt",
-    "name": "Lakshmi Dutt Pandey",
+    "name": "Lakshmi Dutt",
     "gender": "M",
     "parentId": "harikishan_1",
     "generation": 15,
@@ -578,8 +578,12 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Lakshmi Dutt Pandey",
+    "birthDate": null,
+    "fatherName": "Harikrishn Pandey",
+    "motherName": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "devidutt_big_daughter_7",
