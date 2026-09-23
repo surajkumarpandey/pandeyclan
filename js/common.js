@@ -52,8 +52,6 @@ const PandeyData = (() => {
       if (lang !== 'en') return p.gender === 'F' ? 'पुत्री (नाम दर्ज नहीं)' : 'पुत्र (नाम दर्ज नहीं)';
       return p.gender === 'F' ? 'Daughter (name not recorded)' : 'Son (name not recorded)';
     }
-    if (p.gender === 'M') return (lang !== 'en' ? 'श्री ' : 'Shri ') + p.name;
-    if (p.gender === 'F') return (lang !== 'en' ? 'श्रीमती ' : 'Smt. ') + p.name;
     return p.name;
   }
 
