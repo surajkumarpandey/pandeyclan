@@ -246,8 +246,16 @@
     const p = currentPerson;
     const area = document.getElementById('form-area');
     const locRows = (p.locations || []).map(l => locRow(l)).join('');
-    const children = people.filter(c => c.parentId === p.id).sort((a, b) => PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
-    const childRows = children.map(c => `<div class="editor-row"><a href="#" class="child-link" data-id="${c.id}">${PandeyData.displayName(c)}</a></div>`).join('') || '<p class="muted" style="font-size:13.5px;">No children recorded yet.</p>';
+    const children = people.filter(c => c.parentId === p.id).sort((a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999) || PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+    const childRows = children.map((c, i) => `
+      <div class="editor-row" data-child-id="${c.id}">
+        <a href="#" class="child-link" data-id="${c.id}">${PandeyData.displayName(c)}</a>
+        <span style="display:flex; gap:4px;">
+          <button type="button" class="btn btn-outline-dark btn-sm move-child-up" data-id="${c.id}" ${i === 0 ? 'disabled' : ''} title="Move up">&uarr;</button>
+          <button type="button" class="btn btn-outline-dark btn-sm move-child-down" data-id="${c.id}" ${i === children.length - 1 ? 'disabled' : ''} title="Move down">&darr;</button>
+        </span>
+      </div>
+    `).join('') || '<p class="muted" style="font-size:13.5px;">No children recorded yet.</p>';
     const spouse = p.spouseId ? people.find(x => x.id === p.spouseId) : null;
 
     area.innerHTML = `
@@ -349,6 +357,8 @@
     document.getElementById('save-btn').addEventListener('click', savePerson);
     document.getElementById('add-child-btn').addEventListener('click', addChild);
     document.querySelectorAll('.child-link').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadPersonForm(a.dataset.id); }));
+    document.querySelectorAll('.move-child-up').forEach(btn => btn.addEventListener('click', () => moveChild(btn.dataset.id, 'up')));
+    document.querySelectorAll('.move-child-down').forEach(btn => btn.addEventListener('click', () => moveChild(btn.dataset.id, 'down')));
     const deleteBtn = document.getElementById('delete-person-btn');
     if (deleteBtn) deleteBtn.addEventListener('click', deletePerson);
     const addSpouseBtn = document.getElementById('add-spouse-btn');
@@ -525,6 +535,38 @@
 
   function slugify(name) { return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'person'; }
   function uniqueId(base, existingIds) { let id = base, i = 1; while (existingIds.has(id)) id = `${base}-${++i}`; return id; }
+
+  async function moveChild(childId, direction) {
+    const child = people.find(x => x.id === childId);
+    if (!child) return;
+    const siblings = people.filter(x => x.parentId === child.parentId)
+      .sort((a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999) || PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+    const idx = siblings.findIndex(x => x.id === childId);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= siblings.length) return;
+
+    // normalize sortOrder for every sibling to their current displayed
+    // position first, so the swap is meaningful even if none had an
+    // explicit order set before now
+    siblings.forEach((s, i) => { s.sortOrder = i; });
+    const tmp = siblings[idx].sortOrder;
+    siblings[idx].sortOrder = siblings[swapIdx].sortOrder;
+    siblings[swapIdx].sortOrder = tmp;
+
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        siblings.forEach(s => {
+          const li = latestPeople.findIndex(x => x.id === s.id);
+          if (li >= 0) latestPeople[li].sortOrder = s.sortOrder;
+        });
+        return latestPeople;
+      }, `Reorder children — by superadmin`, token);
+      siblings.forEach(s => { const li = people.findIndex(x => x.id === s.id); if (li >= 0) people[li].sortOrder = s.sortOrder; });
+      loadPersonForm(child.parentId);
+    } catch (e) {
+      alert('Could not reorder: ' + e.message);
+    }
+  }
 
   async function addChild() {
     const name = document.getElementById('new-child-name').value.trim();
