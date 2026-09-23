@@ -1012,12 +1012,12 @@
       "uploads/ashok_1790104726830.jpg"
     ],
     "bio": "",
-    "occupation": null,
+    "occupation": "Service / Agriculturist",
     "locations": [
       {
-        "place": "Bairati, Almora",
+        "place": "Dewelchaur Bandobasti",
         "type": "origin",
-        "year": null,
+        "year": "1962",
         "lat": null,
         "lng": null,
         "note": null
@@ -1069,16 +1069,42 @@
         "lat": null,
         "lng": null,
         "note": null
+      },
+      {
+        "place": "Allahabad",
+        "type": "lived",
+        "year": null,
+        "lat": 25.4381302,
+        "lng": 81.8338005,
+        "note": null
+      },
+      {
+        "place": "Meerut",
+        "type": "lived",
+        "year": null,
+        "lat": 29.0018557,
+        "lng": 77.7679671,
+        "note": null
+      },
+      {
+        "place": "Tawang",
+        "type": "lived",
+        "year": null,
+        "lat": -7.3416596,
+        "lng": 108.2244736,
+        "note": null
       }
     ],
     "spouseId": "hemlata-pant",
-    "fullName": null,
-    "birthDate": null,
+    "fullName": "Ashok Kumar Pandey",
+    "birthDate": "1962-02-12",
     "audioMessage": null,
     "audioMessages": [
       "uploads/ashok_voice_1790103072510.wav"
     ],
-    "sortOrder": 2
+    "sortOrder": 2,
+    "fatherName": "Tara Dutt Pandey",
+    "motherName": "Durga Devi Pandey"
   },
   {
     "id": "suraj",
