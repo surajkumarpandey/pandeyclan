@@ -2876,5 +2876,27 @@
     "photos": [],
     "bio": "",
     "occupation": null
+  },
+  {
+    "id": "daughter",
+    "name": "Daughter",
+    "gender": "F",
+    "parentId": "tanmay",
+    "generation": 20,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
