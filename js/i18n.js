@@ -37,6 +37,8 @@ const PandeyI18n = (() => {
     'nav.map': { hi: 'यात्रा मानचित्र' },
     'nav.village': { hi: 'गाँव बैरती' },
     'nav.archive': { hi: 'अभिलेखागार' },
+    'nav.kumaon': { hi: 'कुमाऊं जानिए' },
+    'nav.utilities': { hi: 'कुमाऊँनी उपयोगी संसाधन' },
     'nav.audit': { hi: 'परिवर्तनों का लॉग' },
 
     'home.h1': { hi: 'परिवार की कई पीढ़ियाँ,<br>एक पर्वत श्रृंखला — <span class="place">बैरती</span> में।' },
