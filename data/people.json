@@ -1501,7 +1501,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "prema-2"
   },
   {
     "id": "bholadutt_daughter_29",
@@ -2742,6 +2743,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "prema-2",
+    "name": "Prema",
+    "gender": "F",
+    "parentId": null,
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "umesh",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
