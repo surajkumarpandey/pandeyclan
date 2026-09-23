@@ -13,14 +13,15 @@
   }
   .kumaon-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 34px; margin: 0 0 10px; }
   .kumaon-hero p { max-width: 68ch; color: rgba(255,251,243,0.9); margin: 0; }
-  .section-block { padding: 56px 0; border-bottom: 1px solid var(--line); }
+  .section-block { padding: 52px 0; border-bottom: 1px solid var(--line); }
   .section-block:last-of-type { border-bottom: none; }
   .section-block .kicker { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.4px; margin-bottom: 6px; }
-  .place-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; margin-top: 24px; }
-  .place-card { background: var(--paper-light); border: 1px solid var(--line); border-top: 3px solid var(--ochre); padding: 20px 22px; }
-  .place-card h4 { font-family: var(--font-display); font-weight: 600; font-size: 17px; margin: 0 0 6px; }
-  .place-card .dist { font-size: 12.5px; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
-  .place-card p { font-size: 14px; color: #5a3a2e; margin: 0; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 22px; }
+  .item-card { background: var(--paper-light); border: 1px solid var(--line); border-top: 3px solid var(--ochre); padding: 18px 20px; }
+  .item-card h4 { font-family: var(--font-display); font-weight: 600; font-size: 16.5px; margin: 0 0 6px; }
+  .item-card .dist { font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 7px; }
+  .item-card p { font-size: 13.5px; color: #5a3a2e; margin: 0; }
+  .panchang-box { background: var(--paper-light); border: 1px solid var(--line); border-left: 4px solid var(--gold); padding: 22px 24px; margin-top: 22px; }
   .img-slot { width: 100%; height: 220px; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); margin: 20px 0; background: var(--paper); }
 </style>
 </head>
@@ -48,7 +49,7 @@
   <div class="aipan-border" style="margin-bottom:22px;"></div>
   <div class="wrap">
     <h1>Discover Kumaon</h1>
-    <p>The hills, the history, and the places worth visiting around Bairati — for anyone in the family who's never been, or wants to go back.</p>
+    <p>The hills, the history, and the places, songs, temples, and food worth knowing about — for anyone in the family who's never been, or wants to go back.</p>
   </div>
 </div>
 
@@ -56,63 +57,46 @@
   <div class="kicker">HISTORY</div>
   <h2 class="section-title">A short history of Kumaon</h2>
   <img class="img-slot" src="assets/img/kumaon-history.jpg" alt="">
-  <p>Kumaon's recorded history as a seat of power begins with the <strong>Katyuri dynasty</strong>, who ruled from around the 9th century CE, with their early capital at Joshimath and later centres across the region. Their era left behind an extraordinary number of temples — the Katyuris were prolific temple-builders, and clusters of their stonework survive across Almora district to this day.</p>
-  <p>By the 16th century, power passed to the <strong>Chand dynasty</strong>. King Kalyan Chand founded the town of Almora in 1568 as his capital, and it remained the political and cultural centre of Kumaon for over two centuries under Chand rule. In 1790, the Gorkhas of Nepal took control of the region; the British East India Company then took it from them in 1815, after the Anglo-Nepalese War, and Kumaon became part of British India's United Provinces.</p>
-  <p>Through all of this, Almora — and the hills around it, Bairati included — stayed culturally distinct: a Kumaoni-speaking world of terraced hill-farming, temple architecture, and the rice-paste aipan art still practiced today, largely untouched by the colonial hill-station building that reshaped places like Nainital and Shimla.</p>
+  <div id="history-text"></div>
 </section>
 
 <section class="section-block wrap">
   <div class="kicker">WHY BAIRATI</div>
   <h2 class="section-title">Why this corner of Kumaon matters</h2>
-  <p>Bairati sits within <strong>Chaukhutiya</strong> (also spelled Chaukhutia) tehsil of Almora district — and Chaukhutiya itself turns out to have real archaeological weight. In a 2016–17 excavation, a group of small temples dating to around the <strong>9th century CE</strong> was uncovered there, built in the same era as the Katyuri dynasty's rise. Some had lost their roofs to time, but the shivalingas inside were found still intact — evidence that this stretch of hillside was a place of settled, organised life a thousand years before anyone in this family tree was born.</p>
-  <p>Chaukhutiya is also a natural crossroads: roads from here run toward Ramnagar, toward Karanprayag, and toward Ranikhet and Almora — which is very likely why a family settled and stayed here across so many generations. It's not an isolated hamlet so much as a small point on old, well-used routes through the hills.</p>
+  <div id="why-bairati-text"></div>
 </section>
 
 <section class="section-block wrap">
   <div class="kicker">NEARBY</div>
   <h2 class="section-title">Places worth visiting from Bairati</h2>
   <p class="section-lede">All reachable on a day trip from the Chaukhutiya–Almora stretch.</p>
-  <div class="place-grid">
-    <div class="place-card">
-      <h4>Dwarahat</h4>
-      <div class="dist">On the same road as Chaukhutiya</div>
-      <p>A town famous for its clusters of Katyuri-era stone temples — one of the richest concentrations of early medieval temple architecture in the region.</p>
-    </div>
-    <div class="place-card">
-      <h4>Ranikhet</h4>
-      <div class="dist">~48 km from Almora</div>
-      <p>A hill station built around a cantonment, known for Himalayan views, a golf course, and a quieter pace than Nainital.</p>
-    </div>
-    <div class="place-card">
-      <h4>Someshwar</h4>
-      <div class="dist">~35 km from Almora</div>
-      <p>An ancient Shiva temple built by Raja Som Chand of the Chand dynasty — a direct link to the same rulers who founded Almora.</p>
-    </div>
-    <div class="place-card">
-      <h4>Jageshwar</h4>
-      <div class="dist">~36 km from Almora</div>
-      <p>A major Shiva temple complex with over 100 shrines dating from the 9th–13th centuries, set in dense deodar forest. One of Kumaon's most important pilgrimage sites.</p>
-    </div>
-    <div class="place-card">
-      <h4>Kasar Devi Temple</h4>
-      <div class="dist">~8 km from Almora</div>
-      <p>A hilltop temple with a striking modern history — it became a gathering point for spiritual seekers in the 1960s–70s, visited by figures like Bob Dylan and Cat Stevens.</p>
-    </div>
-    <div class="place-card">
-      <h4>Binsar Wildlife Sanctuary</h4>
-      <div class="dist">~30 km from Almora</div>
-      <p>A forested sanctuary with panoramic Himalayan views, home to leopards, barking deer, and the Himalayan monal.</p>
-    </div>
-    <div class="place-card">
-      <h4>Kainchi Dham</h4>
-      <div class="dist">~45 km from Almora</div>
-      <p>An ashram on the Nainital–Almora road founded by Neem Karoli Baba in 1962, drawing large crowds for its annual June gathering.</p>
-    </div>
-    <div class="place-card">
-      <h4>Almora town itself</h4>
-      <div class="dist">The district headquarters</div>
-      <p>Bright End Corner for sunrise/sunset views, the Nanda Devi temple, and Lal Bazaar for local crafts and woollens.</p>
-    </div>
+  <div class="card-grid" id="places-grid"></div>
+</section>
+
+<section class="section-block wrap">
+  <div class="kicker">MUSIC</div>
+  <h2 class="section-title">Songs worth knowing</h2>
+  <div class="card-grid" id="songs-grid"></div>
+</section>
+
+<section class="section-block wrap">
+  <div class="kicker">TEERTH &amp; TEMPLES</div>
+  <h2 class="section-title">Temples of Kumaon</h2>
+  <div class="card-grid" id="temples-grid"></div>
+</section>
+
+<section class="section-block wrap">
+  <div class="kicker">FOOD</div>
+  <h2 class="section-title">Kumaoni food</h2>
+  <div class="card-grid" id="food-grid"></div>
+</section>
+
+<section class="section-block wrap" style="border-bottom:none;">
+  <div class="kicker">PANCHANG</div>
+  <h2 class="section-title">Today's Panchang for Almora</h2>
+  <div class="panchang-box">
+    <p style="font-size:14.5px; color:#5a3a2e; margin:0 0 12px;">A Panchang — the traditional Hindu almanac of tithi, nakshatra, and auspicious timings — computed for Almora's own coordinates, not a generic national one.</p>
+    <a class="btn btn-outline-dark btn-sm" id="panchang-link" href="https://vedpanchang.com/as/city/almora" target="_blank" rel="noopener">Open today's Panchang for Almora →</a>
   </div>
 </section>
 
@@ -126,5 +110,35 @@
 
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
+<script>
+(async function () {
+  try {
+    const res = await fetch('data/kumaon.json?_=' + Date.now());
+    const d = await res.json();
+
+    const para = (text) => (text || '').split('\n\n').map(p => `<p>${p}</p>`).join('');
+    document.getElementById('history-text').innerHTML = para(d.history);
+    document.getElementById('why-bairati-text').innerHTML = para(d.whyBairati);
+
+    function renderCards(containerId, items, withDist) {
+      const el = document.getElementById(containerId);
+      if (!items || !items.length) return;
+      el.innerHTML = items.map(it => `
+        <div class="item-card">
+          <h4>${it.name}</h4>
+          ${withDist && it.distance ? `<div class="dist">${it.distance}</div>` : ''}
+          <p>${it.description || ''}</p>
+        </div>
+      `).join('');
+    }
+    renderCards('places-grid', d.places, true);
+    renderCards('songs-grid', d.songs, false);
+    renderCards('temples-grid', d.temples, false);
+    renderCards('food-grid', d.food, false);
+
+    if (d.panchangUrl) document.getElementById('panchang-link').href = d.panchangUrl;
+  } catch (e) { /* static fallback text stays if this fails */ }
+})();
+</script>
 </body>
 </html>
