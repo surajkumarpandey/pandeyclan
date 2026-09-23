@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   .kumaon-hero {
-    background-image: url('assets/img/hero-kumaon.PNG'), linear-gradient(165deg, var(--ochre) 0%, var(--ochre-deep) 100%);
+    background-image: url('assets/img/hero-kumaon.jpg'), linear-gradient(165deg, var(--ochre) 0%, var(--ochre-deep) 100%);
     background-size: cover; background-position: center; background-blend-mode: overlay;
     color: var(--paper-light); padding: 54px 0 46px;
   }
@@ -21,7 +21,6 @@
   .item-card h4 { font-family: var(--font-display); font-weight: 600; font-size: 16.5px; margin: 0 0 6px; }
   .item-card .dist { font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 7px; }
   .item-card p { font-size: 13.5px; color: #5a3a2e; margin: 0; }
-  .panchang-box { background: var(--paper-light); border: 1px solid var(--line); border-left: 4px solid var(--gold); padding: 22px 24px; margin-top: 22px; }
   .img-slot { width: 100%; height: 220px; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); margin: 20px 0; background: var(--paper); }
 </style>
 </head>
@@ -56,7 +55,7 @@
 <section class="section-block wrap">
   <div class="kicker">HISTORY</div>
   <h2 class="section-title">A short history of Kumaon</h2>
-  <img class="img-slot" src="assets/img/kumaon-history.PNG" alt="">
+  <img class="img-slot" src="assets/img/kumaon-history.jpg" alt="">
   <div id="history-text"></div>
 </section>
 
@@ -92,19 +91,11 @@
   <div class="card-grid" id="temples-grid"></div>
 </section>
 
-<section class="section-block wrap">
+<section class="section-block wrap" style="border-bottom:none;">
   <div class="kicker">FOOD</div>
   <h2 class="section-title">Kumaoni food</h2>
   <div class="card-grid" id="food-grid"></div>
-</section>
-
-<section class="section-block wrap" style="border-bottom:none;">
-  <div class="kicker">PANCHANG</div>
-  <h2 class="section-title">Today's Panchang for Almora</h2>
-  <div class="panchang-box">
-    <p style="font-size:14.5px; color:#5a3a2e; margin:0 0 12px;">A Panchang — the traditional Hindu almanac of tithi, nakshatra, and auspicious timings — computed for Almora's own coordinates, not a generic national one.</p>
-    <a class="btn btn-outline-dark btn-sm" id="panchang-link" href="https://vedpanchang.com/as/city/almora" target="_blank" rel="noopener">Open today's Panchang for Almora →</a>
-  </div>
+  <p class="muted" style="margin-top:20px; font-size:13.5px;">Looking for today's Panchang? It's on the <a href="utilities.html">Kumaoni Utilities</a> page.</p>
 </section>
 
 <footer class="site-footer">
@@ -143,7 +134,6 @@
     renderCards('temples-grid', d.temples, false);
     renderCards('food-grid', d.food, false);
 
-    if (d.panchangUrl) document.getElementById('panchang-link').href = d.panchangUrl;
   } catch (e) { /* static fallback text stays if this fails */ }
 })();
 </script>
