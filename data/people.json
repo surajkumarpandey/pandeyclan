@@ -1633,19 +1633,25 @@
   },
   {
     "id": "umesh_daughter_33",
-    "name": "Daughter",
+    "name": "Meenakshi",
     "gender": "F",
     "parentId": "umesh",
     "generation": 18,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": "Meenakshi Bhatt",
+    "fatherName": "Umesh Chandra Pandey",
+    "motherName": "Prema Pandey",
+    "birthDate": "1988-12-23",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "manoj_umesh_son",
