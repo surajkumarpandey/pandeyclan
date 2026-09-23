@@ -666,7 +666,8 @@
     "occupation": null,
     "locations": [],
     "fullName": null,
-    "birthDate": null
+    "birthDate": null,
+    "sortOrder": 1
   },
   {
     "id": "jaikishan",
@@ -684,7 +685,8 @@
     "occupation": null,
     "locations": [],
     "fullName": null,
-    "birthDate": null
+    "birthDate": null,
+    "sortOrder": 2
   },
   {
     "id": "jaikishan_daughter_12",
@@ -882,7 +884,8 @@
     "occupation": null,
     "locations": [],
     "fullName": null,
-    "birthDate": null
+    "birthDate": null,
+    "sortOrder": 0
   },
   {
     "id": "bholadutt",
@@ -900,7 +903,8 @@
     "occupation": null,
     "locations": [],
     "fullName": null,
-    "birthDate": null
+    "birthDate": null,
+    "sortOrder": 3
   },
   {
     "id": "taradutt",
