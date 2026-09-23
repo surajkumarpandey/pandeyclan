@@ -1185,10 +1185,25 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
+    "occupation": "Entrepreneur / Politician / Agriculturist",
+    "locations": [
+      {
+        "place": "Dewelchour Bandobasti",
+        "type": "origin",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "spouseId": "meena-pandey",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "fullName": "Khajan Chandra Pandey",
+    "fatherName": "Tara Dutt Pandey",
+    "motherName": "Durga Devi Pandey",
+    "birthDate": "2026-06-30",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "dev",
