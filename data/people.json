@@ -943,7 +943,7 @@
     "birthDate": "1929-12-23",
     "audioMessages": [],
     "audioMessage": null,
-    "sortOrder": 1
+    "sortOrder": 0
   },
   {
     "id": "shekhar",
@@ -960,7 +960,7 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "sortOrder": 0
+    "sortOrder": 1
   },
   {
     "id": "kailash",
