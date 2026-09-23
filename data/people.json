@@ -1270,20 +1270,51 @@
   },
   {
     "id": "taradutt_daughter_24",
-    "name": "Daughter",
+    "name": "Lata",
     "gender": "F",
     "parentId": "taradutt",
     "generation": 18,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": [],
-    "sortOrder": 1
+    "locations": [
+      {
+        "place": "Dewelchaur Bandobasti",
+        "type": "origin",
+        "year": "1959",
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Bangalore",
+        "type": "lived",
+        "year": null,
+        "lat": 12.9767936,
+        "lng": 77.590082,
+        "note": null
+      }
+    ],
+    "sortOrder": 1,
+    "fullName": "Lata Pant",
+    "fatherName": "Tara Dutt Pandey",
+    "motherName": "Durga Devi Pandey",
+    "birthDate": "1959-09-21",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "chetan",
