@@ -1630,7 +1630,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "preeti"
   },
   {
     "id": "umesh_daughter_33",
@@ -2765,6 +2766,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "umesh",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "preeti",
+    "name": "Preeti",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "manoj_umesh",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
