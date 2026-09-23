@@ -583,7 +583,8 @@
     "fatherName": "Harikrishn Pandey",
     "motherName": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "tulsi-devi-pandey"
   },
   {
     "id": "devidutt_big_daughter_7",
@@ -2090,6 +2091,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "taradutt",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "tulsi-devi-pandey",
+    "name": "Tulsi Devi Pandey",
+    "gender": "F",
+    "parentId": null,
+    "generation": 15,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "laxmidutt",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
