@@ -711,7 +711,11 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": null,
+    "birthDate": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "prayagdutt",
