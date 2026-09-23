@@ -914,7 +914,8 @@
     "bio": "",
     "occupation": "Ex Army, Farmer",
     "locations": [],
-    "fullName": "Shri Tara Dutt Pandey"
+    "fullName": "Shri Tara Dutt Pandey",
+    "spouseId": "durga-devi-pandey"
   },
   {
     "id": "shekhar",
@@ -2052,6 +2053,28 @@
     "notes": null,
     "fullName": null,
     "spouseId": "khajan",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "durga-devi-pandey",
+    "name": "Durga Devi Pandey",
+    "gender": "F",
+    "parentId": null,
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "taradutt",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
