@@ -912,10 +912,15 @@
       "uploads/taradutt_1790081489139.jpg"
     ],
     "bio": "",
-    "occupation": "Ex Army, Farmer",
+    "occupation": "Agriculturist / Entrepreneur",
     "locations": [],
-    "fullName": "Shri Tara Dutt Pandey",
-    "spouseId": "durga-devi-pandey"
+    "fullName": "Tara Dutt Pandey",
+    "spouseId": "durga-devi-pandey",
+    "fatherName": "Anand Ballabh Pandey",
+    "motherName": "Saroj Devi Pandey",
+    "birthDate": "1929-12-23",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "shekhar",
