@@ -682,22 +682,6 @@
     "birthDate": null
   },
   {
-    "id": "nityanand_daughter_11",
-    "name": "Daughter",
-    "gender": "F",
-    "parentId": "nityanand",
-    "generation": 17,
-    "tree": "A",
-    "unnamedPlaceholder": true,
-    "notes": null,
-    "birthYear": null,
-    "deathYear": null,
-    "photos": [],
-    "bio": "",
-    "occupation": null,
-    "locations": []
-  },
-  {
     "id": "jaikishan_daughter_12",
     "name": "Daughter",
     "gender": "F",
