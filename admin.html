@@ -67,6 +67,7 @@
       <button id="tab-generations">Generation stories</button>
       <button id="tab-archive">Archive</button>
       <button id="tab-village">Village page</button>
+      <button id="tab-kumaon">Discover Kumaon page</button>
       <button id="tab-backup">Backup &amp; Restore</button>
     </div>
 
@@ -103,6 +104,32 @@
         </div>
         <button class="btn btn-gold" id="save-village-btn">Save village page</button>
         <span id="save-village-status" class="status-msg"></span>
+      </div>
+    </div>
+
+    <div id="kumaon-panel" class="hidden">
+      <div class="card" style="max-width:700px;">
+        <div class="field"><label>History of Kumaon (blank line between paragraphs)</label><textarea id="k-history" style="min-height:140px;"></textarea></div>
+        <div class="field"><label>Why Bairati matters (blank line between paragraphs)</label><textarea id="k-why" style="min-height:100px;"></textarea></div>
+        <div class="field">
+          <label>Places to visit — one per line, as: Name | Distance | Description</label>
+          <textarea id="k-places" style="min-height:120px; font-family:monospace; font-size:13px;"></textarea>
+        </div>
+        <div class="field">
+          <label>Songs — one per line, as: Name | Description</label>
+          <textarea id="k-songs" style="min-height:100px; font-family:monospace; font-size:13px;"></textarea>
+        </div>
+        <div class="field">
+          <label>Temples &amp; teerth — one per line, as: Name | Description</label>
+          <textarea id="k-temples" style="min-height:100px; font-family:monospace; font-size:13px;"></textarea>
+        </div>
+        <div class="field">
+          <label>Food — one per line, as: Name | Description</label>
+          <textarea id="k-food" style="min-height:100px; font-family:monospace; font-size:13px;"></textarea>
+        </div>
+        <div class="field"><label>Panchang link (for Almora)</label><input type="text" id="k-panchang"></div>
+        <button class="btn btn-gold" id="save-kumaon-btn">Save Discover Kumaon page</button>
+        <span id="save-kumaon-status" class="status-msg"></span>
       </div>
     </div>
 
@@ -172,12 +199,13 @@
   document.getElementById('signout-btn').addEventListener('click', () => location.reload());
 
   // ---------- Tabs ----------
-  const TABS = ['people', 'generations', 'archive', 'village', 'backup'];
+  const TABS = ['people', 'generations', 'archive', 'village', 'kumaon', 'backup'];
   TABS.forEach(t => document.getElementById('tab-' + t).addEventListener('click', () => {
     switchTab(t);
     if (t === 'generations') renderGenerationList();
     if (t === 'archive') renderArchiveList();
     if (t === 'village') loadVillageForm();
+    if (t === 'kumaon') loadKumaonForm();
   }));
   function switchTab(tab) {
     TABS.forEach(t => {
@@ -959,6 +987,59 @@
         return { intro, history, aipan, photos: [...(v.photos || []), ...newPhotoUrls] };
       }, `Edit village page — by superadmin`, token);
       pendingVillagePhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ================= DISCOVER KUMAON =================
+  // Places/songs/temples/food are edited as simple "Name | ... | Description"
+  // lines rather than full add/remove row UIs — quicker to maintain a list
+  // of a dozen items this way than clicking through a form for each one.
+  function itemsToLines(items, withDist) {
+    return (items || []).map(it => withDist
+      ? `${it.name} | ${it.distance || ''} | ${it.description || ''}`
+      : `${it.name} | ${it.description || ''}`
+    ).join('\n');
+  }
+  function linesToItems(text, withDist) {
+    return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+      const parts = line.split('|').map(p => p.trim());
+      return withDist
+        ? { name: parts[0] || '', distance: parts[1] || '', description: parts[2] || '' }
+        : { name: parts[0] || '', description: parts[1] || '' };
+    });
+  }
+
+  async function loadKumaonForm() {
+    const { content } = await PandeyGitHub.getFile('data/kumaon.json', token);
+    const d = content ? JSON.parse(content) : {};
+    document.getElementById('k-history').value = d.history || '';
+    document.getElementById('k-why').value = d.whyBairati || '';
+    document.getElementById('k-places').value = itemsToLines(d.places, true);
+    document.getElementById('k-songs').value = itemsToLines(d.songs, false);
+    document.getElementById('k-temples').value = itemsToLines(d.temples, false);
+    document.getElementById('k-food').value = itemsToLines(d.food, false);
+    document.getElementById('k-panchang').value = d.panchangUrl || 'https://vedpanchang.com/as/city/almora';
+    document.getElementById('save-kumaon-btn').onclick = saveKumaon;
+  }
+
+  async function saveKumaon() {
+    const statusEl = document.getElementById('save-kumaon-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const payload = {
+        history: document.getElementById('k-history').value.trim(),
+        whyBairati: document.getElementById('k-why').value.trim(),
+        places: linesToItems(document.getElementById('k-places').value, true),
+        songs: linesToItems(document.getElementById('k-songs').value, false),
+        temples: linesToItems(document.getElementById('k-temples').value, false),
+        food: linesToItems(document.getElementById('k-food').value, false),
+        panchangUrl: document.getElementById('k-panchang').value.trim()
+      };
+      await PandeyGitHub.readModifyWriteJSON('data/kumaon.json', (d) => ({ ...(d || {}), ...payload, photos: (d && d.photos) || [] }),
+        `Edit Discover Kumaon page — by superadmin`, token);
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
     } catch (e) {
       statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
