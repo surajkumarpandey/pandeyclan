@@ -1910,5 +1910,25 @@
     "bio": "",
     "occupation": null,
     "audioMessages": []
+  },
+  {
+    "id": "jaya-devi",
+    "name": "Jaya Devi",
+    "gender": "F",
+    "parentId": "jaikishan",
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
