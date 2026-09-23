@@ -1314,7 +1314,8 @@
     "motherName": "Durga Devi Pandey",
     "birthDate": "1959-09-21",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "bhasker"
   },
   {
     "id": "chetan",
@@ -2243,5 +2244,27 @@
     "bio": "",
     "occupation": null,
     "sortOrder": 3
+  },
+  {
+    "id": "bhasker",
+    "name": "Bhasker",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "taradutt_daughter_24",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
