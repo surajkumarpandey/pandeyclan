@@ -1930,25 +1930,5 @@
     "photos": [],
     "bio": "",
     "occupation": null
-  },
-  {
-    "id": "trial",
-    "name": "Trial",
-    "gender": "M",
-    "parentId": "jaikishan",
-    "generation": 17,
-    "tree": "A",
-    "unnamedPlaceholder": false,
-    "notes": null,
-    "fullName": null,
-    "spouseId": null,
-    "audioMessage": null,
-    "birthDate": null,
-    "birthYear": null,
-    "deathYear": null,
-    "locations": [],
-    "photos": [],
-    "bio": "",
-    "occupation": null
   }
 ]
