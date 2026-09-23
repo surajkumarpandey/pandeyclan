@@ -116,10 +116,11 @@
     .tree-body { display: block; }
     .tree-scroll-wrap { overflow: visible !important; background-image: none !important; }
     #tree-zoom-sizer { width: auto !important; height: auto !important; }
-    .tree-canvas { transform: none !important; }
+    /* transform is set dynamically by JS just before printing, to fit the
+       page width exactly — see the beforeprint handler below */
     body { background: #fff; }
     .gen-label-tag { background: none; }
-    @page { size: landscape; margin: 10mm; }
+    @page { size: landscape; margin: 8mm; }
   }
 </style>
 </head>
@@ -134,6 +135,8 @@
       <li><a href="tree.html" class="active" data-i18n="nav.tree">Family Tree</a></li>
       <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
+      <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
@@ -150,6 +153,7 @@
       <button id="zoom-in-btn" aria-label="Zoom in">+</button>
     </div>
     <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn" data-i18n="tree.download.pdf">Download as PDF</button>
+    <button class="btn btn-outline-dark btn-sm" id="download-image-btn">Download as Image</button>
   </div>
 </div>
 
@@ -420,8 +424,80 @@
     currentPanelPersonId = p.id;
   }
 
+  // ---------- Downloads ----------
+  async function exportTreeAsImage() {
+    const btn = document.getElementById('download-image-btn');
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Preparing…'; btn.disabled = true;
+    try {
+      const svgEl = document.getElementById('tree-svg');
+      const clone = svgEl.cloneNode(true);
+      // Inline every element's resolved (computed) style so the exported
+      // SVG carries its own colors/filters/fonts instead of relying on the
+      // page's stylesheet, which won't exist once this is a standalone file.
+      const props = ['fill', 'stroke', 'stroke-width', 'stroke-opacity', 'font-family', 'font-size', 'font-weight', 'opacity', 'filter', 'paint-order', 'stroke-linejoin', 'text-anchor'];
+      const originals = svgEl.querySelectorAll('*');
+      const clones = clone.querySelectorAll('*');
+      originals.forEach((orig, i) => {
+        const cs = getComputedStyle(orig);
+        let styleStr = '';
+        props.forEach(p => { const v = cs.getPropertyValue(p); if (v && v !== 'none') styleStr += `${p}:${v};`; });
+        if (styleStr) clones[i].setAttribute('style', styleStr);
+      });
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('width', totalWidth); bg.setAttribute('height', totalHeight);
+      bg.setAttribute('fill', '#FBF2E3');
+      clone.insertBefore(bg, clone.firstChild);
+      clone.setAttribute('width', totalWidth); clone.setAttribute('height', totalHeight);
+
+      const svgData = new XMLSerializer().serializeToString(clone);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = () => {
+        const scale = 2; // export at 2x for a crisp, legible image at full tree size
+        const c = document.createElement('canvas');
+        c.width = totalWidth * scale; c.height = totalHeight * scale;
+        const ctx = c.getContext('2d');
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0, totalWidth, totalHeight);
+        URL.revokeObjectURL(url);
+        c.toBlob((blob) => {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'pandey-family-tree.png';
+          a.click();
+          btn.textContent = originalLabel; btn.disabled = false;
+        }, 'image/png');
+      };
+      img.onerror = () => { btn.textContent = originalLabel; btn.disabled = false; alert('Could not generate the image — try again.'); };
+      img.src = url;
+    } catch (e) {
+      btn.textContent = originalLabel; btn.disabled = false;
+      alert('Could not generate the image: ' + e.message);
+    }
+  }
+  document.getElementById('download-image-btn').addEventListener('click', exportTreeAsImage);
+
   // ---------- Search ----------
-  document.getElementById('download-pdf-btn').addEventListener('click', () => window.print());
+  document.getElementById('download-pdf-btn').addEventListener('click', () => {
+    // Fit the whole tree width into one page's width before printing,
+    // so pages only ever stack vertically — never split awkwardly left/right
+    // the way default print pagination does with very wide content.
+    const A4_LANDSCAPE_USABLE_PX = 1050; // ~297mm landscape minus 8mm margins, at 96 CSS px/in
+    const printScale = Math.min(1, A4_LANDSCAPE_USABLE_PX / totalWidth);
+    const prevTransform = canvas.style.transform;
+    const prevSizerW = sizer.style.width, prevSizerH = sizer.style.height;
+    canvas.style.transform = `scale(${printScale})`;
+    sizer.style.width = 'auto'; sizer.style.height = 'auto';
+    window.print();
+    // restore the on-screen zoom afterwards (most browsers fire afterprint;
+    // a short fallback timeout covers the ones that don't for the print
+    // dialog itself, e.g. some in-app browsers)
+    const restore = () => { canvas.style.transform = prevTransform; sizer.style.width = prevSizerW; sizer.style.height = prevSizerH; };
+    window.addEventListener('afterprint', restore, { once: true });
+    setTimeout(restore, 2000);
+  });
 
   document.getElementById('search-box').addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();
