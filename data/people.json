@@ -750,22 +750,6 @@
     "locations": []
   },
   {
-    "id": "jaikishan_daughter_14",
-    "name": "Daughter",
-    "gender": "F",
-    "parentId": "jaikishan",
-    "generation": 17,
-    "tree": "A",
-    "unnamedPlaceholder": true,
-    "notes": null,
-    "birthYear": null,
-    "deathYear": null,
-    "photos": [],
-    "bio": "",
-    "occupation": null,
-    "locations": []
-  },
-  {
     "id": "gopaldutt",
     "name": "Gopal Dutt",
     "gender": "M",
