@@ -315,6 +315,29 @@
     return d + 'Z';
   }
 
+  // Wraps a text label onto multiple lines (tspans) rather than letting
+  // long names overflow into a neighboring node's space. Measures actual
+  // rendered width, since names vary in length and the font isn't monospace.
+  function wrapLabel(textSel, maxWidth, lineHeightEm) {
+    const words = textSel.text().split(/\s+/).reverse();
+    let word, line = [], lineNumber = 0;
+    const y = textSel.attr('y');
+    textSel.text(null);
+    let tspan = textSel.append('tspan').attr('x', 0).attr('y', y);
+    while ((word = words.pop())) {
+      line.push(word);
+      tspan.text(line.join(' '));
+      if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
+        line.pop();
+        tspan.text(line.join(' '));
+        line = [word];
+        lineNumber++;
+        tspan = textSel.append('tspan').attr('x', 0).attr('y', y).attr('dy', lineNumber * lineHeightEm + 'em');
+        tspan.text(word);
+      }
+    }
+  }
+
   function drawAvatar(sel, p, r, isRoot) {
     const hasPhoto = p.photos && p.photos.length;
     const ringColor = p.unnamedPlaceholder ? '#B8804A' : (hasPhoto ? 'var(--gold)' : 'var(--maroon)');
@@ -331,7 +354,8 @@
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r)
         .attr('fill', isRoot ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
     }
-    sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
+    const label = sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
+    wrapLabel(label, DX - 14, 1.15);
   }
 
   const nodeSel = g.append('g').attr('class', 'nodes-layer')
@@ -410,6 +434,10 @@
       <dl>
         ${p.fullName ? `<dt>${t('tree.field.fullname', 'Full name')}</dt><dd>${p.fullName}</dd>` : ''}
         ${spouse ? `<dt>${t('tree.field.spouse', 'Spouse')}</dt><dd>${PandeyData.displayName(spouse)}</dd>` : ''}
+        ${spouse && spouse.fatherName ? `<dt>${t('tree.field.spousefather', "Spouse's father")}</dt><dd>${spouse.fatherName}</dd>` : ''}
+        ${spouse && spouse.motherName ? `<dt>${t('tree.field.spousemother', "Spouse's mother")}</dt><dd>${spouse.motherName}</dd>` : ''}
+        ${!spouse && p.fatherName ? `<dt>${t('tree.field.fathername', "Father's name")}</dt><dd>${p.fatherName}</dd>` : ''}
+        ${!spouse && p.motherName ? `<dt>${t('tree.field.mothername', "Mother's name")}</dt><dd>${p.motherName}</dd>` : ''}
         ${p.occupation ? `<dt>${t('tree.field.occupation', 'Occupation')}</dt><dd>${p.occupation}</dd>` : ''}
         ${(p.birthDate || p.birthYear) ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}</dd>` : ''}
         ${current ? `<dt>${t('tree.field.currentlocation', 'Current location')}</dt><dd>${current.place}</dd>` : ''}
@@ -523,10 +551,16 @@
   // plus the open detail panel and sidebar, don't update on their own since
   // they were built once at load time)
   window.addEventListener('pandey-lang-changed', () => {
-    nodeSel.each(function (d) { d3.select(this).select('text').text(PandeyData.displayName(d.data.data)); });
+    nodeSel.each(function (d) {
+      const label = d3.select(this).select('text').text(PandeyData.displayName(d.data.data));
+      wrapLabel(label, DX - 14, 1.15);
+    });
     spouseLayer.selectAll('g.node').each(function (_, i) {
       const entry = spouseRenderList[i];
-      if (entry) d3.select(this).select('text').text(PandeyData.displayName(entry.person));
+      if (entry) {
+        const label = d3.select(this).select('text').text(PandeyData.displayName(entry.person));
+        wrapLabel(label, DX - 14, 1.15);
+      }
     });
     document.getElementById('search-box').setAttribute('placeholder', PandeyI18n.t('tree.search.placeholder', 'Search a name…'));
     document.getElementById('download-pdf-btn').textContent = PandeyI18n.t('tree.download.pdf', 'Download as PDF');
