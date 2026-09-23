@@ -15,9 +15,12 @@
   }
   .tree-toolbar .wrap { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
   .tree-toolbar input[type=search] { max-width: 300px; }
-  .legend { font-size: 13.5px; color: var(--maroon-deep); font-weight: 600; display: flex; gap: 16px; flex-wrap: wrap; margin-left: auto; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .legend i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.15); }
+  .zoom-controls { display: flex; gap: 6px; align-items: center; margin-left: auto; }
+  .zoom-controls button {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line-dark);
+    background: var(--paper-light); color: var(--maroon); font-size: 16px; cursor: pointer; font-weight: 700;
+  }
+  .zoom-controls button:hover { background: var(--maroon); color: var(--paper-light); }
 
   .tree-body {
     display: grid;
@@ -42,12 +45,13 @@
 
   .tree-scroll-wrap {
     overflow-x: auto;
-    background-image: url('assets/img/0EA9FA8C-FE47-47FA-A7C3-C82FE4981CF5.png');
+    background-image: url('assets/img/tree-backdrop.jpg');
     background-repeat: repeat;
     background-size: 620px auto;
     background-color: var(--paper);
   }
-  .tree-canvas { position: relative; }
+  .tree-canvas { position: relative; transform-origin: top left; }
+  #tree-zoom-sizer { position: relative; }
 
   .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; }
   .gen-label-tag {
@@ -111,6 +115,8 @@
     .site-nav, .tree-toolbar, .story-sidebar, .panel { display: none !important; }
     .tree-body { display: block; }
     .tree-scroll-wrap { overflow: visible !important; background-image: none !important; }
+    #tree-zoom-sizer { width: auto !important; height: auto !important; }
+    .tree-canvas { transform: none !important; }
     body { background: #fff; }
     .gen-label-tag { background: none; }
     @page { size: landscape; margin: 10mm; }
@@ -138,19 +144,21 @@
 <div class="tree-toolbar">
   <div class="wrap">
     <input type="search" id="search-box" placeholder="Search a name…" aria-label="Search the family tree" data-i18n-placeholder="tree.search.placeholder">
-    <span class="legend">
-      <span><i style="background:var(--maroon)"></i> <span data-i18n="tree.legend.named">named</span></span>
-      <span><i style="background:#E7C9A8"></i> <span data-i18n="tree.legend.placeholder">unnamed / placeholder</span></span>
-      <span><i style="background:var(--gold);"></i> has a photo</span>
-    </span>
+    <div class="zoom-controls">
+      <button id="zoom-out-btn" aria-label="Zoom out">&minus;</button>
+      <button id="zoom-reset-btn" style="width:auto; padding:0 10px; font-size:12px; border-radius:15px;">Reset</button>
+      <button id="zoom-in-btn" aria-label="Zoom in">+</button>
+    </div>
     <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn">Download as PDF</button>
   </div>
 </div>
 
 <div class="tree-body">
   <div class="tree-scroll-wrap" id="tree-scroll-wrap">
-    <div class="tree-canvas" id="tree-canvas">
-      <svg id="tree-svg"></svg>
+    <div id="tree-zoom-sizer">
+      <div class="tree-canvas" id="tree-canvas">
+        <svg id="tree-svg"></svg>
+      </div>
     </div>
   </div>
 
@@ -205,12 +213,33 @@
   canvas.style.width = totalWidth + 'px';
   canvas.style.height = totalHeight + 'px';
 
+  // ---------- Zoom ----------
+  // The canvas is visually scaled with a CSS transform; the sizer div around
+  // it is set to the SCALED dimensions so the browser's scrollbars reflect
+  // what's actually visible, rather than always scrolling across the full
+  // unscaled width regardless of zoom.
+  const sizer = document.getElementById('tree-zoom-sizer');
+  const stage = document.querySelector('.tree-scroll-wrap');
+  let zoomLevel = Math.max(0.3, Math.min(1, (stage.clientWidth * 2.4) / totalWidth));
+  function applyZoom() {
+    canvas.style.transform = `scale(${zoomLevel})`;
+    sizer.style.width = (totalWidth * zoomLevel) + 'px';
+    sizer.style.height = (totalHeight * zoomLevel) + 'px';
+  }
+  document.getElementById('zoom-in-btn').addEventListener('click', () => { zoomLevel = Math.min(1.4, zoomLevel + 0.15); applyZoom(); });
+  document.getElementById('zoom-out-btn').addEventListener('click', () => { zoomLevel = Math.max(0.2, zoomLevel - 0.15); applyZoom(); });
+  document.getElementById('zoom-reset-btn').addEventListener('click', () => {
+    zoomLevel = Math.max(0.3, Math.min(1, (stage.clientWidth * 2.4) / totalWidth));
+    applyZoom();
+  });
+  applyZoom();
+
   // Bring the root into view immediately instead of leaving the scroll
   // position at the canvas's default left edge, which — since the tree
   // spreads roughly symmetrically from the root — could otherwise leave
   // Sukhdev off-screen to the right on first load.
   const scrollWrap = document.getElementById('tree-scroll-wrap');
-  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, offsetX - 60); });
+  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, (offsetX - 60) * zoomLevel); });
 
   const svg = d3.select('#tree-svg').attr('width', totalWidth).attr('height', totalHeight);
   const g = svg.append('g').attr('transform', `translate(${offsetX},${MARGIN_TOP})`);
