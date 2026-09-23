@@ -2391,18 +2391,60 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Anjali Joshi",
+    "fatherName": "Tara Dutt Pandey",
+    "motherName": "Durga Devi Pandey",
     "spouseId": null,
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1970-08-19",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Dewelchour Bandobasti",
+        "type": "origin",
+        "year": "1970",
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Jamnagar",
+        "type": "lived",
+        "year": null,
+        "lat": 22.4732415,
+        "lng": 70.0552102,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": 28.4670734,
+        "lng": 77.5137649,
+        "note": null
+      },
+      {
+        "place": "Bagdogra",
+        "type": "lived",
+        "year": null,
+        "lat": 26.6981094,
+        "lng": 88.3245465,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "audioMessages": []
   },
   {
     "id": "mahesh",
