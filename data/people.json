@@ -870,7 +870,7 @@
   },
   {
     "id": "anandbhallabh",
-    "name": "Anand Bhallabh Pandey",
+    "name": "Anand Bhallabh",
     "gender": "M",
     "parentId": "laxmidutt",
     "generation": 16,
@@ -881,11 +881,24 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
-    "fullName": null,
-    "birthDate": null,
-    "sortOrder": 2
+    "occupation": "Entrepreneur / Agriculturist",
+    "locations": [
+      {
+        "place": "Bairati",
+        "type": "origin",
+        "year": "1902",
+        "lat": 24.8176145,
+        "lng": 90.6369117,
+        "note": null
+      }
+    ],
+    "fullName": "Anand Ballabh Pandey",
+    "birthDate": "1902-01-01",
+    "sortOrder": 2,
+    "fatherName": "Lakshmi Dutt Pandey",
+    "motherName": "Tulsi Devi Pandey",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bholadutt",
