@@ -1223,19 +1223,34 @@
   },
   {
     "id": "khajan_daughter_23",
-    "name": "Daughter",
+    "name": "Mahi",
     "gender": "F",
     "parentId": "khajan",
     "generation": 19,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Service",
+    "locations": [
+      {
+        "place": "Dewelchour Bandobasti",
+        "type": "origin",
+        "year": "1999",
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
+    "fullName": "Mahi Pandey",
+    "fatherName": "Khajan Chandra Pandey",
+    "motherName": "Meena Pandey",
+    "birthDate": "1999-03-02",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "taradutt_daughter_24",
