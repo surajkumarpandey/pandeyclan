@@ -253,6 +253,7 @@
         <span style="display:flex; gap:4px;">
           <button type="button" class="btn btn-outline-dark btn-sm move-child-up" data-id="${c.id}" ${i === 0 ? 'disabled' : ''} title="Move up">&uarr;</button>
           <button type="button" class="btn btn-outline-dark btn-sm move-child-down" data-id="${c.id}" ${i === children.length - 1 ? 'disabled' : ''} title="Move down">&darr;</button>
+          <button type="button" class="btn btn-outline-dark btn-sm remove-child-btn" data-id="${c.id}" style="border-color:var(--ochre-deep); color:var(--ochre-deep);" title="Remove">&times;</button>
         </span>
       </div>
     `).join('') || '<p class="muted" style="font-size:13.5px;">No children recorded yet.</p>';
@@ -264,6 +265,8 @@
 
       <div class="field"><label>Name</label><input type="text" id="f-name" value="${p.unnamedPlaceholder ? '' : (p.name || '')}" placeholder="${p.unnamedPlaceholder ? 'Add their real name if known' : ''}"></div>
       <div class="field"><label>Full name (optional)</label><input type="text" id="f-fullname" value="${p.fullName || ''}"></div>
+      <div class="field"><label>Father's name (useful when the father isn't tracked elsewhere in the tree — e.g. for a spouse who married in)</label><input type="text" id="f-fathername" value="${p.fatherName || ''}"></div>
+      <div class="field"><label>Mother's name</label><input type="text" id="f-mothername" value="${p.motherName || ''}"></div>
       <div class="field"><label>Gender</label><select id="f-gender"><option value="unknown" ${p.gender==='unknown'?'selected':''}>Unknown</option><option value="M" ${p.gender==='M'?'selected':''}>Male</option><option value="F" ${p.gender==='F'?'selected':''}>Female</option></select></div>
       <div class="field"><label>Occupation</label><input type="text" id="f-occupation" value="${p.occupation || ''}"></div>
       <div class="field"><label>Date of birth</label><input type="date" id="f-birthdate" value="${p.birthDate || ''}"></div>
@@ -359,6 +362,7 @@
     document.querySelectorAll('.child-link').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadPersonForm(a.dataset.id); }));
     document.querySelectorAll('.move-child-up').forEach(btn => btn.addEventListener('click', () => moveChild(btn.dataset.id, 'up')));
     document.querySelectorAll('.move-child-down').forEach(btn => btn.addEventListener('click', () => moveChild(btn.dataset.id, 'down')));
+    document.querySelectorAll('.remove-child-btn').forEach(btn => btn.addEventListener('click', () => removeChildInline(btn.dataset.id)));
     const deleteBtn = document.getElementById('delete-person-btn');
     if (deleteBtn) deleteBtn.addEventListener('click', deletePerson);
     const addSpouseBtn = document.getElementById('add-spouse-btn');
@@ -494,6 +498,8 @@
 
       const nameVal = document.getElementById('f-name').value.trim();
       const fullNameVal = document.getElementById('f-fullname').value.trim() || null;
+      const fatherNameVal = document.getElementById('f-fathername').value.trim() || null;
+      const motherNameVal = document.getElementById('f-mothername').value.trim() || null;
       const genderVal = document.getElementById('f-gender').value;
       const locVal = [...document.querySelectorAll('#loc-rows .loc-row-wrap')].map(wrap => ({
         place: wrap.querySelector('.loc-place').value.trim(), type: wrap.querySelector('.loc-type').value,
@@ -513,7 +519,7 @@
         const existingAudioList = existing.audioMessages || (existing.audioMessage ? [existing.audioMessage] : []);
         const keptAudio = existingAudioList.filter(src => !removedAudio.has(src));
         updated = {
-          ...existing, name: nameVal || existing.name, fullName: fullNameVal, gender: genderVal,
+          ...existing, name: nameVal || existing.name, fullName: fullNameVal, fatherName: fatherNameVal, motherName: motherNameVal, gender: genderVal,
           unnamedPlaceholder: nameVal ? false : existing.unnamedPlaceholder,
           occupation: occVal, birthDate: birthVal, birthYear: null, bio: bioVal, locations: locVal,
           photos: [...keptPhotos, ...newPhotoUrls],
@@ -535,6 +541,31 @@
 
   function slugify(name) { return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'person'; }
   function uniqueId(base, existingIds) { let id = base, i = 1; while (existingIds.has(id)) id = `${base}-${++i}`; return id; }
+
+  async function removeChildInline(childId) {
+    const child = people.find(x => x.id === childId);
+    if (!child) return;
+    const hasGrandchildren = people.some(x => x.parentId === childId);
+    if (hasGrandchildren) { alert(`${PandeyData.displayName(child)} has children of their own recorded — remove or move those first.`); return; }
+    if (!confirm(`Remove ${PandeyData.displayName(child)} from the tree?`)) return;
+    try {
+      let removed;
+      await PandeyGitHub.readModifyWriteJSON('data/people.json', (latestPeople) => {
+        const idx = latestPeople.findIndex(x => x.id === childId);
+        if (idx === -1) { removed = null; return latestPeople; }
+        removed = latestPeople.splice(idx, 1)[0];
+        if (removed.spouseId) { const sp = latestPeople.find(x => x.id === removed.spouseId); if (sp) sp.spouseId = null; }
+        return latestPeople;
+      }, `Remove ${child.name || child.id} — by superadmin`, token);
+      if (removed) {
+        people.splice(people.findIndex(x => x.id === removed.id), 1);
+        loadPersonForm(child.parentId);
+        renderPersonList(document.getElementById('person-search').value);
+      }
+    } catch (e) {
+      alert('Could not remove: ' + e.message);
+    }
+  }
 
   async function moveChild(childId, direction) {
     const child = people.find(x => x.id === childId);
@@ -583,7 +614,7 @@
         newPerson = {
           id: uniqueId(slugify(name), existingIds), name, gender, parentId: parent.id,
           generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
-          unnamedPlaceholder: false, notes: null, fullName: null, spouseId: null, audioMessage: null,
+          unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, spouseId: null, audioMessage: null,
           birthDate: null, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
         };
         latestPeople.push(newPerson);
@@ -612,7 +643,7 @@
         newSpouse = {
           id: uniqueId(slugify(name), existingIds), name, gender, parentId: null,
           generation: partner.generation, tree: partner.tree || 'A',
-          unnamedPlaceholder: false, notes: null, fullName: null, spouseId: partner.id, audioMessage: null,
+          unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, spouseId: partner.id, audioMessage: null,
           birthDate: null, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
         };
         latestPeople.push(newSpouse);
