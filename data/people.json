@@ -2130,25 +2130,43 @@
   },
   {
     "id": "durga-devi-pandey",
-    "name": "Durga Devi Pandey",
+    "name": "Durga Devi",
     "gender": "F",
     "parentId": null,
     "generation": 17,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
+    "fullName": "Durga Devi Pandey",
+    "fatherName": "Dev Dutt Joshi",
     "motherName": null,
     "spouseId": "taradutt",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Garud",
+        "type": "origin",
+        "year": null,
+        "lat": 29.9309489,
+        "lng": 79.620583,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "audioMessages": []
   },
   {
     "id": "tulsi-devi-pandey",
