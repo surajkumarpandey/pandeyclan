@@ -1068,9 +1068,7 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [
-      "uploads/ashok_pandey.jpg",
-      "uploads/ashok_1790104726830.jpg",
-      "uploads/ashok_1790104964246.jpg"
+      "uploads/ashok_1790104726830.jpg"
     ],
     "bio": "",
     "occupation": null,
@@ -1079,49 +1077,66 @@
         "place": "Bairati, Almora",
         "type": "origin",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Delhi",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Nashik",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Hyderabad",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Arunachal Pradesh",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Angola",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Haldwani",
         "type": "current",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       }
     ],
     "spouseId": "hemlata-pant",
     "fullName": null,
     "birthDate": null,
-    "audioMessage": "uploads/ashok_voice_1790103072510.wav"
+    "audioMessage": null,
+    "audioMessages": [
+      "uploads/ashok_voice_1790103072510.wav"
+    ]
   },
   {
     "id": "suraj",
