@@ -127,7 +127,6 @@
           <label>Food — one per line, as: Name | Description</label>
           <textarea id="k-food" style="min-height:100px; font-family:monospace; font-size:13px;"></textarea>
         </div>
-        <div class="field"><label>Panchang link (for Almora)</label><input type="text" id="k-panchang"></div>
         <button class="btn btn-gold" id="save-kumaon-btn">Save Discover Kumaon page</button>
         <span id="save-kumaon-status" class="status-msg"></span>
       </div>
@@ -1021,7 +1020,6 @@
     document.getElementById('k-songs').value = itemsToLines(d.songs, false);
     document.getElementById('k-temples').value = itemsToLines(d.temples, false);
     document.getElementById('k-food').value = itemsToLines(d.food, false);
-    document.getElementById('k-panchang').value = d.panchangUrl || 'https://vedpanchang.com/as/city/almora';
     document.getElementById('save-kumaon-btn').onclick = saveKumaon;
   }
 
@@ -1035,8 +1033,7 @@
         places: linesToItems(document.getElementById('k-places').value, true),
         songs: linesToItems(document.getElementById('k-songs').value, false),
         temples: linesToItems(document.getElementById('k-temples').value, false),
-        food: linesToItems(document.getElementById('k-food').value, false),
-        panchangUrl: document.getElementById('k-panchang').value.trim()
+        food: linesToItems(document.getElementById('k-food').value, false)
       };
       await PandeyGitHub.readModifyWriteJSON('data/kumaon.json', (d) => ({ ...(d || {}), ...payload, photos: (d && d.photos) || [] }),
         `Edit Discover Kumaon page — by superadmin`, token);
