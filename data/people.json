@@ -962,7 +962,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "baby-pandey"
   },
   {
     "id": "pradeep_daughter_20",
@@ -1922,6 +1923,26 @@
     "notes": null,
     "fullName": null,
     "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "baby-pandey",
+    "name": "Baby Pandey",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "spouseId": "pradeep",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
