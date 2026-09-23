@@ -62,8 +62,8 @@
     <div class="util-card">
       <span class="tag" data-i18n="util.tag.panchang">Panchang</span>
       <h3 data-i18n="util.panchang.h">A Panchang calculated for Almora specifically</h3>
-      <p data-i18n="util.panchang.p">Most Panchang sites give generic pan-India timings. This one computes tithi, nakshatra, sunrise/sunset, and rahu kaal for Almora's exact coordinates — the right choice for anyone in or planning something around Bairati.</p>
-      <a class="source-link" href="https://vedpanchang.com/as/city/almora" target="_blank" rel="noopener">Open today's Panchang for Almora →</a>
+      <p data-i18n="util.panchang.p">Most Panchang sites give generic pan-India timings. This one is computed right here on the page for Almora's exact coordinates — so it works even when an external Panchang site is down.</p>
+      <button class="btn btn-gold btn-sm" id="open-panchang-btn">Open today's Panchang →</button>
     </div>
 
     <div class="util-card">
@@ -99,6 +99,22 @@
   <p class="muted" style="margin-top:32px; font-size:13.5px;">Found something else genuinely useful and hard to find — a recipe, a craft, a resource? It belongs here. Let the family know and it'll be added.</p>
 </div>
 
+<div id="panchang-modal" style="display:none; position:fixed; inset:0; z-index:100; background:rgba(46,15,10,0.55); align-items:center; justify-content:center; padding:20px;">
+  <div style="background:var(--paper-light); border-radius:4px; max-width:420px; width:100%; padding:28px 26px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <button id="close-panchang-btn" aria-label="Close" style="position:absolute; top:12px; right:14px; background:none; border:none; font-size:22px; cursor:pointer; color:var(--maroon);">&times;</button>
+    <h2 style="font-family:var(--font-display); font-weight:600; font-size:21px; margin:0 0 4px;">Panchang — Almora</h2>
+    <div class="field" style="margin:14px 0 18px;"><label>Date</label><input type="date" id="panchang-date"></div>
+    <dl id="panchang-result" style="margin:0;">
+      <dt style="font-size:12px; font-weight:600; color:#8a6a58; margin-top:10px;">Vikram Samvat</dt><dd id="p-samvat" style="margin:2px 0 0;">—</dd>
+      <dt style="font-size:12px; font-weight:600; color:#8a6a58; margin-top:10px;">Masa</dt><dd id="p-masa" style="margin:2px 0 0;">—</dd>
+      <dt style="font-size:12px; font-weight:600; color:#8a6a58; margin-top:10px;">Tithi</dt><dd id="p-tithi" style="margin:2px 0 0; font-family:var(--font-display); font-size:18px;">—</dd>
+      <dt style="font-size:12px; font-weight:600; color:#8a6a58; margin-top:10px;">Nakshatra</dt><dd id="p-nakshatra" style="margin:2px 0 0; font-family:var(--font-display); font-size:18px;">—</dd>
+      <dt style="font-size:12px; font-weight:600; color:#8a6a58; margin-top:10px;">Sunrise / Sunset</dt><dd id="p-sun" style="margin:2px 0 0;">—</dd>
+    </dl>
+    <p class="muted" style="font-size:12px; margin-top:18px; margin-bottom:0;">Computed with simplified astronomical formulas — a solid day-to-day reference, not a substitute for a priest or a professional Panchang for precise muhurta timing.</p>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="aipan-border"></div>
   <div class="wrap">
@@ -109,5 +125,32 @@
 
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/panchang.js"></script>
+<script>
+(function () {
+  const modal = document.getElementById('panchang-modal');
+  const dateInput = document.getElementById('panchang-date');
+
+  function render(dateStr) {
+    const d = dateStr ? new Date(dateStr + 'T12:00:00') : new Date();
+    const r = PandeyPanchang.calculate(d);
+    document.getElementById('p-samvat').textContent = r.vikramSamvat;
+    document.getElementById('p-masa').textContent = r.masa;
+    document.getElementById('p-tithi').textContent = r.tithi;
+    document.getElementById('p-nakshatra').textContent = r.nakshatra;
+    document.getElementById('p-sun').textContent = `${r.sunrise} / ${r.sunset}`;
+  }
+
+  document.getElementById('open-panchang-btn').addEventListener('click', () => {
+    const today = new Date();
+    dateInput.value = today.toISOString().slice(0, 10);
+    render(dateInput.value);
+    modal.style.display = 'flex';
+  });
+  document.getElementById('close-panchang-btn').addEventListener('click', () => { modal.style.display = 'none'; });
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+  dateInput.addEventListener('change', () => render(dateInput.value));
+})();
+</script>
 </body>
 </html>
