@@ -55,6 +55,10 @@
     {
       "name": "Girda's songs",
       "description": "Girish Tiwari 'Girda' (1945–2010) was Kumaon's best-known modern folk poet-singer, whose songs of the land and its people are still sung at gatherings across the region today."
+    },
+    {
+      "name": "Sakunakhar Geet",
+      "description": "Auspicious songs sung to mark good omens and blessings at ceremonies and life events — part of the same ritual-song tradition as the songs sung at Harela."
     }
   ],
   "temples": [
@@ -85,6 +89,30 @@
     {
       "name": "Chaukhutiya temple ruins",
       "description": "A cluster of 9th-century temples uncovered in a 2016–17 excavation right in Bairati's own tehsil."
+    },
+    {
+      "name": "Chitai Golu Devta Temple, Almora",
+      "description": "Kumaon's temple of justice — devotees hang bells and tie written petitions, appealing to Golu Devta (an incarnation of Shiva as Gaur Bhairav) directly. Built in the 12th century by a Chand-dynasty general, ~8 km from Almora."
+    },
+    {
+      "name": "Chitrashila Ghat — Rajmata Jiya Rani, Ranibagh (Gargi Nadi)",
+      "description": "A riverside shrine on the Gargi Nadi at Ranibagh, dedicated to Rajmata Jiya Rani."
+    },
+    {
+      "name": "Shitla Mata Mandir, Kathgodam",
+      "description": "A temple to Goddess Shitla Mata at Kathgodam, the rail-head gateway into the Kumaon hills."
+    },
+    {
+      "name": "Dunagiri Devi Temple, Dwarahat",
+      "description": "One of Kumaon's oldest Shakti Peethas, at 8,000 ft near Dwarahat — considered the second Vaishno Shaktipeeth in Kumaon after Vaishno Devi itself. Around 500 steps, lined with bells, lead up through pine and oak forest to the shrine."
+    },
+    {
+      "name": "Kot Bhramari Mandir, Garur",
+      "description": "A temple to Goddess Bhramari near Garur, in the Bageshwar area of Kumaon."
+    },
+    {
+      "name": "Hat Kalika Temple, Gangolihat",
+      "description": "A Shaktipeeth to Mahakali, and the patron deity of the Kumaon Regiment of the Indian Army — soldiers' war cry is 'Kalika Mata Ki Jai'. Tradition credits its re-establishment to Adi Shankaracharya."
     }
   ],
   "food": [
@@ -119,6 +147,22 @@
     {
       "name": "Bhang ki Chutney",
       "description": "A tangy chutney of roasted hemp seeds, garlic and lemon, served with almost any Kumaoni thali."
+    },
+    {
+      "name": "Saya",
+      "description": "A traditional Kumaoni sweet dessert."
+    },
+    {
+      "name": "Kheere ka Raita",
+      "description": "Grated cucumber mixed into spiced curd — a cooling side dish common with a Kumaoni thali."
+    },
+    {
+      "name": "Sana Hua Nimbu",
+      "description": "A simple, sharp lemon pickle-relish, mashed with salt and spice, served as an accompaniment."
+    },
+    {
+      "name": "Gulgule",
+      "description": "Small fried, jaggery-sweetened wheat-flour fritters — a homely Kumaoni tea-time snack."
     }
   ],
   "photos": []
