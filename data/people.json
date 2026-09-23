@@ -966,22 +966,6 @@
     "spouseId": "baby-pandey"
   },
   {
-    "id": "pradeep_daughter_20",
-    "name": "Daughter",
-    "gender": "F",
-    "parentId": "pradeep",
-    "generation": 19,
-    "tree": "A",
-    "unnamedPlaceholder": true,
-    "notes": null,
-    "birthYear": null,
-    "deathYear": null,
-    "photos": [],
-    "bio": "",
-    "occupation": null,
-    "locations": []
-  },
-  {
     "id": "pradeep_daughter_21",
     "name": "Daughter",
     "gender": "F",
