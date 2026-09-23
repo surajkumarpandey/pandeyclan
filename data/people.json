@@ -942,7 +942,8 @@
     "motherName": "Saroj Devi Pandey",
     "birthDate": "1929-12-23",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "sortOrder": 1
   },
   {
     "id": "shekhar",
@@ -958,7 +959,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "sortOrder": 2
   },
   {
     "id": "kailash",
@@ -974,7 +976,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "sortOrder": 0
   },
   {
     "id": "pradeep",
