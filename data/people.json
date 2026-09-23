@@ -734,22 +734,6 @@
     "locations": []
   },
   {
-    "id": "prayagdutt_daughter_15",
-    "name": "Daughter",
-    "gender": "F",
-    "parentId": "prayagdutt",
-    "generation": 18,
-    "tree": "A",
-    "unnamedPlaceholder": true,
-    "notes": null,
-    "birthYear": null,
-    "deathYear": null,
-    "photos": [],
-    "bio": "",
-    "occupation": null,
-    "locations": []
-  },
-  {
     "id": "prayagdutt_daughter_16",
     "name": "Daughter",
     "gender": "F",
