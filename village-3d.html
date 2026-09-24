@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bairati in 3D — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<style>
+  .map3d-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 44px 0 36px; }
+  .map3d-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 32px; margin: 0 0 8px; }
+  .map3d-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
+  #map3d { width: 100%; height: 70vh; min-height: 480px; }
+  .map3d-controls {
+    position: absolute; right: 16px; bottom: 16px; z-index: 5;
+    display: flex; flex-direction: column; gap: 8px; background: rgba(255,251,243,0.92);
+    border-radius: 6px; padding: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .map3d-controls .row { display: flex; gap: 6px; align-items: center; }
+  .map3d-controls label { font-size: 11.5px; font-weight: 600; color: var(--maroon); width: 46px; }
+  .map3d-controls button { width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--line-dark); background: var(--paper-light); color: var(--maroon); font-weight: 700; cursor: pointer; }
+  .map3d-wrap { position: relative; }
+  .map3d-note { background: var(--paper-light); border-top: 1px solid var(--line); padding: 14px 0; font-size: 13.5px; color: #8a6a58; }
+  .house-popup img { width: 220px; height: 150px; object-fit: cover; border-radius: 3px; display: block; margin-bottom: 8px; }
+  .house-popup p { font-size: 13.5px; margin: 0; max-width: 220px; }
+  .maplibregl-popup-content { font-family: var(--font-body); padding: 12px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="village-3d.html" class="active">Bairati in 3D</a></li>
+      <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
+      <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
+      <li><a href="events.html" data-i18n="nav.events">Events</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="map3d-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1>Bairati in 3D</h1>
+    <p>Real elevation data for the actual hillside — drag to rotate, two fingers (or right-click) to tilt, scroll or pinch to zoom. The pin marks the family house.</p>
+  </div>
+</div>
+
+<div class="map3d-wrap">
+  <div id="map3d"></div>
+  <div class="map3d-controls">
+    <div class="row"><label>Tilt</label><button id="pitch-down">&minus;</button><button id="pitch-up">+</button></div>
+    <div class="row"><label>Rotate</label><button id="rotate-left">&#8634;</button><button id="rotate-right">&#8635;</button></div>
+    <div class="row"><label>Reset</label><button id="view-reset" style="width:auto; padding:0 8px;">↺ View</button></div>
+  </div>
+</div>
+<div class="map3d-note wrap">
+  Terrain is real elevation data for this hillside, from open public data — genuinely 3D, not an illustration. The house photo is shown as a marker at its location on that terrain; it isn't a 3D reconstruction of the building itself, since that would need multiple photos and dedicated 3D-modelling software, not something a single photo can give us reliably.
+</div>
+
+<footer class="site-footer">
+  <div class="aipan-border"></div>
+  <div class="wrap">
+    <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
+    <span><a href="village.html">Back to Bairati Village</a></span>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(function () {
+  // Bairati's approximate coordinates — same point used on the Journeys Map.
+  const BAIRATI = { lat: 29.596, lng: 79.665 };
+  const DEFAULT_VIEW = { center: [BAIRATI.lng, BAIRATI.lat], zoom: 14.5, pitch: 60, bearing: -20 };
+
+  const map = new maplibregl.Map({
+    container: 'map3d',
+    style: {
+      version: 8,
+      sources: {
+        'osm-raster': {
+          type: 'raster',
+          tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '&copy; OpenStreetMap contributors'
+        },
+        'terrain-dem': {
+          type: 'raster-dem',
+          tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          encoding: 'terrarium', // IMPORTANT: this source is Terrarium-encoded, not the MapLibre default (Mapbox) encoding — wrong encoding silently gives wrong elevations
+          maxzoom: 15
+        }
+      },
+      layers: [{ id: 'osm-layer', type: 'raster', source: 'osm-raster' }]
+    },
+    center: DEFAULT_VIEW.center,
+    zoom: DEFAULT_VIEW.zoom,
+    pitch: DEFAULT_VIEW.pitch,
+    bearing: DEFAULT_VIEW.bearing,
+    maxPitch: 80
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+
+  map.on('load', () => {
+    map.setTerrain({ source: 'terrain-dem', exaggeration: 1.6 });
+
+    // House marker with photo popup — update the image path below once
+    // the house photo is uploaded to uploads/ via the admin panel.
+    const houseEl = document.createElement('div');
+    houseEl.style.cssText = 'width:22px; height:22px; border-radius:50%; background:#E0952A; border:3px solid #FFFBF3; box-shadow:0 0 0 2px #5C1F27; cursor:pointer;';
+    new maplibregl.Marker({ element: houseEl })
+      .setLngLat([BAIRATI.lng, BAIRATI.lat])
+      .setPopup(new maplibregl.Popup({ offset: 20 }).setHTML(`
+        <div class="house-popup">
+          <img src="uploads/laxmidutt-house.jpg" alt="The family house" onerror="this.style.display='none'">
+          <p><strong>The family house, Bairati</strong><br>Shared by Anand Bhallabh and Bhola Dutt — presumably built by Laxmi Dutt.</p>
+        </div>
+      `))
+      .addTo(map);
+  });
+
+  document.getElementById('pitch-up').onclick = () => map.easeTo({ pitch: Math.min(80, map.getPitch() + 10) });
+  document.getElementById('pitch-down').onclick = () => map.easeTo({ pitch: Math.max(0, map.getPitch() - 10) });
+  document.getElementById('rotate-left').onclick = () => map.easeTo({ bearing: map.getBearing() - 30 });
+  document.getElementById('rotate-right').onclick = () => map.easeTo({ bearing: map.getBearing() + 30 });
+  document.getElementById('view-reset').onclick = () => map.easeTo(DEFAULT_VIEW);
+})();
+</script>
+</body>
+</html>
