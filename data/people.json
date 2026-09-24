@@ -983,7 +983,8 @@
     "locations": [],
     "fullName": null,
     "birthDate": null,
-    "sortOrder": 3
+    "sortOrder": 3,
+    "spouseId": "padma"
   },
   {
     "id": "taradutt",
@@ -4366,5 +4367,27 @@
     "occupation": null,
     "sortOrder": 0,
     "audioMessages": []
+  },
+  {
+    "id": "padma",
+    "name": "Padma",
+    "gender": "F",
+    "parentId": null,
+    "generation": 16,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "bholadutt",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
