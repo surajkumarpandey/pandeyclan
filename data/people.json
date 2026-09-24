@@ -793,7 +793,8 @@
     "birthDate": "1964-04-05",
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "pratibha"
   },
   {
     "id": "bhuwan_daughter_18",
@@ -3887,6 +3888,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "chetan",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "pratibha",
+    "name": "Pratibha",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "bhuwan",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
