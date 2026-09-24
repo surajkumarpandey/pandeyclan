@@ -785,8 +785,15 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Educationist",
+    "locations": [],
+    "fullName": "Bhuwan Chandra Pandey",
+    "fatherName": "Prayag Dutt Pandey",
+    "motherName": "Kamala Pandey",
+    "birthDate": "1964-04-05",
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bhuwan_daughter_18",
