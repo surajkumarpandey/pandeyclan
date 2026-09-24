@@ -1545,9 +1545,41 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Nainital",
+        "type": "current",
+        "year": null,
+        "lat": 29.294995,
+        "lng": 79.4162511,
+        "note": null
+      },
+      {
+        "place": "Gaziabad",
+        "type": "lived",
+        "year": null,
+        "lat": 35.233837,
+        "lng": 71.33074,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      }
+    ],
     "sortOrder": 0,
-    "spouseId": "harish-2"
+    "spouseId": "harish-2",
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthDate": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "varun",
