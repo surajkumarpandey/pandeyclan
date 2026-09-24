@@ -3185,15 +3185,15 @@
   {
     "id": "pawani",
     "name": "Pawani",
-    "gender": "unknown",
+    "gender": "F",
     "parentId": "tamanna",
     "generation": 20,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Pawani Pandey",
+    "fatherName": "Vikash Pandey",
+    "motherName": "Tamanna Pandey",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -3203,7 +3203,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "audioMessages": []
   },
   {
     "id": "hiya",
