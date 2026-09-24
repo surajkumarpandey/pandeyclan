@@ -2258,7 +2258,8 @@
     "birthDate": null,
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "amit"
   },
   {
     "id": "gaurav_daughter_39",
@@ -4541,6 +4542,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "harish",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "amit",
+    "name": "Amit",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "harish_daughter_38",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
