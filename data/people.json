@@ -1914,7 +1914,8 @@
     "birthDate": "1949-12-07",
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "tara"
   },
   {
     "id": "harish",
@@ -4671,5 +4672,27 @@
     "occupation": null,
     "birthPlace": null,
     "audioMessages": []
+  },
+  {
+    "id": "tara",
+    "name": "Tara",
+    "gender": "F",
+    "parentId": null,
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "lalit",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
