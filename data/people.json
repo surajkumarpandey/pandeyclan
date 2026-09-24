@@ -1546,7 +1546,8 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "sortOrder": 0
+    "sortOrder": 0,
+    "spouseId": "harish-2"
   },
   {
     "id": "varun",
@@ -3756,5 +3757,27 @@
     "occupation": null,
     "birthPlace": "Kichcha",
     "audioMessages": []
+  },
+  {
+    "id": "harish-2",
+    "name": "Harish",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "shekhar_daughter_26",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
