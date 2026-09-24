@@ -984,7 +984,7 @@
     "fullName": null,
     "birthDate": null,
     "sortOrder": 3,
-    "spouseId": null
+    "spouseId": "manorama"
   },
   {
     "id": "taradutt",
@@ -4381,6 +4381,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "manorama",
+    "name": "Manorama",
+    "gender": "F",
+    "parentId": null,
+    "generation": 16,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "bholadutt",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
