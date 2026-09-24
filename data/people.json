@@ -2223,7 +2223,8 @@
     "birthDate": null,
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "spouseanju"
   },
   {
     "id": "ritesh",
@@ -4693,6 +4694,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "lalit",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "spouseanju",
+    "name": "SpouseAnju",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "lalit_daughter_37",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
