@@ -2211,14 +2211,14 @@
   },
   {
     "id": "kushagra-pandey",
-    "name": "Kushagra Pandey",
+    "name": "Kushagra",
     "gender": "M",
     "parentId": null,
     "generation": 19,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Kushagra Pandey",
     "spouseId": "garima",
     "audioMessage": null,
     "birthDate": null,
@@ -2227,7 +2227,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": "Service",
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "varniya-pandey",
