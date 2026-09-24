@@ -93,7 +93,7 @@
 </div>
 
 <div class="note3d wrap">
-  Hills and slopes come from real elevation data (about 30&nbsp;m detail, heights slightly exaggerated so the slopes read clearly at this scale). The ground is satellite imagery. Roads are drawn as straight lines between known points, so the real road bends more than shown.
+  Hills and slopes come from real elevation data (about 30&nbsp;m detail, heights slightly exaggerated so the slopes read clearly at this scale). The ground is satellite imagery. Roads are drawn as straight lines between known points, so the real road bends more than shown. The upper road (Route 2 to the house, past the school) isn't drawn yet, because its path hasn't been pinned.
 </div>
 
 <footer class="site-footer">
@@ -119,29 +119,31 @@
   const PLACES = [
     { key: 'house', lat: 29.8073069, lng: 79.4212201, label: 'Family house', kind: 'Pandey family house', color: 0xe0952a, pinHeight: 150,
       desc: 'The last known residence of the Pandey clan that still stands today, believed to have been built by Laxmi Dutt.',
-      reach: 'From the NH 109 junction, follow the village road past the school; the house is about 350 m beyond it (straight-line), higher up the slope.' },
+      reach: 'Route 1: from NH 109, take the village road uphill at the Bairati turn-off, past the school. Route 2: take the upper road (joined from Dwarahat, from Pan village, or when coming from Chitreshwar), which passes directly by the school. From the school, continue up to the house.',
+      link: { href: 'house-3d.html', text: 'View the house in 3D' } },
     { key: 'village', lat: 29.8071, lng: 79.4194, label: 'Bairati', kind: 'Village', color: 0x5c1f27, pinHeight: 110,
       desc: 'Bairati village, with its own gram panchayat, in Chaukhutiya block and tehsil of Almora district.',
       facts: [['Area', '314.75 hectares'], ['Population', '763 (171 families), Census 2011'], ['PIN code', '263653'], ['Post office', 'Dwarahat'], ['Block / tehsil', 'Chaukhutiya']],
       reach: 'On NH 109 between Dwarahat and Chaukhutia. Nearest railhead: Kathgodam. Nearest airport: Pantnagar. Buses run from Haldwani, Kathgodam and Almora towards Dwarahat and Chaukhutia.',
       src: 'Census 2011 village data; directory listings for the PIN code.' },
-    { key: 'school', lat: 29.8069205, lng: 79.4176471, label: 'G.H.S. Chitreshwar', kind: 'School', color: 0x3e1218, pinHeight: 70,
-      desc: 'Government High School (G.H.S.) Chitreshwar, located in Bairati.',
-      reach: 'About 150 m (straight-line) up the village road from the NH 109 junction.',
-      src: 'Name and address (Bairati, PIN 263653, Post Dwarahat) from school directory listings — worth confirming against the signboard.' },
+    { key: 'school', lat: 29.8069205, lng: 79.4176471, label: 'Govt. Primary School, Bhairati', kind: 'School', color: 0x3e1218, pinHeight: 70,
+      desc: 'The village primary school. Both routes up to the family house pass it.',
+      reach: 'Route 1: about 150 m (straight-line) up the village road from the NH 109 turn-off. Route 2: the upper road runs directly past the school.' },
     { key: 'junction', lat: 29.8059634, lng: 79.4164968, label: 'Bairati turn-off (NH 109)', kind: 'Road junction', color: 0x3e1218, pinHeight: 55,
       desc: 'Where the Bairati village road leaves National Highway 109.',
       facts: [['Dwarahat town', 'about 3 km to the south-east (straight-line)'], ['Chaukhutia', 'about 11 km to the north-west (straight-line)']],
-      reach: 'Coming from Haldwani/Almora: NH 109 via Almora and Ranikhet to Dwarahat, then continue towards Chaukhutia/Karnaprayag. The turn-off is shortly after Dwarahat.' },
+      reach: 'Coming from Haldwani/Almora: NH 109 via Almora and Ranikhet to Dwarahat, then continue towards Chaukhutia/Karnaprayag. The turn-off is just past Green Valley Restaurant.' },
     { key: 'kandy', lat: 29.8151070, lng: 79.4138605, label: 'Kandy Guest House & Restaurant', kind: 'Hotel & restaurant', color: 0x3e1218, pinHeight: 70,
       desc: 'A guest house and restaurant on NH 109, listed on Google as Kandy Guest House & Restaurant.',
       reach: 'About 1 km (straight-line) north along NH 109 from the Bairati turn-off, towards Chaukhutia.' },
-    // { key: 'greenvalley', lat: ..., lng: ..., label: 'Green Valley Restaurant', kind: 'Restaurant', color: 0x3e1218, pinHeight: 70,
-    //   desc: '...', reach: '...' },
+    { key: 'greenvalley', lat: 29.8047284, lng: 79.4166724, label: 'Green Valley Restaurant', kind: 'Restaurant', color: 0x3e1218, pinHeight: 60,
+      desc: 'A restaurant on NH 109, just before the Bairati turn-off when coming from Dwarahat.',
+      reach: 'On NH 109, about 140 m (straight-line) before the Bairati turn-off when travelling from Dwarahat towards Chaukhutia.' },
   ];
   const P = Object.fromEntries(PLACES.map(p => [p.key, p]));
 
   const ROADS = [
+    { from: 'greenvalley', to: 'junction', color: 0xf0b75c, width: 4, name: null },
     { from: 'junction', to: 'kandy', color: 0xf0b75c, width: 4, name: 'NH 109' },
     { from: 'junction', to: 'school', color: 0xfffbf3, width: 2.5, name: 'Village road' },
     { from: 'school', to: 'house', color: 0xfffbf3, width: 2.5, name: null },
@@ -309,7 +311,7 @@
     const lat = f.lat + dLat * (distM / n), lng = f.lng + dLng * (distM / n), l = toLocal(lat, lng);
     const s = textSprite(text, '#9a6412', 0.24); s.position.set(l.x, groundAt(lat, lng) + 25, l.z); scene.add(s);
   }
-  directionLabel('to Dwarahat', 'junction', 29.78, 79.43, 260);       // Dwarahat town centre
+  directionLabel('to Dwarahat', 'greenvalley', 29.78, 79.43, 200);       // Dwarahat town centre
   directionLabel('to Chaukhutia', 'kandy', 29.88472, 79.35139, 220);  // Chaukhutia town centre
 
   // ---------------- 6. Place pins ----------------
@@ -362,6 +364,7 @@
         <a href="${gmaps(p)}" target="_blank" rel="noopener">Open in Google Maps</a>
         <a href="${directions(p)}" target="_blank" rel="noopener">Directions</a>
         <button type="button" id="copy-coords">Copy coordinates</button>
+        ${p.link ? `<a href="${p.link.href}">${p.link.text}</a>` : ''}
       </div>
       ${p.src ? `<div class="src">Source: ${p.src}</div>` : ''}`;
     card.style.display = 'block';
