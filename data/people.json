@@ -3972,14 +3972,14 @@
   },
   {
     "id": "jagdish-chandra-joshi",
-    "name": "Jagdish Chandra Joshi",
+    "name": "Jagdish",
     "gender": "M",
     "parentId": null,
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Jagdish Chandra Joshi",
     "fatherName": null,
     "motherName": null,
     "spouseId": "prayagdutt_daughter_16",
@@ -3990,6 +3990,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   }
 ]
