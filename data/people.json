@@ -2917,25 +2917,36 @@
   },
   {
     "id": "daughter",
-    "name": "Daughter",
+    "name": "Mrunalini",
     "gender": "F",
     "parentId": "tanmay",
     "generation": 20,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Mrunalini Joshi",
+    "fatherName": "Tanmay Joshi",
+    "motherName": "Rashmi Joshi",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Delhi",
+        "type": "origin",
+        "year": null,
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": "Delhi",
+    "audioMessages": []
   },
   {
     "id": "vikash",
