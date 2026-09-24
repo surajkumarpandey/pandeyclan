@@ -4332,8 +4332,8 @@
     "unnamedPlaceholder": false,
     "notes": null,
     "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fatherName": "Ganga Ballabh Tripathi",
+    "motherName": "Haripriya Tripathi",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -4344,6 +4344,7 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "sortOrder": 0
+    "sortOrder": 0,
+    "audioMessages": []
   }
 ]
