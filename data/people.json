@@ -2002,25 +2002,76 @@
   },
   {
     "id": "hemlata-pant",
-    "name": "Hemlata Pant",
+    "name": "Hemlata",
     "gender": "F",
     "parentId": null,
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Hemlata Pant",
     "spouseId": "ashok",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1966-08-15",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
-    "photos": [
-      "uploads/hemlata-pant_1790102733091.jpg"
+    "locations": [
+      {
+        "place": "Pali, Gangolihat",
+        "type": "origin",
+        "year": "1966",
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Pithoragarh",
+        "type": "lived",
+        "year": null,
+        "lat": 29.585871,
+        "lng": 80.215167,
+        "note": null
+      },
+      {
+        "place": "Lalkuan",
+        "type": "lived",
+        "year": "1986",
+        "lat": 29.0678634,
+        "lng": 79.5166143,
+        "note": null
+      },
+      {
+        "place": "Nasik",
+        "type": "lived",
+        "year": "1989",
+        "lat": 19.9480582,
+        "lng": 73.8420837,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": "1998",
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": "1988",
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      }
     ],
+    "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": "Purnanand Pant",
+    "motherName": "Devaki Pant",
+    "birthPlace": "Pali, Gangolihat",
+    "audioMessages": []
   },
   {
     "id": "haripriya",
