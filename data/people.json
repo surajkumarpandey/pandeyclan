@@ -2121,7 +2121,8 @@
     "birthDate": null,
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "bhawana-2"
   },
   {
     "id": "harshit",
@@ -4990,6 +4991,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "vineet",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "bhawana-2",
+    "name": "Bhawana",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "manoj_suresh",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
