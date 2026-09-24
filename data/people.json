@@ -1610,8 +1610,15 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Educationist",
+    "locations": [],
+    "fullName": "Dr. Varun Pandey",
+    "fatherName": "Chetan Pandey",
+    "motherName": "Anurita Pandey",
+    "birthDate": "1995-08-20",
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "harit",
