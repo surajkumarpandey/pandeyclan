@@ -2267,7 +2267,7 @@
   },
   {
     "id": "durga-devi-pandey",
-    "name": "Durga Devi",
+    "name": "Durga",
     "gender": "F",
     "parentId": null,
     "generation": 17,
@@ -2303,7 +2303,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "birthPlace": null
   },
   {
     "id": "tulsi-devi-pandey",
