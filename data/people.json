@@ -2902,7 +2902,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Rashmi Joshi",
     "fatherName": null,
     "motherName": null,
     "spouseId": "tanmay",
@@ -2913,7 +2913,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "daughter",
