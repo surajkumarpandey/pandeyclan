@@ -1501,7 +1501,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "preeti-2"
   },
   {
     "id": "vedansh",
@@ -3348,5 +3349,27 @@
     "occupation": null,
     "birthPlace": null,
     "audioMessages": []
+  },
+  {
+    "id": "preeti-2",
+    "name": "Preeti",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "hem",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
