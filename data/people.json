@@ -2184,7 +2184,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "spouse-jyoti"
   },
   {
     "id": "lalit_daughter_36",
@@ -4817,6 +4818,28 @@
     "audioMessage": null,
     "birthDate": null,
     "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "spouse-jyoti",
+    "name": "Spouse Jyoti",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "lalit_daughter_35",
+    "audioMessage": null,
+    "birthDate": null,
     "birthYear": null,
     "deathYear": null,
     "locations": [],
