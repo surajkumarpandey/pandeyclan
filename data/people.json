@@ -968,7 +968,7 @@
   },
   {
     "id": "bholadutt",
-    "name": "Bhola Dutt Pandey",
+    "name": "Bhola Dutt",
     "gender": "M",
     "parentId": "laxmidutt",
     "generation": 16,
@@ -979,12 +979,17 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
+    "occupation": "Politician / Agriculturist",
     "locations": [],
-    "fullName": null,
+    "fullName": "Bhola Dutt Pandey",
     "birthDate": null,
     "sortOrder": 3,
-    "spouseId": "manorama"
+    "spouseId": "manorama",
+    "fatherName": "Lakshmi Dutt Pandey",
+    "motherName": "Tulsi Devi Pandey",
+    "birthPlace": "Bairati Almora",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "taradutt",
