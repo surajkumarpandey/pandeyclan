@@ -3973,8 +3973,8 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
+    "fullName": "Dr. Pragati Pandey",
+    "fatherName": "Lalit Mohan Joshi",
     "motherName": null,
     "spouseId": "varun",
     "audioMessage": null,
@@ -3984,7 +3984,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "jagdish-chandra-joshi",
