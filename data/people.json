@@ -1531,9 +1531,25 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
-    "spouseId": "prema-2"
+    "occupation": "Service",
+    "locations": [
+      {
+        "place": "Bairati, Almora",
+        "type": "origin",
+        "year": null,
+        "lat": 29.8075451,
+        "lng": 79.4198012,
+        "note": null
+      }
+    ],
+    "spouseId": "prema-2",
+    "fullName": "Umesh Chandra Pandey",
+    "fatherName": "Anand Ballabh Pandey",
+    "motherName": "Saroj Devi Pandey",
+    "birthDate": null,
+    "birthPlace": "Bairati, almora",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bholadutt_daughter_29",
