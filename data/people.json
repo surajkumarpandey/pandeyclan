@@ -961,7 +961,8 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "sortOrder": 1
+    "sortOrder": 1,
+    "spouseId": "reba"
   },
   {
     "id": "kailash",
@@ -3601,6 +3602,28 @@
     "audioMessage": null,
     "birthDate": null,
     "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "reba",
+    "name": "Reba",
+    "gender": "F",
+    "parentId": null,
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "shekhar",
+    "audioMessage": null,
+    "birthDate": null,
     "birthYear": null,
     "deathYear": null,
     "locations": [],
