@@ -101,7 +101,12 @@
   // ---------- Geocoding with local cache ----------
   const CACHE_KEY = 'pandey_geocode_cache_v2';
   const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+  // Known exact point for the ancestral village (the family house). Online
+  // place-name lookup can't reliably find a hamlet this small.
+  const BAIRATI_POINT = { lat: 29.8073069, lng: 79.4212201 };
+
   async function geocode(place) {
+    if (/bairati|बैरती/i.test(place)) return BAIRATI_POINT;
     if (cache[place] !== undefined) return cache[place];
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(place)}`, { headers: { 'Accept-Language': 'en' } });
@@ -127,7 +132,7 @@
         if (!l.place) return;
         byPlace[l.place] ||= { people: [] };
         byPlace[l.place].people.push({ name: PandeyData.displayName(p), type: l.type, id: p.id });
-        if (l.lat != null && l.lng != null && byPlace[l.place].lat == null) {
+        if (l.lat != null && l.lng != null && byPlace[l.place].lat == null && !/bairati|बैरती/i.test(l.place)) {
           byPlace[l.place].lat = l.lat; byPlace[l.place].lng = l.lng;
         }
       });
@@ -158,7 +163,7 @@
     if (!p || !p.locations || !p.locations.length) return;
     const points = [];
     for (const loc of p.locations) {
-      const coords = (loc.lat != null && loc.lng != null) ? { lat: loc.lat, lng: loc.lng } : await geocode(loc.place);
+      const coords = (loc.lat != null && loc.lng != null && !/bairati|बैरती/i.test(loc.place)) ? { lat: loc.lat, lng: loc.lng } : await geocode(loc.place);
       if (myToken !== renderToken) return; // a newer render has started; abandon this one
       if (!coords) continue;
       points.push({ ...loc, ...coords });
