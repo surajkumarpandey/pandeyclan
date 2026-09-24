@@ -960,7 +960,64 @@
     "photos": [],
     "bio": "",
     "occupation": "Retired",
-    "locations": [],
+    "locations": [
+      {
+        "place": "Bairati Almora",
+        "type": "origin",
+        "year": "1932",
+        "lat": 29.8075451,
+        "lng": 79.4198012,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Bakoo",
+        "type": "lived",
+        "year": null,
+        "lat": 3.8612138,
+        "lng": 10.5869444,
+        "note": null
+      },
+      {
+        "place": "Mascow",
+        "type": "lived",
+        "year": null,
+        "lat": 53.9341322,
+        "lng": 13.4157356,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "lived",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      },
+      {
+        "place": "Cochin",
+        "type": "lived",
+        "year": null,
+        "lat": 9.9679032,
+        "lng": 76.2444378,
+        "note": null
+      },
+      {
+        "place": "Vishakhapatnam",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "sortOrder": 1,
     "spouseId": "reba",
     "fullName": "Shekhara Nand Pandey",
