@@ -3181,5 +3181,28 @@
     "occupation": "PPS, Uttarakhand",
     "birthPlace": "Dehradun",
     "audioMessages": []
+  },
+  {
+    "id": "pawani",
+    "name": "Pawani",
+    "gender": "unknown",
+    "parentId": "tamanna",
+    "generation": 20,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthPlace": "Haldwani",
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
