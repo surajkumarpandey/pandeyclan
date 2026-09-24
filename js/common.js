@@ -8,7 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
   if (toggle && links) {
     toggle.addEventListener('click', () => links.classList.toggle('open'));
   }
+  addSiteCredit();
 });
+
+/* ---------- Site credit: "Created and maintained by …" ----------
+   Added to every public page from here, so it only ever needs editing
+   in this one place. Pages with a footer get it inside the footer;
+   pages without one get a slim credit bar at the very bottom. */
+const SITE_CREDIT = {
+  en: 'Created and maintained by Suraj Kumar Pandey and Ashok Kumar Pandey',
+  hi: 'निर्माण एवं देखरेख: सूरज कुमार पाण्डेय एवं अशोक कुमार पाण्डेय'
+};
+function addSiteCredit() {
+  if (!document.querySelector('.site-nav .links')) return;   // skip admin / setup pages
+  if (document.getElementById('site-credit')) return;
+  const credit = document.createElement('div');
+  credit.id = 'site-credit';
+  credit.setAttribute('data-i18n', 'footer.credit');
+  credit.textContent = SITE_CREDIT.en;
+  const footer = document.querySelector('.site-footer');
+  if (footer) {
+    credit.style.cssText = 'width:100%; text-align:center; font-size:13px; color:rgba(255,251,243,0.7); padding:14px 28px 0; margin-top:14px; border-top:1px solid rgba(255,251,243,0.12);';
+    footer.appendChild(credit);
+  } else {
+    credit.style.cssText = 'text-align:center; font-size:13px; color:rgba(255,251,243,0.75); background:var(--maroon-deep, #3E1218); padding:14px 20px;';
+    document.body.appendChild(credit);
+  }
+}
 
 const PandeyData = (() => {
   let peopleCache = null;
