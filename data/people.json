@@ -984,7 +984,7 @@
     "fullName": null,
     "birthDate": null,
     "sortOrder": 3,
-    "spouseId": "padma"
+    "spouseId": null
   },
   {
     "id": "taradutt",
@@ -4380,7 +4380,7 @@
     "fullName": null,
     "fatherName": null,
     "motherName": null,
-    "spouseId": "bholadutt",
+    "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
