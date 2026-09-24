@@ -1676,15 +1676,16 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
+    "occupation": "Service",
     "locations": [],
     "spouseId": "preeti",
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
-    "birthDate": null,
+    "fullName": "Manoj Kumar Pandey",
+    "fatherName": "Umesh Chandra Pandey",
+    "motherName": "Prema Pandey",
+    "birthDate": "1986-12-31",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "birthPlace": "Delhi"
   },
   {
     "id": "umesh_daughter_33",
