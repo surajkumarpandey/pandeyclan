@@ -2207,7 +2207,8 @@
     "birthDate": null,
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "vinod-3"
   },
   {
     "id": "lalit_daughter_37",
@@ -4771,6 +4772,28 @@
     "audioMessage": null,
     "birthDate": null,
     "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "vinod-3",
+    "name": "Vinod",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "lalit_daughter_36",
+    "audioMessage": null,
+    "birthDate": null,
     "birthYear": null,
     "deathYear": null,
     "locations": [],
