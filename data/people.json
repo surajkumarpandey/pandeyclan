@@ -4011,7 +4011,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Manoj Kumar Pandey",
     "fatherName": null,
     "motherName": null,
     "spouseId": "prayagdutt_daughter_17",
@@ -4022,7 +4022,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "so-kavita",
