@@ -746,8 +746,15 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Retired",
+    "locations": [],
+    "fullName": "Gopal Dutt Pandey",
+    "fatherName": "Jaikishan Pandey",
+    "motherName": null,
+    "birthDate": null,
+    "birthPlace": "Bairati, Almora",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "prayagdutt_daughter_16",
