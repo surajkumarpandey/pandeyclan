@@ -135,8 +135,10 @@
       <li><a href="tree.html" class="active" data-i18n="nav.tree">Family Tree</a></li>
       <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
       <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="village-3d.html">Bairati in 3D</a></li>
       <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
       <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
+      <li><a href="events.html" data-i18n="nav.events">Events</a></li>
       <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
       <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
     </ul>
@@ -439,7 +441,7 @@
         ${!spouse && p.fatherName ? `<dt>${t('tree.field.fathername', "Father's name")}</dt><dd>${p.fatherName}</dd>` : ''}
         ${!spouse && p.motherName ? `<dt>${t('tree.field.mothername', "Mother's name")}</dt><dd>${p.motherName}</dd>` : ''}
         ${p.occupation ? `<dt>${t('tree.field.occupation', 'Occupation')}</dt><dd>${p.occupation}</dd>` : ''}
-        ${(p.birthDate || p.birthYear) ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}</dd>` : ''}
+        ${(p.birthDate || p.birthYear) ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}${p.birthPlace ? ', ' + p.birthPlace : ''}</dd>` : (p.birthPlace ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${p.birthPlace}</dd>` : '')}
         ${current ? `<dt>${t('tree.field.currentlocation', 'Current location')}</dt><dd>${current.place}</dd>` : ''}
         ${othersStr ? `<dt>${t('tree.field.placesvisited', 'Places visited')}</dt><dd>${othersStr}</dd>` : ''}
         ${p.bio ? `<dt>${t('tree.field.description', 'Description')}</dt><dd>${p.bio}</dd>` : ''}
