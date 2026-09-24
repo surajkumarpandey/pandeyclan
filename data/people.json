@@ -2933,7 +2933,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Jaya Pant",
     "fatherName": null,
     "motherName": null,
     "spouseId": "mayank",
@@ -2944,7 +2944,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": "Service",
+    "birthPlace": "Lucknow",
+    "audioMessages": []
   },
   {
     "id": "varnika",
