@@ -106,9 +106,35 @@
   .panel .photos { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .panel .photos img { width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--line); }
 
+  /* expand / collapse control on nodes that have children */
+  .node .toggle { cursor: pointer; }
+  .node .toggle circle { fill: var(--maroon); stroke: #FFFBF3; stroke-width: 2px; }
+  .node .toggle text { fill: #FFFBF3; stroke: none; font-size: 15px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+  .node .toggle .count { fill: var(--maroon); font-size: 11px; font-weight: 700; text-anchor: start; paint-order: stroke fill; stroke: #FFFBF3; stroke-width: 3px; }
+
+  /* generation rail: pinned to the left edge on phones, never scrolls sideways */
+  .tree-area { position: relative; min-width: 0; }
+  .gen-rail { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: 0; z-index: 4; pointer-events: none; }
+  .gen-card {
+    position: absolute; left: 4px; width: 92px; pointer-events: auto; cursor: pointer;
+    background: rgba(255,251,243,0.94); border: 1px solid var(--line); border-left: 3px solid var(--gold);
+    border-radius: 6px; padding: 5px 7px; box-shadow: 0 2px 8px rgba(62,18,24,0.15); overflow: hidden;
+  }
+  .gen-card .gc-num { font-family: var(--font-display); font-weight: 700; font-size: 12.5px; color: var(--maroon-deep); line-height: 1.2; }
+  .gen-card .gc-range { font-size: 10.5px; color: #8a6a58; line-height: 1.25; }
+  .gen-card .gc-more { font-size: 10.5px; color: var(--ochre-deep); font-weight: 700; margin-top: 2px; }
+  .gen-card .gc-body { display: none; font-size: 13.5px; color: #5a3a2e; line-height: 1.55; margin-top: 6px; }
+  .gen-card .gc-body p { margin: 0 0 8px; }
+  .gen-card .gc-body img { width: 64px; height: 64px; object-fit: cover; border-radius: 3px; margin: 0 6px 6px 0; }
+  .gen-card.open { width: min(330px, 86vw); max-height: none !important; z-index: 6; box-shadow: 0 8px 24px rgba(62,18,24,0.3); }
+  .gen-card.open .gc-body { display: block; }
+  .gen-card.open .gc-more { display: none; }
+
   @media (max-width: 800px) {
     .tree-body { grid-template-columns: 1fr; }
-    .story-sidebar { position: static; height: auto; border-left: none; border-top: 1px solid var(--line); }
+    .story-sidebar { display: none; }
+    .gen-rail { display: block; }
+    .gen-label-tag { display: none; }
   }
 
   @media print {
@@ -151,6 +177,8 @@
     <div class="zoom-controls">
       <button id="zoom-out-btn" aria-label="Zoom out">&minus;</button>
       <button id="zoom-reset-btn" style="width:auto; padding:0 10px; font-size:12px; border-radius:15px;">Reset</button>
+      <button id="expand-all-btn" style="width:auto; padding:0 10px; font-size:12px; border-radius:15px;">Expand all</button>
+      <button id="collapse-all-btn" style="width:auto; padding:0 10px; font-size:12px; border-radius:15px;">Collapse all</button>
       <button id="zoom-in-btn" aria-label="Zoom in">+</button>
     </div>
     <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn" data-i18n="tree.download.pdf">Download as PDF</button>
@@ -159,12 +187,15 @@
 </div>
 
 <div class="tree-body">
+  <div class="tree-area">
+    <div class="gen-rail" id="gen-rail"></div>
   <div class="tree-scroll-wrap" id="tree-scroll-wrap">
     <div id="tree-zoom-sizer">
       <div class="tree-canvas" id="tree-canvas">
         <svg id="tree-svg"></svg>
       </div>
     </div>
+  </div>
   </div>
 
   <aside class="story-sidebar" id="story-sidebar">
@@ -194,132 +225,113 @@
   const genById = {};
   generations.forEach(g => { genById[g.generation] = g; });
 
+  // ---------- Tree structure (with collapsible branches) ----------
+  const collapsed = new Set();              // ids of people whose children are hidden
+  const sortKids = (list) => list.sort((a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999) || PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
+  const kidsOf = (id) => sortKids(people.filter(c => c.parentId === id));
+  function countDescendants(id) { return kidsOf(id).reduce((n, k) => n + 1 + countDescendants(k.id), 0); }
   function buildNode(p) {
-    const children = people.filter(c => c.parentId === p.id)
-      .sort((a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999) || PandeyData.displayName(a).localeCompare(PandeyData.displayName(b)));
-    return { id: p.id, data: p, children: children.map(buildNode) };
+    const kids = kidsOf(p.id), isCollapsed = kids.length > 0 && collapsed.has(p.id);
+    return { id: p.id, data: p, hasKids: kids.length > 0, isCollapsed, children: isCollapsed ? [] : kids.map(buildNode) };
   }
-  const rootPerson = people.find(p => !p.parentId);
-  const root = d3.hierarchy(buildNode(rootPerson), d => d.children);
-  const maxDepth = d3.max(root.descendants(), d => d.depth);
+  // the root is the ancestor with no parent who isn't simply someone's spouse
+  const rootPerson = people.find(p => !p.parentId && !people.some(x => x.spouseId === p.id && x.parentId)) || people.find(p => !p.parentId);
+  const fullMaxDepth = d3.max(d3.hierarchy(buildNode(rootPerson), d => d.children).descendants(), d => d.depth);
 
   const DX = 120;  // horizontal spacing between siblings — wide enough for bigger avatars + labels
   const DY = 168;  // vertical spacing between generations
   const MARGIN_TOP = 60, MARGIN_SIDE = 60;
-
-  const treeLayout = d3.tree().nodeSize([DX, DY]);
-  treeLayout(root);
-
-  let minX = Infinity, maxX = -Infinity;
-  root.each(d => { minX = Math.min(minX, d.x); maxX = Math.max(maxX, d.x); });
-  const totalWidth = (maxX - minX) + MARGIN_SIDE * 2 + 200; // extra room for spouse nodes drawn beside their partner
-  const totalHeight = maxDepth * DY + MARGIN_TOP * 2;
-  const offsetX = -minX + MARGIN_SIDE;
+  const R = 20, ROOT_R = 34;
+  const spouseGap = Math.max(DX * 0.62, R * 2.6);
+  const isMobile = () => window.matchMedia('(max-width: 800px)').matches;
+  const RAIL_W = 100;                      // space reserved on the left for the generation rail on phones
 
   const canvas = document.getElementById('tree-canvas');
-  canvas.style.width = totalWidth + 'px';
-  canvas.style.height = totalHeight + 'px';
-
-  // ---------- Zoom ----------
-  // The canvas is visually scaled with a CSS transform; the sizer div around
-  // it is set to the SCALED dimensions so the browser's scrollbars reflect
-  // what's actually visible, rather than always scrolling across the full
-  // unscaled width regardless of zoom.
   const sizer = document.getElementById('tree-zoom-sizer');
-  const stage = document.querySelector('.tree-scroll-wrap');
-  let zoomLevel = Math.max(0.3, Math.min(1, (stage.clientWidth * 2.4) / totalWidth));
-  function applyZoom() {
-    canvas.style.transform = `scale(${zoomLevel})`;
-    sizer.style.width = (totalWidth * zoomLevel) + 'px';
-    sizer.style.height = (totalHeight * zoomLevel) + 'px';
-  }
-  document.getElementById('zoom-in-btn').addEventListener('click', () => { zoomLevel = Math.min(1.4, zoomLevel + 0.15); applyZoom(); });
-  document.getElementById('zoom-out-btn').addEventListener('click', () => { zoomLevel = Math.max(0.2, zoomLevel - 0.15); applyZoom(); });
-  document.getElementById('zoom-reset-btn').addEventListener('click', () => {
-    zoomLevel = Math.max(0.3, Math.min(1, (stage.clientWidth * 2.4) / totalWidth));
-    applyZoom();
-  });
-  applyZoom();
-
-  // Bring the root into view immediately instead of leaving the scroll
-  // position at the canvas's default left edge, which — since the tree
-  // spreads roughly symmetrically from the root — could otherwise leave
-  // Sukhdev off-screen to the right on first load.
   const scrollWrap = document.getElementById('tree-scroll-wrap');
-  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, (offsetX - 60) * zoomLevel); });
+  const svgSel = d3.select('#tree-svg');
+  const totalHeight = fullMaxDepth * DY + MARGIN_TOP * 2;
+  canvas.style.height = totalHeight + 'px';
+  let root, totalWidth, offsetX, nodeSel, linkSel, spouseLayer, spouseRenderList, zoomLevel = null;
 
-  const svg = d3.select('#tree-svg').attr('width', totalWidth).attr('height', totalHeight);
-  const g = svg.append('g').attr('transform', `translate(${offsetX},${MARGIN_TOP})`);
-
-  // ---------- Generation row labels + scroll-observer markers ----------
-  for (let gen = 1; gen <= maxDepth + 1; gen++) {
+  // ---------- Generation rows: in-canvas labels + scroll markers (desktop sidebar) ----------
+  for (let gen = 1; gen <= fullMaxDepth + 1; gen++) {
     const y = (gen - 1) * DY + MARGIN_TOP;
     const marker = document.createElement('div');
-    marker.className = 'gen-marker';
-    marker.dataset.gen = gen;
-    marker.style.top = y + 'px';
-    marker.style.height = DY + 'px';
+    marker.className = 'gen-marker'; marker.dataset.gen = gen;
+    marker.style.top = y + 'px'; marker.style.height = DY + 'px';
     canvas.appendChild(marker);
-
     const tag = document.createElement('div');
-    tag.className = 'gen-label-tag';
-    tag.style.top = (y + 6) + 'px';
+    tag.className = 'gen-label-tag'; tag.style.top = (y + 6) + 'px';
     tag.textContent = (genById[gen] && genById[gen].title) || `Generation ${gen}`;
     canvas.appendChild(tag);
   }
 
-  // ---------- Links ----------
-  // Angular (elbow) connectors instead of smooth curves — drop straight down,
-  // step sideways, drop straight down again. Pairs better with the aipan
-  // geometric aesthetic than a soft bezier curve.
-  //
-  // Where a person has a spouse recorded, children hang from the MIDPOINT
-  // between the couple rather than from one parent alone — so first work out
-  // that midpoint for anyone who has one.
-  const R = 20, ROOT_R = 34;
-  const spouseGap = Math.max(DX * 0.62, R * 2.6);
-  const midXMap = new Map();       // person id -> x used as the link's source
-  const spouseRenderList = [];     // spouses to draw once nodes are in place
-  root.each(d => {
-    const p = d.data.data;
-    if (p.spouseId) {
-      const spouse = people.find(x => x.id === p.spouseId);
-      if (spouse && spouse.parentId === null) {
-        const spouseX = d.x + spouseGap;
-        midXMap.set(d.data.id, (d.x + spouseX) / 2);
-        spouseRenderList.push({ person: spouse, x: spouseX, y: d.y, partnerX: d.x, partnerY: d.y });
-      }
-    }
-  });
-
-  function elbowLink(d) {
-    const sx = midXMap.has(d.source.data.id) ? midXMap.get(d.source.data.id) : d.source.x;
-    const midY = (d.source.y + d.target.y) / 2;
-    return `M${sx},${d.source.y} V${midY} H${d.target.x} V${d.target.y}`;
+  // ---------- Generation rail (phones): one card per generation, pinned left ----------
+  const rail = document.getElementById('gen-rail');
+  function railCardHTML(gen) {
+    const story = genById[gen] || {};
+    const parts = (story.title || `Generation ${gen}`).split(' — ');
+    const range = parts[1] || '';
+    const photos = story.photos && story.photos.length ? story.photos.map(src => `<img src="${src}" alt="">`).join('') : '';
+    const body = story.description
+      ? fillStoryTokens(story.description).split('\n\n').map(p => `<p>${p}</p>`).join('')
+      : `<p><em>${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</em></p>`;
+    return `<div class="gc-num">Gen ${gen}</div><div class="gc-range">${range}</div><div class="gc-more">Read ▸</div><div class="gc-body">${photos ? `<div>${photos}</div>` : ''}${body}</div>`;
   }
-  const linkGen = elbowLink;
-  const linkSel = g.append('g').attr('class', 'links-layer')
-    .selectAll('path.link').data(root.links()).join('path').attr('class', 'link').attr('d', linkGen);
+  function buildRail() {
+    rail.innerHTML = '';
+    for (let gen = 1; gen <= fullMaxDepth + 1; gen++) {
+      const card = document.createElement('div');
+      card.className = 'gen-card'; card.dataset.gen = gen;
+      card.innerHTML = railCardHTML(gen);
+      card.addEventListener('click', () => {
+        const wasOpen = card.classList.contains('open');
+        rail.querySelectorAll('.gen-card.open').forEach(c => c.classList.remove('open'));
+        if (!wasOpen) card.classList.add('open');
+      });
+      rail.appendChild(card);
+    }
+    positionRail();
+  }
+  function positionRail() {
+    if (zoomLevel == null) return;
+    const rowH = DY * zoomLevel;
+    rail.querySelectorAll('.gen-card').forEach(card => {
+      const gen = +card.dataset.gen;
+      const nodeY = ((gen - 1) * DY + MARGIN_TOP) * zoomLevel;
+      card.style.top = Math.max(0, nodeY - Math.min(rowH * 0.45, 40)) + 'px';
+      card.style.maxHeight = Math.max(38, rowH - 6) + 'px';
+    });
+  }
 
-  // ---------- Nodes ----------
+  // ---------- Zoom ----------
+  // The canvas is visually scaled with a CSS transform; the sizer div around
+  // it is set to the SCALED dimensions so the scrollbars match what's visible.
+  function applyZoom() {
+    canvas.style.transform = `scale(${zoomLevel})`;
+    sizer.style.width = (totalWidth * zoomLevel) + 'px';
+    sizer.style.height = (totalHeight * zoomLevel) + 'px';
+    sizer.style.marginLeft = isMobile() ? RAIL_W + 'px' : '0';
+    positionRail();
+  }
+  const defaultZoom = () => Math.max(0.3, Math.min(1, (scrollWrap.clientWidth * 2.4) / totalWidth));
+  document.getElementById('zoom-in-btn').addEventListener('click', () => { zoomLevel = Math.min(1.4, zoomLevel + 0.15); applyZoom(); });
+  document.getElementById('zoom-out-btn').addEventListener('click', () => { zoomLevel = Math.max(0.2, zoomLevel - 0.15); applyZoom(); });
+  document.getElementById('zoom-reset-btn').addEventListener('click', () => { zoomLevel = defaultZoom(); applyZoom(); });
+  window.addEventListener('resize', applyZoom);
 
-  // A wavy, sun-ray halo behind each avatar — the "divine" edge the family
-  // asked for, evoking Indian sun/mandala iconography rather than a plain ring.
+  // ---------- Drawing helpers ----------
+  // A wavy, sun-ray halo behind each avatar, evoking Indian sun/mandala iconography.
   function sunHaloPath(r, rays, amp) {
-    const steps = rays * 6;
-    let d = '';
+    const steps = rays * 6; let d = '';
     for (let i = 0; i <= steps; i++) {
-      const angle = (i / steps) * Math.PI * 2;
-      const rr = r + Math.sin(angle * rays) * amp;
-      const x = (rr * Math.cos(angle)).toFixed(1), y = (rr * Math.sin(angle)).toFixed(1);
-      d += (i === 0 ? 'M' : 'L') + x + ',' + y;
+      const angle = (i / steps) * Math.PI * 2, rr = r + Math.sin(angle * rays) * amp;
+      d += (i === 0 ? 'M' : 'L') + (rr * Math.cos(angle)).toFixed(1) + ',' + (rr * Math.sin(angle)).toFixed(1);
     }
     return d + 'Z';
   }
-
-  // Wraps a text label onto multiple lines (tspans) rather than letting
-  // long names overflow into a neighboring node's space. Measures actual
-  // rendered width, since names vary in length and the font isn't monospace.
+  // Wraps a label onto multiple lines so long names don't run into neighbours.
   function wrapLabel(textSel, maxWidth, lineHeightEm) {
     const words = textSel.text().split(/\s+/).reverse();
     let word, line = [], lineNumber = 0;
@@ -327,63 +339,128 @@
     textSel.text(null);
     let tspan = textSel.append('tspan').attr('x', 0).attr('y', y);
     while ((word = words.pop())) {
-      line.push(word);
-      tspan.text(line.join(' '));
+      line.push(word); tspan.text(line.join(' '));
       if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
-        line.pop();
-        tspan.text(line.join(' '));
-        line = [word];
-        lineNumber++;
-        tspan = textSel.append('tspan').attr('x', 0).attr('y', y).attr('dy', lineNumber * lineHeightEm + 'em');
-        tspan.text(word);
+        line.pop(); tspan.text(line.join(' ')); line = [word]; lineNumber++;
+        tspan = textSel.append('tspan').attr('x', 0).attr('y', y).attr('dy', lineNumber * lineHeightEm + 'em').text(word);
       }
     }
   }
-
   function drawAvatar(sel, p, r, isRoot) {
     const hasPhoto = p.photos && p.photos.length;
     const ringColor = p.unnamedPlaceholder ? '#B8804A' : (hasPhoto ? 'var(--gold)' : 'var(--maroon)');
-    sel.append('path').attr('class', 'sun-halo' + (isRoot ? ' root-halo' : ''))
-      .attr('d', sunHaloPath(r * 1.35, isRoot ? 16 : 10, r * 0.22));
+    sel.append('path').attr('class', 'sun-halo' + (isRoot ? ' root-halo' : '')).attr('d', sunHaloPath(r * 1.35, isRoot ? 16 : 10, r * 0.22));
     if (hasPhoto) {
       const clipId = 'clip-' + p.id + '-' + Math.random().toString(36).slice(2, 6);
       sel.append('clipPath').attr('id', clipId).append('circle').attr('r', r);
-      sel.append('image').attr('href', p.photos[0])
-        .attr('x', -r).attr('y', -r).attr('width', r * 2).attr('height', r * 2)
+      sel.append('image').attr('href', p.photos[0]).attr('x', -r).attr('y', -r).attr('width', r * 2).attr('height', r * 2)
         .attr('clip-path', `url(#${clipId})`).attr('preserveAspectRatio', 'xMidYMid slice');
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', 'none').attr('stroke', ringColor);
     } else {
-      sel.append('circle').attr('class', 'avatar-ring').attr('r', r)
-        .attr('fill', isRoot ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
+      sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', isRoot ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
     }
     const label = sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
     wrapLabel(label, DX - 14, 1.15);
   }
 
-  const nodeSel = g.append('g').attr('class', 'nodes-layer')
-    .selectAll('g.node').data(root.descendants()).join('g')
-    .attr('class', d => 'node' + (d.data.data.unnamedPlaceholder ? ' placeholder' : '') + (d.depth === 0 ? ' root-node' : ''))
-    .attr('transform', d => `translate(${d.x},${d.y})`);
+  // ---------- Draw (re-run whenever a branch is expanded or collapsed) ----------
+  function draw() {
+    root = d3.hierarchy(buildNode(rootPerson), d => d.children);
+    d3.tree().nodeSize([DX, DY])(root);
+    let minX = Infinity, maxX = -Infinity;
+    root.each(d => { minX = Math.min(minX, d.x); maxX = Math.max(maxX, d.x); });
+    totalWidth = (maxX - minX) + MARGIN_SIDE * 2 + 200;   // extra room for spouses drawn beside their partner
+    offsetX = -minX + MARGIN_SIDE;
+    canvas.style.width = totalWidth + 'px';
+    svgSel.attr('width', totalWidth).attr('height', totalHeight);
+    svgSel.selectAll('*').remove();
+    const g = svgSel.append('g').attr('transform', `translate(${offsetX},${MARGIN_TOP})`);
 
-  nodeSel.each(function (d) {
-    drawAvatar(d3.select(this), d.data.data, d.depth === 0 ? ROOT_R : R, d.depth === 0);
+    // children hang from the midpoint of a couple where a spouse is recorded
+    const midXMap = new Map();
+    spouseRenderList = [];
+    root.each(d => {
+      const p = d.data.data;
+      if (p.spouseId) {
+        const spouse = people.find(x => x.id === p.spouseId);
+        if (spouse && spouse.parentId === null) {
+          const spouseX = d.x + spouseGap;
+          midXMap.set(d.data.id, (d.x + spouseX) / 2);
+          spouseRenderList.push({ person: spouse, x: spouseX, y: d.y, partnerX: d.x, partnerY: d.y });
+        }
+      }
+    });
+    // right-angled (elbow) connectors
+    const elbowLink = (d) => {
+      const sx = midXMap.has(d.source.data.id) ? midXMap.get(d.source.data.id) : d.source.x;
+      const midY = (d.source.y + d.target.y) / 2;
+      return `M${sx},${d.source.y} V${midY} H${d.target.x} V${d.target.y}`;
+    };
+    linkSel = g.append('g').attr('class', 'links-layer').selectAll('path.link').data(root.links()).join('path').attr('class', 'link').attr('d', elbowLink);
+
+    nodeSel = g.append('g').attr('class', 'nodes-layer').selectAll('g.node').data(root.descendants()).join('g')
+      .attr('class', d => 'node' + (d.data.data.unnamedPlaceholder ? ' placeholder' : '') + (d.depth === 0 ? ' root-node' : ''))
+      .attr('transform', d => `translate(${d.x},${d.y})`);
+    nodeSel.each(function (d) { drawAvatar(d3.select(this), d.data.data, d.depth === 0 ? ROOT_R : R, d.depth === 0); });
+
+    // expand / collapse button on everyone who has children
+    nodeSel.filter(d => d.data.hasKids).each(function (d) {
+      const r = d.depth === 0 ? ROOT_R : R;
+      const tg = d3.select(this).append('g').attr('class', 'toggle')
+        .attr('transform', `translate(${r * 0.95},${-r * 0.95})`)
+        .attr('aria-label', d.data.isCollapsed ? 'Expand' : 'Collapse')
+        .on('click', (event) => { event.stopPropagation(); toggleBranch(d.data.id); });
+      tg.append('circle').attr('r', 11);
+      tg.append('text').attr('dy', '0.36em').text(d.data.isCollapsed ? '+' : '−');
+      if (d.data.isCollapsed) tg.append('text').attr('class', 'count').attr('x', 15).attr('dy', '0.36em').text(`${countDescendants(d.data.id)} more`);
+    });
+
+    // spouses beside their partner, joined by a marriage line
+    spouseLayer = g.append('g').attr('class', 'spouse-layer');
+    spouseRenderList.forEach(({ person, x, y, partnerX, partnerY }) => {
+      spouseLayer.append('line').attr('class', 'link').attr('x1', partnerX).attr('y1', partnerY).attr('x2', x).attr('y2', y);
+      const sSel = spouseLayer.append('g').attr('class', 'node' + (person.unnamedPlaceholder ? ' placeholder' : ''))
+        .attr('transform', `translate(${x},${y})`).style('cursor', 'pointer')
+        .on('click', (event) => { event.stopPropagation(); openPanel(person); });
+      drawAvatar(sSel, person, R, false);
+    });
+
+    nodeSel.on('click', (event, d) => { event.stopPropagation(); openPanel(d.data.data); });
+    if (zoomLevel == null) zoomLevel = defaultZoom();
+    applyZoom();
+  }
+
+  const nodeX = (id) => { let x = null; root.each(d => { if (d.data.id === id) x = d.x + offsetX; }); return x; };
+  function toggleBranch(id) {
+    const before = nodeX(id);
+    if (collapsed.has(id)) collapsed.delete(id); else collapsed.add(id);
+    draw();
+    // keep the node that was tapped in the same place on screen
+    const after = nodeX(id);
+    if (before != null && after != null) scrollWrap.scrollLeft += (after - before) * zoomLevel;
+  }
+  document.getElementById('expand-all-btn').addEventListener('click', () => { collapsed.clear(); draw(); });
+  document.getElementById('collapse-all-btn').addEventListener('click', () => {
+    collapsed.clear();
+    kidsOf(rootPerson.id).forEach(k => { if (kidsOf(k.id).length) collapsed.add(k.id); });
+    draw();
+    scrollWrap.scrollLeft = Math.max(0, (nodeX(rootPerson.id) - 60) * zoomLevel);
   });
 
-  // ---------- Spouses: rendered beside their partner, with a marriage
-  // connector, using the same halo/avatar treatment ----------
-  const spouseLayer = g.append('g').attr('class', 'spouse-layer');
-  spouseRenderList.forEach(({ person, x, y, partnerX, partnerY }) => {
-    spouseLayer.append('line').attr('class', 'link')
-      .attr('x1', partnerX).attr('y1', partnerY).attr('x2', x).attr('y2', y);
-    const sSel = spouseLayer.append('g')
-      .attr('class', 'node' + (person.unnamedPlaceholder ? ' placeholder' : ''))
-      .attr('transform', `translate(${x},${y})`)
-      .style('cursor', 'pointer')
-      .on('click', (event) => { event.stopPropagation(); openPanel(person); });
-    drawAvatar(sSel, person, R, false);
-  });
+  // Story text can contain {{children:PERSON_ID}}, which is filled in live
+  // from the tree data — e.g. "shared by {{children:laxmidutt}}".
+  function fillStoryTokens(text) {
+    return text.replace(/\{\{children:([a-zA-Z0-9_-]+)\}\}/g, (match, id) => {
+      const kids = kidsOf(id).map(x => PandeyData.displayName(x));
+      if (!kids.length) return 'his children';
+      if (kids.length === 1) return kids[0];
+      return kids.slice(0, -1).join(', ') + ' and ' + kids[kids.length - 1];
+    });
+  }
 
-  nodeSel.on('click', (event, d) => { event.stopPropagation(); openPanel(d.data.data); });
+  draw();
+  buildRail();
+  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, (offsetX - 60) * zoomLevel); });
 
   // ---------- Sticky generation story, driven by scroll position ----------
   const sidebar = document.getElementById('story-sidebar');
@@ -395,7 +472,7 @@
       <div class="gen-num">GENERATION ${gen}</div>
       <h2>${(story && story.title) || 'Generation ' + gen}</h2>
       ${photos}
-      ${story && story.description ? `<p>${story.description}</p>` : `<p class="empty">${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</p>`}
+      ${story && story.description ? fillStoryTokens(story.description).split('\n\n').map(para => `<p>${para}</p>`).join('') : `<p class="empty">${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</p>`}
     `;
   }
   renderStory(1);
@@ -535,16 +612,18 @@
     nodeSel.classed('highlight', false).classed('dim', false);
     linkSel.classed('dim', false);
     if (!q) return;
-
-    const match = root.descendants().find(d => !d.data.data.unnamedPlaceholder && d.data.data.name.toLowerCase().includes(q));
-    if (!match) return;
-
-    const ancestorIds = new Set();
-    let n = match;
-    while (n) { ancestorIds.add(n.data.id); n = n.parent; }
+    const chainOf = (p) => PandeyData.ancestorChain(people, p.id);
+    const matchPerson = people.find(p => !p.unnamedPlaceholder && (p.name || '').toLowerCase().includes(q) && chainOf(p)[0] && chainOf(p)[0].id === rootPerson.id);
+    if (!matchPerson) return;
+    // open up any collapsed branch that hides the match
+    const chainIds = chainOf(matchPerson).map(n => n.id);
+    let changed = false;
+    chainIds.slice(0, -1).forEach(id => { if (collapsed.delete(id)) changed = true; });
+    if (changed) draw();
+    const ancestorIds = new Set(chainIds);
     nodeSel.classed('dim', d => !ancestorIds.has(d.data.id));
     linkSel.classed('dim', d => !ancestorIds.has(d.target.data.id));
-    const matchEl = nodeSel.filter(d => d.data.id === match.data.id).classed('highlight', true).node();
+    const matchEl = nodeSel.filter(d => d.data.id === matchPerson.id).classed('highlight', true).node();
     if (matchEl && matchEl.scrollIntoView) matchEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
   });
 
@@ -553,24 +632,15 @@
   // plus the open detail panel and sidebar, don't update on their own since
   // they were built once at load time)
   window.addEventListener('pandey-lang-changed', () => {
-    nodeSel.each(function (d) {
-      const label = d3.select(this).select('text').text(PandeyData.displayName(d.data.data));
-      wrapLabel(label, DX - 14, 1.15);
-    });
-    spouseLayer.selectAll('g.node').each(function (_, i) {
-      const entry = spouseRenderList[i];
-      if (entry) {
-        const label = d3.select(this).select('text').text(PandeyData.displayName(entry.person));
-        wrapLabel(label, DX - 14, 1.15);
-      }
-    });
+    draw();
+    buildRail();
     document.getElementById('search-box').setAttribute('placeholder', PandeyI18n.t('tree.search.placeholder', 'Search a name…'));
     document.getElementById('download-pdf-btn').textContent = PandeyI18n.t('tree.download.pdf', 'Download as PDF');
     if (currentPanelPersonId) {
       const p = people.find(x => x.id === currentPanelPersonId);
       if (p) openPanel(p);
     }
-    const activeGen = document.querySelector('.gen-num');
+    const activeGen = document.querySelector('.story-sidebar .gen-num');
     if (activeGen) renderStory(parseInt(activeGen.textContent.replace('GENERATION ', ''), 10) || 1);
   });
 })();
