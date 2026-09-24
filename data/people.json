@@ -2366,14 +2366,14 @@
   },
   {
     "id": "ganga-dutt-tripathi",
-    "name": "Ganga Dutt Tripathi",
+    "name": "Ganga Ballabh",
     "gender": "M",
     "parentId": null,
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Ganga Ballabh Tripathi",
     "spouseId": "haripriya",
     "audioMessage": null,
     "birthDate": null,
@@ -2382,7 +2382,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "basanti-devi",
