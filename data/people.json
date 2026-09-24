@@ -2349,7 +2349,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Haripriya Tewadi",
     "spouseId": "ganga-dutt-tripathi",
     "audioMessage": null,
     "birthDate": null,
@@ -2358,7 +2358,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": "Nityanand Pandey",
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "ganga-dutt-tripathi",
