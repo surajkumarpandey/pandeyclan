@@ -948,7 +948,7 @@
   },
   {
     "id": "shekhar",
-    "name": "Shekhar",
+    "name": "Shekhara Nand",
     "gender": "M",
     "parentId": "anandbhallabh",
     "generation": 17,
@@ -959,10 +959,17 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
+    "occupation": "Retired",
     "locations": [],
     "sortOrder": 1,
-    "spouseId": "reba"
+    "spouseId": "reba",
+    "fullName": "Shekhara Nand Pandey",
+    "fatherName": "Anand Ballabh Pandey",
+    "motherName": "Saroj Devi Pandey",
+    "birthDate": "1932-04-14",
+    "birthPlace": "Bairati, Almora",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "kailash",
