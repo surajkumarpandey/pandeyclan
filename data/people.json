@@ -2322,9 +2322,9 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Mayank Pant",
+    "fatherName": "Bhasker Chandra Pant",
+    "motherName": "Lata Pant",
     "spouseId": "jaya",
     "audioMessage": null,
     "birthDate": null,
@@ -2333,8 +2333,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "birthPlace": null,
+    "occupation": "Service",
+    "birthPlace": "Haldwani",
     "audioMessages": []
   },
   {
