@@ -3685,17 +3685,76 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
+    "fullName": "Reba Pandey",
+    "fatherName": "Dharmanand Pant",
     "motherName": null,
     "spouseId": "shekhar",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1944-11-03",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Kichcha",
+        "type": "origin",
+        "year": "1944",
+        "lat": 34.792192,
+        "lng": -3.41236,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "lived",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      },
+      {
+        "place": "Cochin",
+        "type": "lived",
+        "year": null,
+        "lat": 9.9679032,
+        "lng": 76.2444378,
+        "note": null
+      },
+      {
+        "place": "Vishakhapatnam",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "lived",
+        "year": null,
+        "lat": 30.3255646,
+        "lng": 78.0436813,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": "Kichcha",
+    "audioMessages": []
   }
 ]
