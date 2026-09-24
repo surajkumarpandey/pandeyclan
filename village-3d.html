@@ -5,26 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bairati in 3D — The Pandey Clan of Bairati</title>
 <link rel="stylesheet" href="css/style.css">
-<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
-<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <style>
   .map3d-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 44px 0 36px; }
   .map3d-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 32px; margin: 0 0 8px; }
   .map3d-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
-  #map3d { width: 100%; height: 70vh; min-height: 480px; }
-  .map3d-controls {
-    position: absolute; right: 16px; bottom: 16px; z-index: 5;
-    display: flex; flex-direction: column; gap: 8px; background: rgba(255,251,243,0.92);
-    border-radius: 6px; padding: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  }
-  .map3d-controls .row { display: flex; gap: 6px; align-items: center; }
-  .map3d-controls label { font-size: 11.5px; font-weight: 600; color: var(--maroon); width: 46px; }
-  .map3d-controls button { width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--line-dark); background: var(--paper-light); color: var(--maroon); font-weight: 700; cursor: pointer; }
-  .map3d-wrap { position: relative; }
-  .map3d-note { background: var(--paper-light); border-top: 1px solid var(--line); padding: 14px 0; font-size: 13.5px; color: #8a6a58; }
-  .house-popup img { width: 220px; height: 150px; object-fit: cover; border-radius: 3px; display: block; margin-bottom: 8px; }
-  .house-popup p { font-size: 13.5px; margin: 0; max-width: 220px; }
-  .maplibregl-popup-content { font-family: var(--font-body); padding: 12px; }
+  .stage { position: relative; width: 100%; height: 75vh; min-height: 480px;
+    background: radial-gradient(ellipse at 50% 30%, #3a4a5e 0%, #1b2230 70%, #121722 100%); overflow: hidden; }
+  #diorama { width: 100%; height: 100%; display: block; touch-action: none; }
+  .overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: #f4e6d8; font-size: 15px; text-align: center; padding: 20px; pointer-events: none; }
+  .ctrl { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .ctrl button { background: rgba(255,251,243,0.92); border: 1px solid var(--line-dark); color: var(--maroon);
+    font-weight: 600; font-size: 13px; padding: 7px 12px; border-radius: 999px; cursor: pointer; }
+  .legend3d { position: absolute; left: 14px; top: 14px; background: rgba(255,251,243,0.9); border-radius: 6px;
+    padding: 10px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.7; }
+  .legend3d i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .note3d { background: var(--paper-light); border-top: 1px solid var(--line); padding: 14px 0; font-size: 13.5px; color: #8a6a58; }
+  @media (max-width: 640px) { .legend3d { font-size: 11.5px; } }
 </style>
 </head>
 <body>
@@ -53,20 +52,25 @@
   <div class="aipan-border" style="margin-bottom:22px;"></div>
   <div class="wrap">
     <h1>Bairati in 3D</h1>
-    <p>Real elevation data for the actual hillside — drag to rotate, two fingers (or right-click) to tilt, scroll or pinch to zoom. The pin marks the family house.</p>
+    <p>The village and the hillside around it, as a model you can hold. Drag to rotate, pinch or scroll to zoom, two fingers (or right-drag) to pan.</p>
   </div>
 </div>
 
-<div class="map3d-wrap">
-  <div id="map3d"></div>
-  <div class="map3d-controls">
-    <div class="row"><label>Tilt</label><button id="pitch-down">&minus;</button><button id="pitch-up">+</button></div>
-    <div class="row"><label>Rotate</label><button id="rotate-left">&#8634;</button><button id="rotate-right">&#8635;</button></div>
-    <div class="row"><label>Reset</label><button id="view-reset" style="width:auto; padding:0 8px;">↺ View</button></div>
+<div class="stage" id="stage">
+  <canvas id="diorama"></canvas>
+  <div class="overlay" id="status">Loading the terrain…</div>
+  <div class="legend3d">
+    <div><i style="background:#f0b75c"></i>Dwarahat highway</div>
+    <div><i style="background:#fffbf3"></i>Village road</div>
+  </div>
+  <div class="ctrl">
+    <button id="btn-rotate">Auto-rotate</button>
+    <button id="btn-reset">Reset view</button>
   </div>
 </div>
-<div class="map3d-note wrap">
-  Terrain is real elevation data for this hillside, from open public data — genuinely 3D, not an illustration. The house photo is shown as a marker at its location on that terrain; it isn't a 3D reconstruction of the building itself, since that would need multiple photos and dedicated 3D-modelling software, not something a single photo can give us reliably.
+
+<div class="note3d wrap">
+  Hills and slopes come from real elevation data (about 30&nbsp;m detail, heights slightly exaggerated so the slopes read clearly at this scale). The ground is satellite imagery. Roads are drawn as straight lines between known points, so the real road bends more than shown.
 </div>
 
 <footer class="site-footer">
@@ -80,64 +84,274 @@
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
 <script>
-(function () {
-  // Bairati's approximate coordinates — same point used on the Journeys Map.
-  const BAIRATI = { lat: 29.885, lng: 79.351 }; // INTERIM: Chaukhutia town centre. Replace with Bairati's exact pin.
-  const DEFAULT_VIEW = { center: [BAIRATI.lng, BAIRATI.lat], zoom: 14.5, pitch: 60, bearing: -20 };
+(async function () {
+  // ---------------- Places (supplied from Google Maps pins) ----------------
+  const PLACES = {
+    house:    { lat: 29.8073069, lng: 79.4212201, label: 'Family house' },
+    school:   { lat: 29.8069205, lng: 79.4176471, label: 'Bairati school' },
+    junction: { lat: 29.8059634, lng: 79.4164968, label: 'Highway junction' },
+    kandy:    { lat: 29.8151070, lng: 79.4138605, label: 'Kandy Hotel' }
+  };
+  const HOUSE_PHOTO = 'uploads/laxmidutt-house.jpg';
 
-  const map = new maplibregl.Map({
-    container: 'map3d',
-    style: {
-      version: 8,
-      sources: {
-        'osm-raster': {
-          type: 'raster',
-          tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'],
-          tileSize: 256,
-          attribution: '&copy; OpenStreetMap contributors'
-        },
-        'terrain-dem': {
-          type: 'raster-dem',
-          tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
-          tileSize: 256,
-          encoding: 'terrarium', // IMPORTANT: this source is Terrarium-encoded, not the MapLibre default (Mapbox) encoding — wrong encoding silently gives wrong elevations
-          maxzoom: 15
-        }
-      },
-      layers: [{ id: 'osm-layer', type: 'raster', source: 'osm-raster' }]
-    },
-    center: DEFAULT_VIEW.center,
-    zoom: DEFAULT_VIEW.zoom,
-    pitch: DEFAULT_VIEW.pitch,
-    bearing: DEFAULT_VIEW.bearing,
-    maxPitch: 80
+  // Area modelled: the points above plus a margin all round.
+  const BBOX = { south: 29.8025, north: 29.8185, west: 79.4100, east: 79.4250 };
+  const EXAGGERATION = 1.5;
+  const DEM_ZOOM = 14;   // elevation tiles (source data is ~30 m anyway)
+  const IMG_ZOOM = 17;   // imagery tiles (~1 m per pixel)
+  const GRID = 180;      // terrain mesh resolution along the longer side
+
+  const statusEl = document.getElementById('status');
+  const setStatus = (t) => { statusEl.textContent = t || ''; statusEl.style.display = t ? 'flex' : 'none'; };
+
+  // ---------------- Geo helpers (Web Mercator, 256px tiles) ----------------
+  const worldPx = (lat, lng, z) => {
+    const s = 256 * Math.pow(2, z);
+    const x = (lng + 180) / 360 * s;
+    const latR = lat * Math.PI / 180;
+    const y = (1 - Math.log(Math.tan(latR) + 1 / Math.cos(latR)) / Math.PI) / 2 * s;
+    return { x, y };
+  };
+  const lat0 = (BBOX.south + BBOX.north) / 2, lng0 = (BBOX.west + BBOX.east) / 2;
+  const M_PER_LAT = 111320, M_PER_LNG = 111320 * Math.cos(lat0 * Math.PI / 180);
+  const toLocal = (lat, lng) => ({ x: (lng - lng0) * M_PER_LNG, z: -(lat - lat0) * M_PER_LAT });
+  const widthM = (BBOX.east - BBOX.west) * M_PER_LNG;
+  const depthM = (BBOX.north - BBOX.south) * M_PER_LAT;
+
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Failed: ' + url));
+      img.src = url;
+    });
+  }
+
+  // Stitch every tile covering BBOX at zoom z into one canvas, cropped exactly to BBOX.
+  async function stitch(z, urlFor) {
+    const nw = worldPx(BBOX.north, BBOX.west, z), se = worldPx(BBOX.south, BBOX.east, z);
+    const tx0 = Math.floor(nw.x / 256), tx1 = Math.floor(se.x / 256);
+    const ty0 = Math.floor(nw.y / 256), ty1 = Math.floor(se.y / 256);
+    const w = Math.ceil(se.x - nw.x), h = Math.ceil(se.y - nw.y);
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    const jobs = [];
+    for (let tx = tx0; tx <= tx1; tx++) for (let ty = ty0; ty <= ty1; ty++) {
+      jobs.push(loadImage(urlFor(z, tx, ty)).then(img => {
+        ctx.drawImage(img, tx * 256 - nw.x, ty * 256 - nw.y, 256, 256);
+      }));
+    }
+    await Promise.all(jobs);
+    return c;
+  }
+
+  // ---------------- 1. Elevation ----------------
+  setStatus('Loading elevation data…');
+  let demCanvas;
+  try {
+    demCanvas = await stitch(DEM_ZOOM, (z, x, y) => `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`);
+  } catch (e) {
+    setStatus('Could not load elevation data. Check your connection and reload the page.');
+    return;
+  }
+  const demCtx = demCanvas.getContext('2d');
+  const demPx = demCtx.getImageData(0, 0, demCanvas.width, demCanvas.height).data;
+  // Terrarium encoding: height = (R * 256 + G + B / 256) - 32768 metres
+  const rawH = (px, py) => {
+    px = Math.max(0, Math.min(demCanvas.width - 1, px)); py = Math.max(0, Math.min(demCanvas.height - 1, py));
+    const i = (py * demCanvas.width + px) * 4;
+    return demPx[i] * 256 + demPx[i + 1] + demPx[i + 2] / 256 - 32768;
+  };
+  const demNW = worldPx(BBOX.north, BBOX.west, DEM_ZOOM);
+  function elevationAt(lat, lng) {   // bilinear sample, metres
+    const p = worldPx(lat, lng, DEM_ZOOM);
+    const fx = p.x - demNW.x - 0.5, fy = p.y - demNW.y - 0.5;
+    const x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+    const a = rawH(x0, y0), b = rawH(x0 + 1, y0), c = rawH(x0, y0 + 1), d = rawH(x0 + 1, y0 + 1);
+    return a * (1 - tx) * (1 - ty) + b * tx * (1 - ty) + c * (1 - tx) * ty + d * tx * ty;
+  }
+
+  // ---------------- 2. Imagery (satellite, with a street-map fallback) ----------------
+  setStatus('Loading satellite imagery…');
+  let imgCanvas = null, imageryCredit = '';
+  try {
+    imgCanvas = await stitch(IMG_ZOOM, (z, x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`);
+    imageryCredit = 'Imagery © Esri, Maxar, Earthstar Geographics';
+  } catch (e) {
+    try {
+      imgCanvas = await stitch(16, (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`);
+      imageryCredit = 'Map © OpenStreetMap contributors';
+    } catch (e2) { imgCanvas = null; }
+  }
+
+  // ---------------- 3. Scene ----------------
+  setStatus('Building the model…');
+  const canvas = document.getElementById('diorama');
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 10, 20000);
+
+  scene.add(new THREE.HemisphereLight(0xfff4e0, 0x4a3a2a, 0.75));
+  const sun = new THREE.DirectionalLight(0xfff0d0, 0.9);
+  sun.position.set(-1200, 1800, 900);
+  scene.add(sun);
+
+  // sample the elevation grid once; reuse for surface + walls
+  const cols = widthM >= depthM ? GRID : Math.round(GRID * widthM / depthM);
+  const rows = depthM > widthM ? GRID : Math.round(GRID * depthM / widthM);
+  const heights = [];
+  let minH = Infinity, maxH = -Infinity;
+  for (let r = 0; r <= rows; r++) {
+    const lat = BBOX.north - (r / rows) * (BBOX.north - BBOX.south);
+    for (let c = 0; c <= cols; c++) {
+      const lng = BBOX.west + (c / cols) * (BBOX.east - BBOX.west);
+      const h = elevationAt(lat, lng);
+      heights.push(h); minH = Math.min(minH, h); maxH = Math.max(maxH, h);
+    }
+  }
+  const baseH = minH;                      // lowest point sits at y = 0
+  const Y = (h) => (h - baseH) * EXAGGERATION;
+  const floorY = -120;                     // bottom of the earth block
+
+  // --- top surface ---
+  const topGeo = new THREE.PlaneGeometry(widthM, depthM, cols, rows);
+  topGeo.rotateX(-Math.PI / 2);            // plane now lies flat, rows run north -> south
+  const pos = topGeo.attributes.position;
+  for (let i = 0; i < pos.count; i++) pos.setY(i, Y(heights[i]));
+  topGeo.computeVertexNormals();
+  let topMat;
+  if (imgCanvas) {
+    const tex = new THREE.CanvasTexture(imgCanvas);
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    topMat = new THREE.MeshLambertMaterial({ map: tex });
+  } else {
+    topMat = new THREE.MeshLambertMaterial({ color: 0x7d8f5a });
+  }
+  scene.add(new THREE.Mesh(topGeo, topMat));
+
+  // --- earth walls: a skirt along each edge down to the floor ---
+  const wallMat = new THREE.MeshLambertMaterial({ color: 0x6b4a33, side: THREE.DoubleSide });
+  function addWall(points) {           // points: [{x, z, y}] along one edge
+    const g = new THREE.BufferGeometry();
+    const v = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i], b = points[i + 1];
+      v.push(a.x, a.y, a.z,  b.x, b.y, b.z,  a.x, floorY, a.z);
+      v.push(b.x, b.y, b.z,  b.x, floorY, b.z,  a.x, floorY, a.z);
+    }
+    g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+    g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, wallMat));
+  }
+  const vtx = (r, c) => ({ x: -widthM / 2 + (c / cols) * widthM, z: -depthM / 2 + (r / rows) * depthM, y: Y(heights[r * (cols + 1) + c]) });
+  const edge = (fn, n) => Array.from({ length: n + 1 }, (_, i) => fn(i));
+  addWall(edge(c => vtx(0, c), cols));
+  addWall(edge(c => vtx(rows, c), cols));
+  addWall(edge(r => vtx(r, 0), rows));
+  addWall(edge(r => vtx(r, cols), rows));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(widthM, depthM), new THREE.MeshLambertMaterial({ color: 0x4a3322 }));
+  floor.rotation.x = Math.PI / 2; floor.position.y = floorY; scene.add(floor);
+
+  // ---------------- 4. Roads draped on the terrain ----------------
+  const groundAt = (lat, lng) => Y(elevationAt(lat, lng));
+  function drapedRoad(a, b, color, width) {
+    const lenM = Math.hypot((b.lng - a.lng) * M_PER_LNG, (b.lat - a.lat) * M_PER_LAT);
+    const steps = Math.max(8, Math.round(lenM / 6));
+    const pts = [];
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps, lat = a.lat + (b.lat - a.lat) * t, lng = a.lng + (b.lng - a.lng) * t;
+      const l = toLocal(lat, lng);
+      pts.push(new THREE.Vector3(l.x, groundAt(lat, lng) + 3, l.z));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts);
+    const tube = new THREE.TubeGeometry(curve, steps * 2, width, 6, false);
+    scene.add(new THREE.Mesh(tube, new THREE.MeshBasicMaterial({ color })));
+  }
+  drapedRoad(PLACES.junction, PLACES.kandy, 0xf0b75c, 4);   // Dwarahat highway stretch
+  drapedRoad(PLACES.junction, PLACES.school, 0xfffbf3, 2.5); // village road
+  drapedRoad(PLACES.school, PLACES.house, 0xfffbf3, 2.5);
+
+  // ---------------- 5. Labels (always face the camera) ----------------
+  function textSprite(text, bg) {
+    const c = document.createElement('canvas'); const ctx = c.getContext('2d');
+    const font = '600 44px "Work Sans", sans-serif'; ctx.font = font;
+    const w = Math.ceil(ctx.measureText(text).width) + 48, h = 76;
+    c.width = w; c.height = h; ctx.font = font;
+    ctx.fillStyle = bg; ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(0, 0, w, h, 20); else ctx.rect(0, 0, w, h);
+    ctx.fill();
+    ctx.fillStyle = '#fffbf3'; ctx.textBaseline = 'middle'; ctx.fillText(text, 24, h / 2 + 2);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
+    s.scale.set(w * 0.32, h * 0.32, 1);
+    s.renderOrder = 10;
+    return s;
+  }
+  function pin(place, color, liftM) {
+    const l = toLocal(place.lat, place.lng), gy = groundAt(place.lat, place.lng);
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, liftM, 8), new THREE.MeshBasicMaterial({ color }));
+    stem.position.set(l.x, gy + liftM / 2, l.z); scene.add(stem);
+    const label = textSprite(place.label, color === 0xe0952a ? '#8c2f1f' : '#3e1218');
+    label.position.set(l.x, gy + liftM + 16, l.z); scene.add(label);
+    return { x: l.x, y: gy, z: l.z };
+  }
+  pin(PLACES.school, 0x3e1218, 70);
+  pin(PLACES.junction, 0x3e1218, 55);
+  pin(PLACES.kandy, 0x3e1218, 70);
+  const housePos = pin(PLACES.house, 0xe0952a, 150);
+
+  // ---------------- 6. House: photo standing on its spot ----------------
+  // Shown as an upright framed photo facing the viewer — not a 3D model of
+  // the building. If the photo isn't uploaded yet, a small house marker shows.
+  loadImage(HOUSE_PHOTO).then(img => {
+    const maxSide = 110, ratio = img.width / img.height;
+    const w = ratio >= 1 ? maxSide : maxSide * ratio, h = ratio >= 1 ? maxSide / ratio : maxSide;
+    const c = document.createElement('canvas'); c.width = img.width + 24; c.height = img.height + 24;
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#e0952a'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 12, 12);
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c) }));
+    sprite.scale.set(w, h, 1);
+    sprite.position.set(housePos.x, housePos.y + 150 + 40 + h / 2, housePos.z);
+    scene.add(sprite);
+  }).catch(() => {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(22, 14, 16), new THREE.MeshLambertMaterial({ color: 0xd9c7a8 }));
+    body.position.y = 7;
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(17, 10, 4), new THREE.MeshLambertMaterial({ color: 0x5a5a5a }));
+    roof.position.y = 19; roof.rotation.y = Math.PI / 4;
+    g.add(body, roof); g.position.set(housePos.x, housePos.y, housePos.z); scene.add(g);
   });
 
-  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+  // ---------------- 7. Camera, controls, render loop ----------------
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.maxPolarAngle = Math.PI * 0.49;
+  controls.minDistance = 250; controls.maxDistance = 5000;
+  const focus = new THREE.Vector3(housePos.x * 0.4, (maxH - baseH) * EXAGGERATION * 0.3, housePos.z * 0.4);
+  function resetView() {
+    controls.target.copy(focus);
+    camera.position.set(focus.x + 1300, focus.y + 1100, focus.z + 1500);
+    controls.update();
+  }
+  resetView();
+  document.getElementById('btn-reset').onclick = resetView;
+  document.getElementById('btn-rotate').onclick = (e) => {
+    controls.autoRotate = !controls.autoRotate; controls.autoRotateSpeed = 0.8;
+    e.target.textContent = controls.autoRotate ? 'Stop rotating' : 'Auto-rotate';
+  };
 
-  map.on('load', () => {
-    map.setTerrain({ source: 'terrain-dem', exaggeration: 1.6 });
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize); resize();
+  (function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
 
-    // House marker with photo popup — update the image path below once
-    // the house photo is uploaded to uploads/ via the admin panel.
-    const houseEl = document.createElement('div');
-    houseEl.style.cssText = 'width:22px; height:22px; border-radius:50%; background:#E0952A; border:3px solid #FFFBF3; box-shadow:0 0 0 2px #5C1F27; cursor:pointer;';
-    new maplibregl.Marker({ element: houseEl })
-      .setLngLat([BAIRATI.lng, BAIRATI.lat])
-      .setPopup(new maplibregl.Popup({ offset: 20 }).setHTML(`
-        <div class="house-popup">
-          <img src="uploads/laxmidutt-house.jpg" alt="The family house" onerror="this.style.display='none'">
-          <p><strong>The family house, Bairati</strong><br>Shared by Anand Bhallabh and Bhola Dutt — presumably built by Laxmi Dutt.</p>
-        </div>
-      `))
-      .addTo(map);
-  });
-
-  document.getElementById('pitch-up').onclick = () => map.easeTo({ pitch: Math.min(80, map.getPitch() + 10) });
-  document.getElementById('pitch-down').onclick = () => map.easeTo({ pitch: Math.max(0, map.getPitch() - 10) });
-  document.getElementById('rotate-left').onclick = () => map.easeTo({ bearing: map.getBearing() - 30 });
-  document.getElementById('rotate-right').onclick = () => map.easeTo({ bearing: map.getBearing() + 30 });
-  document.getElementById('view-reset').onclick = () => map.easeTo(DEFAULT_VIEW);
+  setStatus('');
+  document.querySelector('.note3d').insertAdjacentHTML('beforeend',
+    ` Elevation: Mapzen/AWS Terrain Tiles. ${imageryCredit}${imgCanvas ? '' : ' Imagery could not be loaded, so the ground is shown in plain green.'}`);
 })();
 </script>
 </body>
