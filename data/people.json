@@ -976,10 +976,66 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
+    "occupation": "Retired",
+    "locations": [
+      {
+        "place": "Bairati Almora",
+        "type": "origin",
+        "year": "1946",
+        "lat": 29.8075451,
+        "lng": 79.4198012,
+        "note": null
+      },
+      {
+        "place": "Visakhapatnam",
+        "type": "lived",
+        "year": null,
+        "lat": 17.6935526,
+        "lng": 83.2921297,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "lived",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      },
+      {
+        "place": "Cochin",
+        "type": "lived",
+        "year": null,
+        "lat": 9.9679032,
+        "lng": 76.2444378,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      }
+    ],
     "sortOrder": 2,
-    "spouseId": "pushpa"
+    "spouseId": "pushpa",
+    "fullName": "Kailash Chandra Pandey",
+    "fatherName": "Anand Ballabh Pandey",
+    "motherName": "Saroj Devi Pandey",
+    "birthDate": "1946-01-03",
+    "birthPlace": "Bairati, Almora",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "pradeep",
