@@ -4258,7 +4258,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 3
   },
   {
     "id": "kiran",
@@ -4281,7 +4282,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 1
   },
   {
     "id": "person",
@@ -4304,7 +4306,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 2
   },
   {
     "id": "hema-2",
@@ -4327,6 +4330,7 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 0
   }
 ]
