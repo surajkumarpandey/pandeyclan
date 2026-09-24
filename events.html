@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Family Events — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .events-hero {
+    background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%);
+    color: var(--paper-light); padding: 54px 0 46px;
+  }
+  .events-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 34px; margin: 0 0 10px; }
+  .events-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
+  .timeline { position: relative; padding-left: 32px; border-left: 2px solid var(--line); }
+  .event-item { position: relative; padding-bottom: 40px; }
+  .event-item:last-child { padding-bottom: 0; }
+  .event-item::before {
+    content: ''; position: absolute; left: -38px; top: 4px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--gold); border: 3px solid var(--maroon); box-shadow: 0 0 0 2px var(--paper-light);
+  }
+  .event-num { font-family: var(--font-display); font-size: 12.5px; font-weight: 700; color: var(--gold); letter-spacing: 0.4px; }
+  .event-date { font-size: 13px; color: #8a6a58; margin: 2px 0 8px; }
+  .event-item h3 { font-family: var(--font-display); font-weight: 600; font-size: 20px; margin: 0 0 6px; }
+  .event-item .loc { font-size: 13px; color: var(--pine); font-weight: 600; margin-bottom: 8px; }
+  .event-item p { font-size: 14.5px; color: #5a3a2e; margin: 0 0 12px; }
+  .event-photos { display: flex; gap: 10px; flex-wrap: wrap; }
+  .event-photos img { width: 110px; height: 110px; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); }
+  .empty-state { padding: 60px 0; text-align: center; color: #8a6a58; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="village-3d.html">Bairati in 3D</a></li>
+      <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
+      <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
+      <li><a href="events.html" class="active" data-i18n="nav.events">Events</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="events-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1 data-i18n="events.title">Family Events</h1>
+    <p data-i18n="events.lede">Gatherings, ceremonies, and occasions worth remembering — kept as a running record.</p>
+  </div>
+</div>
+
+<div class="section wrap">
+  <div class="timeline" id="events-timeline"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="aipan-border"></div>
+  <div class="wrap">
+    <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
+    <span><a href="archive.html">Family Archive</a></span>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(async function () {
+  let events = [];
+  try {
+    const res = await fetch('data/events.json?_=' + Date.now());
+    events = await res.json();
+  } catch (e) { events = []; }
+  events.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+  const el = document.getElementById('events-timeline');
+  if (!events.length) {
+    el.innerHTML = `<div class="empty-state">No events recorded yet.</div>`;
+    return;
+  }
+  el.innerHTML = events.map(ev => `
+    <div class="event-item">
+      <div class="event-num">EVENT ${ev.eventNumber ?? ''}</div>
+      <div class="event-date">${ev.date ? new Date(ev.date + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Date unknown'}</div>
+      <h3>${ev.title || 'Untitled event'}</h3>
+      ${ev.location ? `<div class="loc">${ev.location}</div>` : ''}
+      ${ev.description ? `<p>${ev.description}</p>` : ''}
+      ${ev.photos && ev.photos.length ? `<div class="event-photos">${ev.photos.map(src => `<img src="${src}">`).join('')}</div>` : ''}
+    </div>
+  `).join('');
+})();
+</script>
+</body>
+</html>
