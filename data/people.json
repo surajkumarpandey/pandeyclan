@@ -2185,7 +2185,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "spouse-jyoti"
+    "spouseId": "spouse-jyoti",
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthDate": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "lalit_daughter_36",
