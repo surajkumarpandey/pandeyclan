@@ -1536,7 +1536,8 @@
     "birthDate": null,
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "anil"
   },
   {
     "id": "shekhar_daughter_26",
@@ -3858,6 +3859,28 @@
     "audioMessage": null,
     "birthDate": null,
     "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "anil",
+    "name": "Anil",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "shekhar_daughter_25",
+    "audioMessage": null,
+    "birthDate": null,
     "birthYear": null,
     "deathYear": null,
     "locations": [],
