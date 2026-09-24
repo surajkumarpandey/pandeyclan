@@ -3547,7 +3547,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Vinod Pandey",
     "fatherName": null,
     "motherName": null,
     "spouseId": "kailash_daughter_28",
@@ -3558,7 +3558,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "daksh-2",
