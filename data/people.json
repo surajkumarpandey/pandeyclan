@@ -978,7 +978,8 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "sortOrder": 2
+    "sortOrder": 2,
+    "spouseId": "pushpa"
   },
   {
     "id": "pradeep",
@@ -3380,5 +3381,27 @@
     "occupation": null,
     "birthPlace": null,
     "audioMessages": []
+  },
+  {
+    "id": "pushpa",
+    "name": "Pushpa",
+    "gender": "F",
+    "parentId": null,
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "kailash",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
