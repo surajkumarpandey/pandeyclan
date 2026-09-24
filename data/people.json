@@ -2073,7 +2073,8 @@
     "birthDate": null,
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "lata"
   },
   {
     "id": "vineet",
@@ -4938,5 +4939,27 @@
     "occupation": null,
     "birthPlace": null,
     "audioMessages": []
+  },
+  {
+    "id": "lata",
+    "name": "Lata",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "visvesh",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
