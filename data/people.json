@@ -4147,5 +4147,28 @@
     "photos": [],
     "bio": "",
     "occupation": null
+  },
+  {
+    "id": "daughter1-bhawna",
+    "name": "Daughter1 Bhawna",
+    "gender": "M",
+    "parentId": "bhawana",
+    "generation": 19,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
