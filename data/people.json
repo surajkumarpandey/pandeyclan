@@ -2536,14 +2536,14 @@
   },
   {
     "id": "meena-pandey",
-    "name": "Meena Pandey",
+    "name": "Meena",
     "gender": "F",
     "parentId": null,
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Meena Pandey",
     "spouseId": "khajan",
     "audioMessage": null,
     "birthDate": null,
@@ -2552,7 +2552,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "durga-devi-pandey",
