@@ -2626,14 +2626,14 @@
   },
   {
     "id": "tulsi-devi-pandey",
-    "name": "Tulsi Devi Pandey",
+    "name": "Tulsi",
     "gender": "F",
     "parentId": null,
     "generation": 15,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Tulsi Devi Pandey",
     "fatherName": null,
     "motherName": null,
     "spouseId": "laxmidutt",
@@ -2644,7 +2644,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "bhasker",
