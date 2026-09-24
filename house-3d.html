@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Family House in 3D — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<style>
+  .house-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 44px 0 36px; }
+  .house-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 32px; margin: 0 0 8px; }
+  .house-hero p { max-width: 70ch; color: rgba(255,251,243,0.88); margin: 0; }
+  .stage { position: relative; width: 100%; height: 72vh; min-height: 460px; background: linear-gradient(180deg, #bcd3e6 0%, #e8efe6 60%, #d9e2cf 100%); }
+  #house3d { width: 100%; height: 100%; display: block; touch-action: none; }
+  .overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--maroon-deep); font-size: 15px; pointer-events: none; }
+  .mode { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); display: flex; background: rgba(255,251,243,0.95); border-radius: 999px; padding: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  .mode button { border: none; background: none; padding: 8px 16px; border-radius: 999px; font-weight: 700; font-size: 13.5px; color: var(--maroon); cursor: pointer; }
+  .mode button.active { background: var(--maroon); color: var(--paper-light); }
+  .ctrl { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 6px; }
+  .ctrl button { background: rgba(255,251,243,0.95); border: 1px solid var(--line-dark); color: var(--maroon); font-weight: 600; font-size: 13px; padding: 7px 12px; border-radius: 999px; cursor: pointer; }
+  .mode-note { position: absolute; left: 14px; bottom: 14px; max-width: min(360px, calc(100% - 200px)); background: rgba(255,251,243,0.93); border-radius: 6px; padding: 8px 12px; font-size: 12.5px; color: var(--ink); }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+  .gallery figure { margin: 0; background: var(--paper-light); border: 1px solid var(--line); }
+  .gallery img { width: 100%; height: 200px; object-fit: cover; display: block; cursor: zoom-in; }
+  .gallery figcaption { padding: 10px 12px; font-size: 13.5px; color: #5a3a2e; }
+  .routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .route { background: var(--paper-light); border: 1px solid var(--line); border-left: 4px solid var(--gold); padding: 18px 20px; }
+  .route h3 { font-family: var(--font-display); font-size: 18px; margin: 0 0 8px; }
+  .route ol { margin: 0; padding-left: 20px; font-size: 14.5px; color: #5a3a2e; }
+  .route li { margin-bottom: 6px; }
+  .lightbox { position: fixed; inset: 0; background: rgba(20,10,8,0.9); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; cursor: zoom-out; }
+  .lightbox img { max-width: 100%; max-height: 100%; }
+  @media (max-width: 640px) { .mode-note { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="village-3d.html">Bairati in 3D</a></li>
+      <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
+      <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
+      <li><a href="events.html" data-i18n="nav.events">Events</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="house-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1>The Family House, Bairati</h1>
+    <p>The last known residence of the Pandey clan that still stands today, believed to have been built by Laxmi Dutt. Drag to walk around it, pinch or scroll to zoom, and switch between the house as it stands today and a restored concept.</p>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <canvas id="house3d"></canvas>
+  <div class="overlay" id="status">Building the house…</div>
+  <div class="mode">
+    <button id="mode-today" class="active">As it stands today</button>
+    <button id="mode-restored">Restored concept</button>
+  </div>
+  <div class="mode-note" id="mode-note"></div>
+  <div class="ctrl">
+    <button id="btn-rotate">Auto-rotate</button>
+    <button id="btn-reset">Reset view</button>
+  </div>
+</div>
+
+<section class="section wrap">
+  <h2 class="section-title">How to reach the house</h2>
+  <p class="section-lede">Two routes lead up to it. Both pass the village school.</p>
+  <div class="routes">
+    <div class="route">
+      <h3>Route 1 — from the highway</h3>
+      <ol>
+        <li>Take National Highway 109 to Dwarahat, then continue towards Chaukhutia.</li>
+        <li>Pass Green Valley Restaurant; the Bairati turn-off is just beyond it.</li>
+        <li>Take the village road uphill from the highway.</li>
+        <li>Pass Govt. Primary School, Bhairati.</li>
+        <li>Continue up to the house.</li>
+      </ol>
+    </div>
+    <div class="route">
+      <h3>Route 2 — the upper road</h3>
+      <ol>
+        <li>Take the road that runs above the highway. It can be joined from Dwarahat, from Pan village (just before Bairati), or by anyone coming from Chitreshwar.</li>
+        <li>This road passes directly by Govt. Primary School, Bhairati.</li>
+        <li>Continue from the school up to the house.</li>
+      </ol>
+    </div>
+  </div>
+  <p style="margin-top:18px;"><a class="btn btn-outline-dark btn-sm" href="village-3d.html">See the house on the 3D village map</a>
+     <a class="btn btn-outline-dark btn-sm" href="https://www.google.com/maps/dir/?api=1&destination=29.8073069,79.4212201" target="_blank" rel="noopener">Directions in Google Maps</a></p>
+</section>
+
+<section class="section wrap">
+  <h2 class="section-title">Photographs</h2>
+  <div class="gallery">
+    <figure><img src="assets/house/photo-front.jpg" alt=""><figcaption>The front of the house today. The carved door frames and the central window still survive.</figcaption></figure>
+    <figure><img src="assets/house/photo-family.jpg" alt=""><figcaption>Ashok Kumar Pandey, Hemlata Pandey and their grandson Mrityunjay Pandey in front of the house.</figcaption></figure>
+    <figure><img src="assets/house/photo-side-angle.jpg" alt=""><figcaption>The front seen from the left, with the overgrowth in front of the house.</figcaption></figure>
+    <figure><img src="assets/house/photo-right-end.jpg" alt=""><figcaption>The right end of the house and the large tree beside it, with the footpath between.</figcaption></figure>
+    <figure><img src="assets/house/photo-right-wall.jpg" alt=""><figcaption>The right side wall.</figcaption></figure>
+    <figure><img src="assets/house/restored-concept.jpg" alt=""><figcaption><strong>Restored concept</strong>: an AI-generated illustration of how the house may once have looked. It is not a historical photograph.</figcaption></figure>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox"><img id="lightbox-img" alt=""></div>
+
+<footer class="site-footer">
+  <div class="aipan-border"></div>
+  <div class="wrap">
+    <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
+    <span><a href="village-3d.html">Bairati in 3D</a></span>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(function () {
+  // ---------------- Dimensions ----------------
+  // Proportions come from the photographs. Absolute size could not be
+  // measured from them, so WIDTH_M is an estimate: change it to the real
+  // measured width of the front and everything else scales to match.
+  const WIDTH_M = 8.5;
+  const FACADE_ASPECT = 690 / 1600;        // height / width of the facade photos
+  const WALL_H = WIDTH_M * FACADE_ASPECT;  // eave height
+  const DEPTH_M = 5.0;                     // not visible in any photo — estimate
+  const RIDGE_RISE = 1.3, OVERHANG_FRONT = 0.7, OVERHANG_SIDE = 0.4, PLINTH = 0.2;
+  const LEDGE_FROM_GROUND = WALL_H * 0.47; // the stone floor ledge, from the photos
+
+  const statusEl = document.getElementById('status');
+  const canvas = document.getElementById('house3d'), stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+  scene.add(new THREE.HemisphereLight(0xfffaf0, 0x6b5a45, 0.85));
+  const sun = new THREE.DirectionalLight(0xfff1dc, 0.75); sun.position.set(8, 14, 12); scene.add(sun);
+
+  const loader = new THREE.TextureLoader();
+  function tex(url, repeatX, repeatY) {
+    const t = loader.load(url, () => { statusEl.style.display = 'none'; });
+    t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    if (repeatX) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeatX, repeatY); }
+    return t;
+  }
+  function canvasTex(draw, w, h, rx, ry) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+    const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx || 1, ry || 1); return t;
+  }
+  // stone slate roof: irregular rectangles in rows, like the pathal roofs of Kumaon
+  function slateTex(base, mossy) {
+    return canvasTex((ctx, w, h) => {
+      ctx.fillStyle = '#2d2a27'; ctx.fillRect(0, 0, w, h);
+      let y = 0; let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+      while (y < h) {
+        const rowH = 38 + rnd() * 18; let x = -rnd() * 60;
+        while (x < w) {
+          const sw = 60 + rnd() * 70, v = base + (rnd() - 0.5) * 30;
+          ctx.fillStyle = `rgb(${v},${v - 4},${v - 8})`; ctx.fillRect(x + 2, y + 2, sw - 4, rowH - 4);
+          if (mossy && rnd() < 0.35) { ctx.fillStyle = `rgba(${80 + rnd() * 40},${100 + rnd() * 40},50,0.45)`; ctx.fillRect(x + 4, y + 4, sw * rnd(), rowH * 0.6); }
+          x += sw;
+        }
+        y += rowH;
+      }
+    }, 512, 512, 3, 2);
+  }
+  function plasterTex() {
+    return canvasTex((ctx, w, h) => {
+      ctx.fillStyle = '#e9d9b8'; ctx.fillRect(0, 0, w, h);
+      let seed = 3; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+      for (let i = 0; i < 900; i++) { const v = 215 + rnd() * 30; ctx.fillStyle = `rgba(${v},${v - 18},${v - 50},0.35)`; ctx.fillRect(rnd() * w, rnd() * h, 2 + rnd() * 10, 2 + rnd() * 6); }
+    }, 256, 256, 2, 2);
+  }
+
+  const MATS = {
+    today: {
+      front: new THREE.MeshLambertMaterial({ map: tex('assets/house/front-today.jpg') }),
+      side: new THREE.MeshLambertMaterial({ map: tex('assets/house/side-today.jpg', 2, 1) }),
+      roof: new THREE.MeshLambertMaterial({ map: slateTex(95, true) }),
+      wood: new THREE.MeshLambertMaterial({ color: 0x4a3526 }),
+      ground: new THREE.MeshLambertMaterial({ color: 0x6f8a4a }),
+      note: 'Front: the real photograph of the house today. A thin strip at the far right edge, cut off in the photo, is filled with matching wall. Side walls use the photo of the right wall.'
+    },
+    restored: {
+      front: new THREE.MeshLambertMaterial({ map: tex('assets/house/front-restored.jpg') }),
+      side: new THREE.MeshLambertMaterial({ map: plasterTex() }),
+      roof: new THREE.MeshLambertMaterial({ map: slateTex(125, false) }),
+      wood: new THREE.MeshLambertMaterial({ color: 0x7a3e22 }),
+      ground: new THREE.MeshLambertMaterial({ color: 0x9a9388 }),
+      note: 'Restored concept: an AI-generated illustration of how the house may once have looked, placed on the same model. It is not a historical record.'
+    }
+  };
+
+  // ---------------- Build the house ----------------
+  const house = new THREE.Group(); scene.add(house);
+  const W = WIDTH_M, D = DEPTH_M, H = WALL_H;
+  const meshes = {};
+
+  // plinth
+  meshes.plinth = new THREE.Mesh(new THREE.BoxGeometry(W + 0.2, PLINTH, D + 0.2), new THREE.MeshLambertMaterial({ color: 0x8c877d }));
+  meshes.plinth.position.y = PLINTH / 2; house.add(meshes.plinth);
+
+  // walls: one box; the front face gets the facade photo, the other faces the side texture
+  const wallGeo = new THREE.BoxGeometry(W, H, D);
+  meshes.walls = new THREE.Mesh(wallGeo, []);
+  meshes.walls.position.y = PLINTH + H / 2; house.add(meshes.walls);
+
+  // gable triangles above the side walls
+  function gable(x) {
+    const s = new THREE.Shape(); s.moveTo(-D / 2, 0); s.lineTo(D / 2, 0); s.lineTo(0, RIDGE_RISE); s.lineTo(-D / 2, 0);
+    const g = new THREE.ShapeGeometry(s);
+    const m = new THREE.Mesh(g, null); m.rotation.y = Math.PI / 2; m.position.set(x, PLINTH + H, 0);
+    // UVs so the side texture continues onto the gable
+    const uv = g.attributes.uv, p = g.attributes.position;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, (p.getX(i) + D / 2) / D * 2, p.getY(i) / H);
+    return m;
+  }
+  meshes.gables = [gable(W / 2), gable(-W / 2)];
+  meshes.gables.forEach(g => { g.material = null; house.add(g); });
+  meshes.gables[1].rotation.y = -Math.PI / 2;
+
+  // roof: two sloping slabs meeting at the ridge, overhanging front/back and sides
+  const halfRun = D / 2 + OVERHANG_FRONT, slope = Math.atan2(RIDGE_RISE, D / 2);
+  const slabLen = halfRun / Math.cos(slope), roofW = W + OVERHANG_SIDE * 2;
+  meshes.roof = [];
+  [1, -1].forEach(dir => {
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(roofW, 0.14, slabLen), null);
+    slab.rotation.x = dir * slope;
+    slab.position.set(0, PLINTH + H + RIDGE_RISE - Math.tan(slope) * (halfRun / 2) + 0.07, dir * (halfRun / 2));
+    house.add(slab); meshes.roof.push(slab);
+  });
+
+  // carved eave band along the front, with projecting joist ends
+  meshes.woods = [];
+  const band = new THREE.Mesh(new THREE.BoxGeometry(W + 0.1, 0.32, 0.22), null);
+  band.position.set(0, PLINTH + H - 0.16, D / 2 + 0.11); house.add(band); meshes.woods.push(band);
+  const nJoists = Math.round(W / 0.55);
+  for (let i = 0; i <= nJoists; i++) {
+    const j = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.13, OVERHANG_FRONT), null);
+    j.position.set(-W / 2 + (i / nJoists) * W, PLINTH + H + 0.02, D / 2 + OVERHANG_FRONT / 2); house.add(j); meshes.woods.push(j);
+  }
+  // stone floor ledge projecting along the front
+  const ledge = new THREE.Mesh(new THREE.BoxGeometry(W + 0.05, 0.07, 0.16), new THREE.MeshLambertMaterial({ color: 0x86817a }));
+  ledge.position.set(0, PLINTH + LEDGE_FROM_GROUND, D / 2 + 0.08); house.add(ledge);
+
+  // ground, the footpath at the right end, and the large tree beside it
+  meshes.ground = new THREE.Mesh(new THREE.CircleGeometry(22, 48), null);
+  meshes.ground.rotation.x = -Math.PI / 2; scene.add(meshes.ground);
+  const path = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 12), new THREE.MeshLambertMaterial({ color: 0xa39c8e }));
+  path.rotation.x = -Math.PI / 2; path.position.set(W / 2 + 1.6, 0.01, 2); scene.add(path);
+  const tree = new THREE.Group();
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 6, 10), new THREE.MeshLambertMaterial({ color: 0x4d3b2c }));
+  trunk.position.y = 3; tree.add(trunk);
+  [[0, 7, 0, 2.8], [1.4, 6.3, 0.8, 2.1], [-1.2, 6.5, -0.6, 2.2], [0.4, 8.2, -0.4, 1.9]].forEach(([x, y, z, r]) => {
+    const c = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 10), new THREE.MeshLambertMaterial({ color: 0x3f6b35 }));
+    c.position.set(x, y, z); tree.add(c);
+  });
+  tree.position.set(W / 2 + 3.4, 0, 0.5); scene.add(tree);
+
+  // ---------------- Modes ----------------
+  function applyMode(mode) {
+    const m = MATS[mode];
+    // BoxGeometry face order: +x, -x, +y, -y, +z (front), -z (back)
+    meshes.walls.material = [m.side, m.side, m.side, m.side, m.front, m.side];
+    meshes.gables.forEach(g => { g.material = m.side; });
+    meshes.roof.forEach(r => { r.material = m.roof; });
+    meshes.woods.forEach(w => { w.material = m.wood; });
+    meshes.ground.material = m.ground;
+    document.getElementById('mode-note').textContent = m.note;
+    document.getElementById('mode-today').classList.toggle('active', mode === 'today');
+    document.getElementById('mode-restored').classList.toggle('active', mode === 'restored');
+  }
+  document.getElementById('mode-today').onclick = () => applyMode('today');
+  document.getElementById('mode-restored').onclick = () => applyMode('restored');
+  applyMode('today');
+
+  // ---------------- Camera & controls ----------------
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.maxPolarAngle = Math.PI * 0.49; controls.minDistance = 4; controls.maxDistance = 45;
+  function resetView() {
+    controls.target.set(0, H * 0.55, 0);
+    camera.position.set(W * 0.45, H * 0.9, D / 2 + W * 1.25);
+    controls.update();
+  }
+  resetView();
+  document.getElementById('btn-reset').onclick = resetView;
+  document.getElementById('btn-rotate').onclick = (e) => {
+    controls.autoRotate = !controls.autoRotate; controls.autoRotateSpeed = 1.2;
+    e.target.textContent = controls.autoRotate ? 'Stop rotating' : 'Auto-rotate';
+  };
+  function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  window.addEventListener('resize', resize); resize();
+  (function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+
+  // ---------------- Gallery lightbox ----------------
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
+  document.querySelectorAll('.gallery img').forEach(img => img.onclick = () => { lbImg.src = img.src; lb.style.display = 'flex'; });
+  lb.onclick = () => { lb.style.display = 'none'; };
+})();
+</script>
+</body>
+</html>
