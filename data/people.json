@@ -1196,7 +1196,8 @@
         "year": null,
         "note": null
       }
-    ]
+    ],
+    "spouseId": "vibha"
   },
   {
     "id": "ashok_daughter_22",
@@ -3081,6 +3082,28 @@
     "audioMessage": null,
     "birthDate": null,
     "birthPlace": "Bangalore",
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "vibha",
+    "name": "Vibha",
+    "gender": "F",
+    "parentId": null,
+    "generation": 19,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "suraj",
+    "audioMessage": null,
+    "birthDate": null,
     "birthYear": null,
     "deathYear": null,
     "locations": [],
