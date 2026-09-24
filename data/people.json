@@ -1708,7 +1708,8 @@
     "birthDate": "1988-12-23",
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "ravi"
+    "spouseId": "ravi",
+    "birthPlace": "Delhi"
   },
   {
     "id": "manoj_umesh_son",
