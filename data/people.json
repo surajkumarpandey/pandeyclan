@@ -1116,7 +1116,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": "null",
-    "birthYear": "1992",
+    "birthYear": null,
     "deathYear": null,
     "photos": [
       "uploads/suraj_pandey.jpg"
@@ -1128,76 +1128,106 @@
         "place": "Bairati, Almora",
         "type": "origin",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Delhi",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Assam",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Canada",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Andaman",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Mumbai",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Madras",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Ropar",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Mangalore",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Jaisalmer",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Dehradun",
         "type": "visited",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       },
       {
         "place": "Haldwani",
         "type": "current",
         "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       }
     ],
-    "spouseId": "vibha"
+    "spouseId": "vibha",
+    "fatherName": null,
+    "motherName": null,
+    "birthDate": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "ashok_daughter_22",
