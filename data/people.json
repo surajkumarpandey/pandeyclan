@@ -898,7 +898,8 @@
     "fatherName": "Lakshmi Dutt Pandey",
     "motherName": "Tulsi Devi Pandey",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "saroj"
   },
   {
     "id": "bholadutt",
@@ -3259,5 +3260,27 @@
     "bio": "",
     "occupation": null,
     "audioMessages": []
+  },
+  {
+    "id": "saroj",
+    "name": "Saroj",
+    "gender": "F",
+    "parentId": null,
+    "generation": 16,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "anandbhallabh",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
