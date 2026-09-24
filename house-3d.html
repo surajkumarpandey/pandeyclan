@@ -258,8 +258,12 @@
     j.position.set(-W / 2 + (i / nJoists) * W, PLINTH + H + 0.02, D / 2 + OVERHANG_FRONT / 2); house.add(j); meshes.woods.push(j);
   }
   // stone floor ledge projecting along the front
-  const ledge = new THREE.Mesh(new THREE.BoxGeometry(W + 0.05, 0.07, 0.16), new THREE.MeshLambertMaterial({ color: 0x86817a }));
-  ledge.position.set(0, PLINTH + LEDGE_FROM_GROUND, D / 2 + 0.08); house.add(ledge);
+  // It stops short of the tall entrance door on the left: the door's carved
+  // frame ends about 30% of the way across the front (measured from the photos).
+  const DOOR_RIGHT_EDGE = 0.31;
+  const ledgeW = W * (1 - DOOR_RIGHT_EDGE) + 0.05;
+  const ledge = new THREE.Mesh(new THREE.BoxGeometry(ledgeW, 0.07, 0.16), new THREE.MeshLambertMaterial({ color: 0x86817a }));
+  ledge.position.set(-W / 2 + W * DOOR_RIGHT_EDGE + ledgeW / 2, PLINTH + LEDGE_FROM_GROUND, D / 2 + 0.08); house.add(ledge);
 
   // ground, the footpath at the right end, and the large tree beside it
   meshes.ground = new THREE.Mesh(new THREE.CircleGeometry(22, 48), null);
