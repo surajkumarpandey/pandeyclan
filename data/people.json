@@ -1513,7 +1513,14 @@
     "occupation": null,
     "locations": [],
     "sortOrder": 2,
-    "spouseId": "anurita"
+    "spouseId": "anurita",
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthDate": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "shekhar_daughter_25",
