@@ -3397,16 +3397,16 @@
   },
   {
     "id": "daughter-neeraj",
-    "name": "Daughter Neeraj",
+    "name": "Vamika",
     "gender": "F",
     "parentId": "neeraj",
     "generation": 20,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Vamika Pant",
+    "fatherName": "Neeraj Pant",
+    "motherName": "Pallavi Pant",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -3416,7 +3416,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "audioMessages": []
   },
   {
     "id": "vibha",
