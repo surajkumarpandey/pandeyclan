@@ -4236,5 +4236,28 @@
     "photos": [],
     "bio": "",
     "occupation": null
+  },
+  {
+    "id": "manoj-2",
+    "name": "Manoj",
+    "gender": "M",
+    "parentId": "haripriya",
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": null,
+    "audioMessage": null,
+    "birthDate": "1965-03-23",
+    "birthPlace": "Haldwani",
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
