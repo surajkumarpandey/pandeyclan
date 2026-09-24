@@ -1906,8 +1906,15 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Retired",
+    "locations": [],
+    "fullName": "Lalit Mohan Pandey",
+    "fatherName": "Bhola Dutt pandey",
+    "motherName": "Padma Pandey",
+    "birthDate": "1949-12-07",
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "harish",
