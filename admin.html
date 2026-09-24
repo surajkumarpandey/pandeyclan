@@ -66,6 +66,7 @@
       <button id="tab-people" class="active">People</button>
       <button id="tab-generations">Generation stories</button>
       <button id="tab-archive">Archive</button>
+      <button id="tab-events">Events</button>
       <button id="tab-village">Village page</button>
       <button id="tab-kumaon">Discover Kumaon page</button>
       <button id="tab-backup">Backup &amp; Restore</button>
@@ -89,6 +90,14 @@
       <div id="archive-form-area">
         <p class="muted">Select an item to edit it, or add a new one below.</p>
         <button class="btn btn-gold btn-sm" id="new-archive-item-btn" style="margin-top:10px;">+ Add a new item</button>
+      </div>
+    </div>
+
+    <div id="events-panel" class="hidden editor-layout">
+      <div class="person-list"><ul id="events-ul"></ul></div>
+      <div id="events-form-area">
+        <p class="muted">Select an event to edit it, or add a new one below.</p>
+        <button class="btn btn-gold btn-sm" id="new-event-btn" style="margin-top:10px;">+ Add a new event</button>
       </div>
     </div>
 
@@ -198,11 +207,12 @@
   document.getElementById('signout-btn').addEventListener('click', () => location.reload());
 
   // ---------- Tabs ----------
-  const TABS = ['people', 'generations', 'archive', 'village', 'kumaon', 'backup'];
+  const TABS = ['people', 'generations', 'archive', 'events', 'village', 'kumaon', 'backup'];
   TABS.forEach(t => document.getElementById('tab-' + t).addEventListener('click', () => {
     switchTab(t);
     if (t === 'generations') renderGenerationList();
     if (t === 'archive') renderArchiveList();
+    if (t === 'events') renderEventList();
     if (t === 'village') loadVillageForm();
     if (t === 'kumaon') loadKumaonForm();
   }));
@@ -270,6 +280,7 @@
       <div class="field"><label>Gender</label><select id="f-gender"><option value="unknown" ${p.gender==='unknown'?'selected':''}>Unknown</option><option value="M" ${p.gender==='M'?'selected':''}>Male</option><option value="F" ${p.gender==='F'?'selected':''}>Female</option></select></div>
       <div class="field"><label>Occupation</label><input type="text" id="f-occupation" value="${p.occupation || ''}"></div>
       <div class="field"><label>Date of birth</label><input type="date" id="f-birthdate" value="${p.birthDate || ''}"></div>
+      <div class="field"><label>Birth place</label><input type="text" id="f-birthplace" value="${p.birthPlace || ''}" placeholder="e.g. Bairati, Almora"></div>
 
       <div class="field">
         <label>Places — origin, current home, lived, or visited</label>
@@ -321,6 +332,8 @@
       <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:end;">
         <div class="field" style="margin:0; flex:1; min-width:140px;"><label>Add a child — name</label><input type="text" id="new-child-name"></div>
         <div class="field" style="margin:0; min-width:110px;"><label>Gender</label><select id="new-child-gender"><option value="unknown">Unknown</option><option value="M">Male</option><option value="F">Female</option></select></div>
+        <div class="field" style="margin:0; min-width:140px;"><label>Date of birth (optional)</label><input type="date" id="new-child-birthdate"></div>
+        <div class="field" style="margin:0; flex:1; min-width:140px;"><label>Birth place (optional)</label><input type="text" id="new-child-birthplace" placeholder="e.g. Bairati, Almora"></div>
         <button class="btn btn-outline-dark btn-sm" id="add-child-btn" style="margin-bottom:16px;">+ Add child</button>
       </div>
       <span id="add-child-status" class="status-msg"></span>
@@ -509,6 +522,7 @@
       })).filter(l => l.place);
       const occVal = document.getElementById('f-occupation').value.trim() || null;
       const birthVal = document.getElementById('f-birthdate').value || null;
+      const birthPlaceVal = document.getElementById('f-birthplace').value.trim() || null;
       const bioVal = document.getElementById('f-bio').value.trim();
 
       let updated;
@@ -521,7 +535,7 @@
         updated = {
           ...existing, name: nameVal || existing.name, fullName: fullNameVal, fatherName: fatherNameVal, motherName: motherNameVal, gender: genderVal,
           unnamedPlaceholder: nameVal ? false : existing.unnamedPlaceholder,
-          occupation: occVal, birthDate: birthVal, birthYear: null, bio: bioVal, locations: locVal,
+          occupation: occVal, birthDate: birthVal, birthPlace: birthPlaceVal, birthYear: null, bio: bioVal, locations: locVal,
           photos: [...keptPhotos, ...newPhotoUrls],
           audioMessages: [...keptAudio, ...newAudioUrls],
           audioMessage: null // superseded by audioMessages[]; kept as null for backward compatibility
@@ -602,6 +616,8 @@
   async function addChild() {
     const name = document.getElementById('new-child-name').value.trim();
     const gender = document.getElementById('new-child-gender').value;
+    const birthDate = document.getElementById('new-child-birthdate').value || null;
+    const birthPlace = document.getElementById('new-child-birthplace').value.trim() || null;
     const statusEl = document.getElementById('add-child-status');
     if (!name) { statusEl.textContent = 'Enter a name.'; statusEl.className = 'status-msg error'; return; }
     statusEl.textContent = 'Adding…'; statusEl.className = 'status-msg';
@@ -615,7 +631,7 @@
           id: uniqueId(slugify(name), existingIds), name, gender, parentId: parent.id,
           generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
           unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, spouseId: null, audioMessage: null,
-          birthDate: null, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
+          birthDate, birthPlace, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
         };
         latestPeople.push(newPerson);
         return latestPeople;
@@ -1005,6 +1021,97 @@
       pendingArchiveMedia = []; removedArchiveMedia = new Set();
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
       renderArchiveList();
+    } catch (e) {
+      statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ================= EVENTS =================
+  let currentEvent = null;
+  let pendingEventPhotos = [];
+
+  async function renderEventList() {
+    const ul = document.getElementById('events-ul');
+    const { content } = await PandeyGitHub.getFile('data/events.json', token);
+    const events = content ? JSON.parse(content) : [];
+    events.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    ul.innerHTML = events.map((ev, idx) => `<li><a href="#" data-idx="${idx}">${ev.eventNumber != null ? '#' + ev.eventNumber + ' — ' : ''}${ev.title || 'Untitled'}</a></li>`).join('') || '<li class="muted" style="padding:10px 14px; font-size:13.5px;">Nothing yet.</li>';
+    ul.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); loadEventForm(events[parseInt(a.dataset.idx, 10)], events); }));
+  }
+  document.getElementById('new-event-btn').addEventListener('click', async () => {
+    const { content } = await PandeyGitHub.getFile('data/events.json', token);
+    const events = content ? JSON.parse(content) : [];
+    loadEventForm(null, events);
+  });
+
+  function loadEventForm(ev, allEvents) {
+    currentEvent = ev || { id: null, eventNumber: null, title: '', date: '', description: '', location: '' };
+    pendingEventPhotos = [];
+    const nextNumber = ev ? ev.eventNumber : (Math.max(0, ...allEvents.map(e => e.eventNumber || 0)) + 1);
+    const area = document.getElementById('events-form-area');
+    area.innerHTML = `
+      <h2 style="font-family:var(--font-display); font-weight:600; font-size:22px; margin:0 0 16px;">${ev ? 'Edit event' : 'New event'}</h2>
+      <div class="field"><label>Event number</label><input type="number" id="ev-number" value="${nextNumber}"></div>
+      <div class="field"><label>Title</label><input type="text" id="ev-title" value="${currentEvent.title || ''}" placeholder="e.g. Family reunion at Bairati"></div>
+      <div class="field"><label>Date</label><input type="date" id="ev-date" value="${currentEvent.date || ''}"></div>
+      <div class="field"><label>Location</label><input type="text" id="ev-location" value="${currentEvent.location || ''}"></div>
+      <div class="field"><label>Description</label><textarea id="ev-description">${currentEvent.description || ''}</textarea></div>
+      <div class="field"><label>Photos</label><div class="photo-grid" id="ev-photo-grid">${(currentEvent.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+      <input type="file" id="ev-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
+      <button class="btn btn-gold" id="save-event-btn">Save event</button>
+      <span id="save-event-status" class="status-msg"></span>
+    `;
+    document.getElementById('ev-photo-input').addEventListener('change', (e) => {
+      [...e.target.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev2) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 1600; let { width, height } = img;
+            if (width > maxDim || height > maxDim) { const scale = maxDim / Math.max(width, height); width *= scale; height *= scale; }
+            const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+            const filename = `event_${Date.now()}_${Math.random().toString(36).slice(2,5)}.jpg`;
+            pendingEventPhotos.push({ dataUrl, filename });
+            document.getElementById('ev-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+          };
+          img.src = ev2.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    document.getElementById('save-event-btn').addEventListener('click', saveEvent);
+  }
+
+  async function saveEvent() {
+    const statusEl = document.getElementById('save-event-status');
+    statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
+    try {
+      const newPhotoUrls = [];
+      for (const photo of pendingEventPhotos) {
+        await PandeyGitHub.putFileRaw(`uploads/${photo.filename}`, photo.dataUrl.split(',')[1], `Add event photo`, token);
+        newPhotoUrls.push(`uploads/${photo.filename}`);
+      }
+      const eventNumber = parseInt(document.getElementById('ev-number').value, 10) || null;
+      const titleVal = document.getElementById('ev-title').value.trim();
+      const dateVal = document.getElementById('ev-date').value || null;
+      const locationVal = document.getElementById('ev-location').value.trim() || null;
+      const descVal = document.getElementById('ev-description').value.trim();
+      if (!titleVal) { statusEl.textContent = 'Give it a title.'; statusEl.className = 'status-msg error'; return; }
+      await PandeyGitHub.readModifyWriteJSON('data/events.json', (events) => {
+        events = events || [];
+        if (currentEvent.id) {
+          const idx = events.findIndex(e => e.id === currentEvent.id);
+          if (idx >= 0) events[idx] = { ...events[idx], eventNumber, title: titleVal, date: dateVal, location: locationVal, description: descVal, photos: [...(events[idx].photos || []), ...newPhotoUrls] };
+        } else {
+          events.push({ id: 'event-' + Date.now(), eventNumber, title: titleVal, date: dateVal, location: locationVal, description: descVal, photos: newPhotoUrls, addedAt: new Date().toISOString() });
+        }
+        return events;
+      }, `${currentEvent.id ? 'Edit' : 'Add'} event: ${titleVal} — by superadmin`, token);
+      pendingEventPhotos = [];
+      statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
+      renderEventList();
     } catch (e) {
       statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
     }
