@@ -2242,7 +2242,8 @@
     "birthDate": null,
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "kanika"
   },
   {
     "id": "harish_daughter_38",
@@ -4621,6 +4622,28 @@
     "audioMessage": null,
     "birthDate": null,
     "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "kanika",
+    "name": "Kanika",
+    "gender": "F",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "gaurav",
+    "audioMessage": null,
+    "birthDate": null,
     "birthYear": null,
     "deathYear": null,
     "locations": [],
