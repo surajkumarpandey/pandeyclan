@@ -71,7 +71,7 @@
   <div class="aipan-border" style="margin-bottom:22px;"></div>
   <div class="wrap">
     <h1>Bairati in 3D</h1>
-    <p>The village and the hillside around it, as a model you can hold. Drag to rotate, pinch or scroll to zoom, two fingers (or right-drag) to pan.</p>
+    <p>Bairati and the two roads up from Dwarahat, as a model you can hold. Drag to rotate, pinch or scroll to zoom, two fingers (or right-drag) to pan.</p>
   </div>
 </div>
 
@@ -82,8 +82,10 @@
   <div class="overlay" id="status">Loading the terrain…</div>
   <div class="info-card" id="info-card"><button class="close" id="info-close" aria-label="Close">&times;</button><div id="info-body"></div></div>
   <div class="legend3d">
-    <div><i style="background:#f0b75c"></i>NH 109 (Dwarahat – Chaukhutia)</div>
-    <div><i style="background:#fffbf3"></i>Village road</div>
+    <div><i style="background:#ffd76a; box-shadow:0 0 6px #ffc53d"></i>Route 1: NH 109 → village road</div>
+    <div><i style="background:#ffa640; box-shadow:0 0 6px #ff9a2e"></i>Route 2: school road from Dwarahat</div>
+    <div><i style="background:#ffd76a; box-shadow:0 0 6px #ffc53d"></i>Local road up to the house</div>
+    <div><i style="background:#f4efe6"></i>NH 109 (Dwarahat–Chaukhutia road)</div>
     <div style="margin-top:4px; color:#8a6a58;">Tap any label for details</div>
   </div>
   <div class="ctrl">
@@ -93,8 +95,7 @@
 </div>
 
 <div class="note3d wrap">
-  Hills and slopes come from real elevation data (about 30&nbsp;m detail, heights slightly exaggerated so the slopes read clearly at this scale). The ground is satellite imagery. Roads are drawn as straight lines between known points, so the real road bends more than shown. The upper road (Route 2 to the house, past the school) isn't drawn yet, because its path hasn't been pinned.
-</div>
+  Hills and slopes come from real elevation data (about 30&nbsp;m detail, heights exaggerated 1.5&times; so the slopes read clearly). The ground is satellite imagery. Roads are drawn through the points pinned by the family, so the real roads bend more between those points than shown. The family house is drawn 3&times; its real size so that it can be seen on a model this large; its front wall is the real photograph.</div>
 
 <footer class="site-footer">
   <div class="aipan-border"></div>
@@ -109,57 +110,81 @@
 <script>
 (async function () {
   // =====================================================================
-  // PLACES — everything shown on the model comes from this list.
-  // To add a place (e.g. Green Valley restaurant), add one entry with its
-  // Google Maps coordinates; the model area grows to fit automatically.
+  // DATA — everything on the model comes from these two lists.
+  // Coordinates are Google Maps pins supplied by the family.
   // =====================================================================
   const gmaps = (p) => `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   const directions = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
 
+  const ROUTE1 = 'Route 1 (via the highway): take NH 109 from Dwarahat towards Chaukhutia, past Bijepur, Suraikhet, Pan and Selagarhi. Just after Green Valley Restaurant, turn uphill at the Bairati turn-off and follow the village road through the meadows to the school.';
+  const ROUTE2 = 'Route 2 (the school road): in Dwarahat, take the road that branches off NH 109 opposite Himalayan Homestay Dwarahat. It runs above the highway, past the same villages, and goes straight past the front of the school. It can also be joined from the north when coming from the Chitreshwar side.';
+  const LAST_LEG = 'About 95 m past the school, a local road turns uphill into the village; it leads to the house (about 380 m).';
+
   const PLACES = [
-    { key: 'house', lat: 29.8073069, lng: 79.4212201, label: 'Family house', kind: 'Pandey family house', color: 0xe0952a, pinHeight: 150,
-      desc: 'The last known residence of the Pandey clan that still stands today, believed to have been built by Laxmi Dutt.',
-      reach: 'Route 1: from NH 109, take the village road uphill at the Bairati turn-off, past the school. Route 2: take the upper road (joined from Dwarahat, from Pan village, or when coming from Chitreshwar), which passes directly by the school. From the school, continue up to the house.',
+    { key: 'house', lat: 29.8073069, lng: 79.4212201, label: 'Family house', kind: 'Pandey family house', isHouse: true,
+      desc: 'The last known residence of the Pandey clan that still stands today, believed to have been built by Laxmi Dutt. Its front faces down towards the school.',
+      reach: `${ROUTE1} ${ROUTE2} ${LAST_LEG}`,
       link: { href: 'house-3d.html', text: 'View the house in 3D' } },
     { key: 'village', lat: 29.8071, lng: 79.4194, label: 'Bairati', kind: 'Village', color: 0x5c1f27, pinHeight: 110,
       desc: 'Bairati village, with its own gram panchayat, in Chaukhutiya block and tehsil of Almora district.',
       facts: [['Area', '314.75 hectares'], ['Population', '763 (171 families), Census 2011'], ['PIN code', '263653'], ['Post office', 'Dwarahat'], ['Block / tehsil', 'Chaukhutiya']],
-      reach: 'On NH 109 between Dwarahat and Chaukhutia. Nearest railhead: Kathgodam. Nearest airport: Pantnagar. Buses run from Haldwani, Kathgodam and Almora towards Dwarahat and Chaukhutia.',
-      src: 'Census 2011 village data; directory listings for the PIN code.' },
+      reach: `Both routes start at Dwarahat, which is on NH 109. ${ROUTE1} ${ROUTE2} Nearest railhead: Kathgodam. Nearest airport: Pantnagar.`,
+      src: 'Census 2011 village data.' },
     { key: 'school', lat: 29.8069205, lng: 79.4176471, label: 'Govt. Primary School, Bhairati', kind: 'School', color: 0x3e1218, pinHeight: 70,
-      desc: 'The village primary school. Both routes up to the family house pass it.',
-      reach: 'Route 1: about 150 m (straight-line) up the village road from the NH 109 turn-off. Route 2: the upper road runs directly past the school.' },
-    { key: 'junction', lat: 29.8059634, lng: 79.4164968, label: 'Bairati turn-off (NH 109)', kind: 'Road junction', color: 0x3e1218, pinHeight: 55,
-      desc: 'Where the Bairati village road leaves National Highway 109.',
-      facts: [['Dwarahat town', 'about 3 km to the south-east (straight-line)'], ['Chaukhutia', 'about 11 km to the north-west (straight-line)']],
-      reach: 'Coming from Haldwani/Almora: NH 109 via Almora and Ranikhet to Dwarahat, then continue towards Chaukhutia/Karnaprayag. The turn-off is just past Green Valley Restaurant.' },
-    { key: 'kandy', lat: 29.8151070, lng: 79.4138605, label: 'Kandy Guest House & Restaurant', kind: 'Hotel & restaurant', color: 0x3e1218, pinHeight: 70,
-      desc: 'A guest house and restaurant on NH 109, listed on Google as Kandy Guest House & Restaurant.',
-      reach: 'About 1 km (straight-line) north along NH 109 from the Bairati turn-off, towards Chaukhutia.' },
-    { key: 'greenvalley', lat: 29.8047284, lng: 79.4166724, label: 'Green Valley Restaurant', kind: 'Restaurant', color: 0x3e1218, pinHeight: 60,
+      desc: 'The village primary school, on the school road, one level up the slope from the meadows beside NH 109. Both routes to the family house pass it.',
+      reach: `${ROUTE1} ${ROUTE2}` },
+    { key: 'localjct', lat: 29.807720, lng: 79.417299, label: 'Local road to the house', kind: 'Road junction', color: 0x3e1218, pinHeight: 50,
+      desc: 'Just past the school, a local road leaves the school road and climbs into the village. It leads up to the family house.',
+      reach: 'About 95 m past the school along the school road. From here the house is about 380 m up the local road.' },
+    { key: 'nhjct', lat: 29.8059634, lng: 79.4164968, label: 'Bairati turn-off (NH 109)', kind: 'Road junction', color: 0x3e1218, pinHeight: 55,
+      desc: 'Where the Bairati village road leaves NH 109 and climbs through the meadows to the school.',
+      reach: 'On NH 109 (the Dwarahat–Chaukhutia road), just after Green Valley Restaurant when coming from Dwarahat. From here the school is about 150 m up the village road.' },
+    { key: 'dwarahat', lat: 29.778624, lng: 79.430626, label: 'Dwarahat: school road turn-off', kind: 'Road junction', color: 0x3e1218, pinHeight: 70,
+      desc: 'In Dwarahat, the school road branches off NH 109 here, opposite Himalayan Homestay Dwarahat.',
+      reach: 'Dwarahat is on NH 109 (via Almora and Ranikhet from Haldwani). From here the school road runs about 4 km north, above the highway, to Govt. Primary School, Bhairati.' },
+    { key: 'bijepur', lat: 29.784601, lng: 79.427189, label: 'Bijepur & Suraikhet', kind: 'Villages', color: 0x6b4a33, pinHeight: 45,
+      desc: 'Villages along NH 109, passed on both routes from Dwarahat to Bairati.',
+      reach: 'On NH 109, about 0.7 km north of the school road turn-off in Dwarahat.' },
+    { key: 'pan', lat: 29.800269, lng: 79.418321, label: 'Pan', kind: 'Village', color: 0x6b4a33, pinHeight: 45,
+      desc: 'A village along NH 109, passed on both routes from Dwarahat to Bairati.',
+      reach: 'On NH 109, about 2 km beyond Bijepur towards Bairati.' },
+    { key: 'selagarhi', lat: 29.803811, lng: 79.416324, label: 'Selagarhi', kind: 'Village', color: 0x6b4a33, pinHeight: 45,
+      desc: 'The last village along NH 109 before Bairati, passed on both routes.',
+      reach: 'On NH 109, about 0.4 km beyond Pan, just before Green Valley Restaurant.' },
+    { key: 'greenvalley', lat: 29.8047284, lng: 79.4166724, label: 'Green Valley Restaurant', kind: 'Restaurant', color: 0x3e1218, pinHeight: 55,
       desc: 'A restaurant on NH 109, just before the Bairati turn-off when coming from Dwarahat.',
-      reach: 'On NH 109, about 140 m (straight-line) before the Bairati turn-off when travelling from Dwarahat towards Chaukhutia.' },
+      reach: 'On NH 109, just past Selagarhi and about 140 m before the Bairati turn-off.' },
+    { key: 'kandy', lat: 29.8151070, lng: 79.4138605, label: 'Kandy Guest House & Restaurant', kind: 'Hotel & restaurant', color: 0x3e1218, pinHeight: 70,
+      desc: 'A guest house and restaurant on NH 109, north of Bairati. The school road also runs up near here, on the slope above.',
+      reach: 'On NH 109, about 1 km beyond the Bairati turn-off towards Chaukhutia.' }
   ];
   const P = Object.fromEntries(PLACES.map(p => [p.key, p]));
+  const pt = (k) => [P[k].lat, P[k].lng];
 
   const ROADS = [
-    { from: 'greenvalley', to: 'junction', color: 0xf0b75c, width: 4, name: null },
-    { from: 'junction', to: 'kandy', color: 0xf0b75c, width: 4, name: 'NH 109' },
-    { from: 'junction', to: 'school', color: 0xfffbf3, width: 2.5, name: 'Village road' },
-    { from: 'school', to: 'house', color: 0xfffbf3, width: 2.5, name: null },
+    { name: 'NH 109 · Dwarahat–Chaukhutia road', color: 0xf4efe6, width: 4, glow: null, labelAt: 0.5,
+      path: [pt('dwarahat'), pt('bijepur'), pt('pan'), pt('selagarhi'), pt('greenvalley'), pt('nhjct'), pt('kandy')] },
+    { name: 'School road (Route 2)', color: 0xffa640, width: 3, glow: 0xff9a2e, labelAt: 0.35,
+      path: [pt('dwarahat'), [29.785412, 79.428615], [29.800364, 79.419133], [29.803936, 79.418010], pt('school'), pt('localjct')] },
+    { name: null, color: 0xd9cfbf, width: 2.5, glow: null,
+      path: [pt('localjct'), [29.816575, 79.414160]] },            // school road beyond the junction (not part of either route)
+    { name: 'Village road (Route 1)', color: 0xffd76a, width: 3, glow: 0xffc53d, labelAt: 0.5,
+      path: [pt('nhjct'), pt('school')] },
+    { name: 'Local road to the house', color: 0xffd76a, width: 3, glow: 0xffc53d, labelAt: 0.55,
+      path: [pt('localjct'), pt('house')] }
   ];
+  const MEADOWS = { lat: (P.nhjct.lat + P.school.lat) / 2, lng: (P.nhjct.lng + P.school.lng) / 2 };
 
-  const HOUSE_PHOTO = 'uploads/laxmidutt-house.jpg';
-  const EXAGGERATION = 1.5;
-  const DEM_ZOOM = 14, IMG_ZOOM = 17, GRID = 180;
+  const EXAGGERATION = 1.5, DEM_ZOOM = 14, GRID = 240;
+  const HOUSE_SCALE = 3;                 // house drawn 3x real size so it can be seen on a 5 km model
+  const HOUSE_W = 8.5, HOUSE_D = 5.0, HOUSE_H = 8.5 * 690 / 1600, ROOF_RISE = 1.3;
 
-  // Model area: all places plus a ~450 m margin (never smaller than the original block).
-  const MARGIN_DEG = 0.004;
+  // Model area: every place and road point, plus ~330 m margin.
+  const allPts = [...PLACES.map(p => [p.lat, p.lng]), ...ROADS.flatMap(r => r.path)];
+  const MARGIN = 0.003;
   const BBOX = {
-    south: Math.min(29.8025, ...PLACES.map(p => p.lat)) - (PLACES.some(p => p.lat < 29.8025) ? MARGIN_DEG : 0),
-    north: Math.max(29.8185, ...PLACES.map(p => p.lat)) + (PLACES.some(p => p.lat > 29.8185) ? MARGIN_DEG : 0),
-    west: Math.min(79.4100, ...PLACES.map(p => p.lng)) - (PLACES.some(p => p.lng < 79.4100) ? MARGIN_DEG : 0),
-    east: Math.max(79.4250, ...PLACES.map(p => p.lng)) + (PLACES.some(p => p.lng > 79.4250) ? MARGIN_DEG : 0)
+    south: Math.min(...allPts.map(a => a[0])) - MARGIN, north: Math.max(...allPts.map(a => a[0])) + MARGIN,
+    west: Math.min(...allPts.map(a => a[1])) - MARGIN, east: Math.max(...allPts.map(a => a[1])) + MARGIN
   };
 
   const statusEl = document.getElementById('status');
@@ -173,7 +198,16 @@
   const lat0 = (BBOX.south + BBOX.north) / 2, lng0 = (BBOX.west + BBOX.east) / 2;
   const M_PER_LAT = 111320, M_PER_LNG = 111320 * Math.cos(lat0 * Math.PI / 180);
   const toLocal = (lat, lng) => ({ x: (lng - lng0) * M_PER_LNG, z: -(lat - lat0) * M_PER_LAT });
+  const toLatLng = (x, z) => ({ lat: lat0 - z / M_PER_LAT, lng: lng0 + x / M_PER_LNG });
   const widthM = (BBOX.east - BBOX.west) * M_PER_LNG, depthM = (BBOX.north - BBOX.south) * M_PER_LAT;
+
+  // sharpest imagery zoom whose stitched texture still fits phone GPU limits (4096 px)
+  let IMG_ZOOM = 17;
+  while (IMG_ZOOM > 13) {
+    const nw = worldPx(BBOX.north, BBOX.west, IMG_ZOOM), se = worldPx(BBOX.south, BBOX.east, IMG_ZOOM);
+    if (Math.max(se.x - nw.x, se.y - nw.y) <= 4096) break;
+    IMG_ZOOM--;
+  }
 
   function loadImage(url) {
     return new Promise((resolve, reject) => {
@@ -217,7 +251,7 @@
     imgCanvas = await stitch(IMG_ZOOM, (z, x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`);
     imageryCredit = 'Imagery © Esri, Maxar, Earthstar Geographics';
   } catch (e) {
-    try { imgCanvas = await stitch(16, (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`); imageryCredit = 'Map © OpenStreetMap contributors'; }
+    try { imgCanvas = await stitch(Math.min(IMG_ZOOM, 16), (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`); imageryCredit = 'Map © OpenStreetMap contributors'; }
     catch (e2) { imgCanvas = null; }
   }
 
@@ -227,7 +261,7 @@
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, 1, 10, 30000);
+  const camera = new THREE.PerspectiveCamera(45, 1, 5, 40000);
   scene.add(new THREE.HemisphereLight(0xfff4e0, 0x4a3a2a, 0.75));
   const sun = new THREE.DirectionalLight(0xfff0d0, 0.9); sun.position.set(-1200, 1800, 900); scene.add(sun);
 
@@ -241,7 +275,7 @@
       heights.push(h); minH = Math.min(minH, h); maxH = Math.max(maxH, h);
     }
   }
-  const Y = (h) => (h - minH) * EXAGGERATION, floorY = -120;
+  const Y = (h) => (h - minH) * EXAGGERATION, floorY = -150;
 
   const topGeo = new THREE.PlaneGeometry(widthM, depthM, cols, rows);
   topGeo.rotateX(-Math.PI / 2);
@@ -270,9 +304,9 @@
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(widthM, depthM), new THREE.MeshLambertMaterial({ color: 0x4a3322 }));
   floor.rotation.x = Math.PI / 2; floor.position.y = floorY; scene.add(floor);
 
-  // ---------------- 4. Labels ----------------
-  const clickable = [];
   const groundAt = (lat, lng) => Y(elevationAt(lat, lng));
+  const clickable = [], glowMats = [];
+
   function textSprite(text, bg, scale) {
     const c = document.createElement('canvas'), ctx = c.getContext('2d');
     const font = '600 44px "Work Sans", sans-serif'; ctx.font = font;
@@ -281,70 +315,129 @@
     if (ctx.roundRect) ctx.roundRect(0, 0, w, h, 20); else ctx.rect(0, 0, w, h);
     ctx.fill(); ctx.fillStyle = '#fffbf3'; ctx.textBaseline = 'middle'; ctx.fillText(text, 24, h / 2 + 2);
     const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
-    const k = scale || 0.32; s.scale.set(w * k, h * k, 1); s.renderOrder = 10;
+    const k = scale || 0.42; s.scale.set(w * k, h * k, 1); s.renderOrder = 10;
     return s;
   }
 
-  // ---------------- 5. Roads (draped on terrain) + road-name labels ----------------
-  function drapedRoad(a, b, color, width) {
-    const lenM = Math.hypot((b.lng - a.lng) * M_PER_LNG, (b.lat - a.lat) * M_PER_LAT);
-    const steps = Math.max(8, Math.round(lenM / 6)), pts = [];
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps, lat = a.lat + (b.lat - a.lat) * t, lng = a.lng + (b.lng - a.lng) * t, l = toLocal(lat, lng);
-      pts.push(new THREE.Vector3(l.x, groundAt(lat, lng) + 3, l.z));
+  // ---------------- 4. Roads draped on the terrain, routes with a golden glow ----------------
+  function drapedPoints(path) {
+    const out = [];
+    for (let i = 0; i < path.length - 1; i++) {
+      const [aLat, aLng] = path[i], [bLat, bLng] = path[i + 1];
+      const len = Math.hypot((bLng - aLng) * M_PER_LNG, (bLat - aLat) * M_PER_LAT);
+      const steps = Math.max(4, Math.round(len / 8));
+      for (let s = (i === 0 ? 0 : 1); s <= steps; s++) {
+        const t = s / steps, lat = aLat + (bLat - aLat) * t, lng = aLng + (bLng - aLng) * t, l = toLocal(lat, lng);
+        out.push(new THREE.Vector3(l.x, groundAt(lat, lng) + 3, l.z));
+      }
     }
-    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), steps * 2, width, 6, false), new THREE.MeshBasicMaterial({ color })));
+    return out;
   }
   ROADS.forEach(r => {
-    const a = P[r.from], b = P[r.to];
-    drapedRoad(a, b, r.color, r.width);
+    const pts = drapedPoints(r.path);
+    const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
+    const segs = Math.min(2000, pts.length * 2);
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, segs, r.width, 6, false), new THREE.MeshBasicMaterial({ color: r.color })));
+    if (r.glow) {
+      const gm = new THREE.MeshBasicMaterial({ color: r.glow, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
+      scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, segs, r.width * 3.4, 8, false), gm));
+      glowMats.push(gm);
+    }
     if (r.name) {
-      const mLat = (a.lat + b.lat) / 2, mLng = (a.lng + b.lng) / 2, l = toLocal(mLat, mLng);
-      const s = textSprite(r.name, r.color === 0xf0b75c ? '#9a6412' : '#5a5a5a', 0.26);
-      s.position.set(l.x, groundAt(mLat, mLng) + 30, l.z); scene.add(s);
+      const p = curve.getPointAt(r.labelAt);
+      const s = textSprite(r.name, r.glow ? '#9a5a0c' : '#55504a', 0.32);
+      s.position.set(p.x, p.y + 30, p.z); scene.add(s);
     }
   });
-  // where NH 109 leaves the modelled block, show which town it leads to
-  function directionLabel(text, fromKey, towardLat, towardLng, distM) {
-    const f = P[fromKey], dLat = towardLat - f.lat, dLng = towardLng - f.lng;
-    const n = Math.hypot(dLat * M_PER_LAT, dLng * M_PER_LNG);
-    const lat = f.lat + dLat * (distM / n), lng = f.lng + dLng * (distM / n), l = toLocal(lat, lng);
-    const s = textSprite(text, '#9a6412', 0.24); s.position.set(l.x, groundAt(lat, lng) + 25, l.z); scene.add(s);
-  }
-  directionLabel('to Dwarahat', 'greenvalley', 29.78, 79.43, 200);       // Dwarahat town centre
-  directionLabel('to Chaukhutia', 'kandy', 29.88472, 79.35139, 220);  // Chaukhutia town centre
+  { const l = toLocal(MEADOWS.lat, MEADOWS.lng); const s = textSprite('Meadows', '#3f5341', 0.28); s.position.set(l.x - 40, groundAt(MEADOWS.lat, MEADOWS.lng) + 18, l.z); scene.add(s); }
+  // NH 109 continues beyond the model towards Chaukhutia
+  { const f = P.kandy, dLat = 29.88472 - f.lat, dLng = 79.35139 - f.lng, n = Math.hypot(dLat * M_PER_LAT, dLng * M_PER_LNG);
+    const lat = f.lat + dLat * 220 / n, lng = f.lng + dLng * 220 / n, l = toLocal(lat, lng);
+    const s = textSprite('to Chaukhutia', '#55504a', 0.3); s.position.set(l.x, groundAt(lat, lng) + 25, l.z); scene.add(s); }
 
-  // ---------------- 6. Place pins ----------------
+  // ---------------- 5. Place pins ----------------
   const placePos = {};
   PLACES.forEach(p => {
     const l = toLocal(p.lat, p.lng), gy = groundAt(p.lat, p.lng);
+    placePos[p.key] = new THREE.Vector3(l.x, gy, l.z);
+    if (p.isHouse) return;   // the house is a 3D building, drawn below
     const stem = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, p.pinHeight, 8), new THREE.MeshBasicMaterial({ color: p.color }));
     stem.position.set(l.x, gy + p.pinHeight / 2, l.z); scene.add(stem);
-    const label = textSprite(p.label, p.color === 0xe0952a ? '#8c2f1f' : (p.key === 'village' ? '#5c1f27' : '#3e1218'));
-    label.position.set(l.x, gy + p.pinHeight + 16, l.z); scene.add(label);
-    stem.userData.placeKey = label.userData.placeKey = p.key;
-    clickable.push(stem, label);
-    placePos[p.key] = new THREE.Vector3(l.x, gy, l.z);
+    const bg = p.key === 'village' ? '#5c1f27' : (p.color === 0x6b4a33 ? '#6b4a33' : '#3e1218');
+    const label = textSprite(p.label, bg); label.position.set(l.x, gy + p.pinHeight + 20, l.z); scene.add(label);
+    stem.userData.placeKey = label.userData.placeKey = p.key; clickable.push(stem, label);
   });
 
-  // ---------------- 7. House photo ----------------
-  const housePos = placePos.house;
-  loadImage(HOUSE_PHOTO).then(img => {
-    const maxSide = 110, ratio = img.width / img.height;
-    const w = ratio >= 1 ? maxSide : maxSide * ratio, h = ratio >= 1 ? maxSide / ratio : maxSide;
-    const c = document.createElement('canvas'); c.width = img.width + 24; c.height = img.height + 24;
-    const ctx = c.getContext('2d'); ctx.fillStyle = '#e0952a'; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 12, 12);
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c) }));
-    sprite.scale.set(w, h, 1); sprite.position.set(housePos.x, housePos.y + P.house.pinHeight + 40 + h / 2, housePos.z);
-    sprite.userData.placeKey = 'house'; clickable.push(sprite); scene.add(sprite);
-  }).catch(() => {
-    const g = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.BoxGeometry(22, 14, 16), new THREE.MeshLambertMaterial({ color: 0xd9c7a8 })); body.position.y = 7;
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(17, 10, 4), new THREE.MeshLambertMaterial({ color: 0x5a5a5a })); roof.position.y = 19; roof.rotation.y = Math.PI / 4;
-    g.add(body, roof); g.position.copy(housePos); scene.add(g);
-  });
+  // ---------------- 6. The family house as a 3D building ----------------
+  const loader = new THREE.TextureLoader();
+  function slateTexture() {
+    const c = document.createElement('canvas'); c.width = c.height = 256; const ctx = c.getContext('2d');
+    ctx.fillStyle = '#2d2a27'; ctx.fillRect(0, 0, 256, 256);
+    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    for (let y = 0; y < 256; y += 22) for (let x = -rnd() * 30; x < 256; ) { const w = 30 + rnd() * 36, v = 85 + rnd() * 35; ctx.fillStyle = `rgb(${v},${v - 4},${v - 8})`; ctx.fillRect(x + 1, y + 1, w - 2, 20); x += w; }
+    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 1); return t;
+  }
+  const S = HOUSE_SCALE, hw = HOUSE_W * S, hd = HOUSE_D * S, hh = HOUSE_H * S, rise = ROOF_RISE * S;
+  const frontMat = new THREE.MeshLambertMaterial({ map: loader.load('assets/house/front-today.jpg') });
+  const sideTex = loader.load('assets/house/side-today.jpg'); sideTex.wrapS = sideTex.wrapT = THREE.RepeatWrapping; sideTex.repeat.set(2, 1);
+  const sideMat = new THREE.MeshLambertMaterial({ map: sideTex });
+  const roofMat = new THREE.MeshLambertMaterial({ map: slateTexture() });
+  const plinthMat = new THREE.MeshLambertMaterial({ color: 0x8c877d });
 
-  // ---------------- 8. Info card ----------------
+  const house = new THREE.Group();
+  const hp = placePos.house;
+  // stone plinth reaches down into the slope so the house never floats
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(hw + 2, 12, hd + 2), plinthMat); plinth.position.y = -5; house.add(plinth);
+  // walls: BoxGeometry faces are +x, -x, +y, -y, +z (front), -z (back)
+  const walls = new THREE.Mesh(new THREE.BoxGeometry(hw, hh, hd), [sideMat, sideMat, sideMat, sideMat, frontMat, sideMat]);
+  walls.position.y = 1 + hh / 2; house.add(walls);
+  [1, -1].forEach(side => {
+    const s = new THREE.Shape(); s.moveTo(-hd / 2, 0); s.lineTo(hd / 2, 0); s.lineTo(0, rise); s.lineTo(-hd / 2, 0);
+    const g = new THREE.Mesh(new THREE.ShapeGeometry(s), sideMat);
+    g.rotation.y = side * Math.PI / 2; g.position.set(side * hw / 2, 1 + hh, 0); house.add(g);
+  });
+  const overhang = 0.7 * S, halfRun = hd / 2 + overhang, slope = Math.atan2(rise, hd / 2), slabLen = halfRun / Math.cos(slope);
+  [1, -1].forEach(dir => {
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(hw + 0.8 * S, 0.4, slabLen), roofMat);
+    slab.rotation.x = dir * slope;
+    slab.position.set(0, 1 + hh + rise - Math.tan(slope) * (halfRun / 2) + 0.2, dir * (halfRun / 2));
+    house.add(slab);
+  });
+  // golden glow around the house: a slightly larger shell drawn only from behind,
+  // so it shows as a halo round the edges and never tints the photo on the walls
+  const houseGlowMat = new THREE.MeshBasicMaterial({ color: 0xffc53d, transparent: true, opacity: 0.45, blending: THREE.AdditiveBlending, side: THREE.BackSide, depthWrite: false });
+  const shell = new THREE.Mesh(new THREE.BoxGeometry(hw * 1.35, (hh + rise) * 1.3, hd * 1.6), houseGlowMat);
+  shell.position.y = (hh + rise) / 2; house.add(shell); glowMats.push(houseGlowMat);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xffc53d, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false });
+  const ring = new THREE.Mesh(new THREE.RingGeometry(hw * 0.95, hw * 1.15, 48), ringMat); ring.rotation.x = -Math.PI / 2; ring.position.y = 2; house.add(ring);
+  glowMats.push(ringMat);
+
+  // face the front towards the school
+  const toSchool = new THREE.Vector3().subVectors(placePos.school, hp);
+  house.rotation.y = Math.atan2(toSchool.x, toSchool.z);
+  house.position.copy(hp);
+  scene.add(house);
+  walls.userData.placeKey = 'house'; clickable.push(walls);
+  const houseLabel = textSprite('Family house', '#8c2f1f'); houseLabel.position.set(hp.x, hp.y + hh + rise + 40, hp.z);
+  houseLabel.userData.placeKey = 'house'; clickable.push(houseLabel); scene.add(houseLabel);
+
+  // trees around the house (kept clear of the front, which faces the school)
+  const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4d3b2c }), leafMats = [0x3f6b35, 0x4a7a3a, 0x355f2e].map(c => new THREE.MeshLambertMaterial({ color: c }));
+  let tseed = 11; const trnd = () => (tseed = (tseed * 9301 + 49297) % 233280) / 233280;
+  const frontAngle = house.rotation.y;
+  for (let i = 0; i < 16; i++) {
+    let a = trnd() * Math.PI * 2;
+    const diff = Math.atan2(Math.sin(a - frontAngle), Math.cos(a - frontAngle));
+    if (Math.abs(diff) < 0.7) a += Math.PI * 0.5 * Math.sign(diff || 1);   // keep the view of the front open
+    const dist = hw * 1.1 + trnd() * 70, x = hp.x + Math.sin(a) * dist, z = hp.z + Math.cos(a) * dist;
+    const ll = toLatLng(x, z), gy = groundAt(ll.lat, ll.lng), size = 0.8 + trnd() * 0.7;
+    const t = new THREE.Group();
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(1.2 * size, 1.8 * size, 14 * size, 6), trunkMat); trunk.position.y = 7 * size; t.add(trunk);
+    const crown = new THREE.Mesh(new THREE.SphereGeometry(8 * size, 8, 6), leafMats[i % 3]); crown.position.y = 18 * size; t.add(crown);
+    t.position.set(x, gy, z); scene.add(t);
+  }
+
+  // ---------------- 7. Info card ----------------
   const card = document.getElementById('info-card'), body = document.getElementById('info-body');
   function showInfo(key) {
     const p = P[key]; if (!p) return;
@@ -368,39 +461,38 @@
       </div>
       ${p.src ? `<div class="src">Source: ${p.src}</div>` : ''}`;
     card.style.display = 'block';
-    document.getElementById('copy-coords').onclick = (e) => {
-      navigator.clipboard.writeText(coordText).then(() => { e.target.textContent = 'Copied'; });
-    };
+    document.getElementById('copy-coords').onclick = (e) => { navigator.clipboard.writeText(coordText).then(() => { e.target.textContent = 'Copied'; }); };
   }
   document.getElementById('info-close').onclick = () => { card.style.display = 'none'; };
 
-  // ---------------- 9. Camera, controls, fly-to ----------------
+  // ---------------- 8. Camera, controls, fly-to ----------------
   const controls = new THREE.OrbitControls(camera, canvas);
   controls.enableDamping = true; controls.dampingFactor = 0.08;
-  controls.maxPolarAngle = Math.PI * 0.49; controls.minDistance = 150; controls.maxDistance = 6000;
-  const focus = new THREE.Vector3(housePos.x * 0.4, (maxH - minH) * EXAGGERATION * 0.3, housePos.z * 0.4);
+  controls.maxPolarAngle = Math.PI * 0.49; controls.minDistance = 60; controls.maxDistance = 9000;
   const span = Math.max(widthM, depthM);
   function resetView() {
-    controls.target.copy(focus);
-    camera.position.set(focus.x + span * 0.72, focus.y + span * 0.62, focus.z + span * 0.84);
+    const c = new THREE.Vector3(0, (maxH - minH) * EXAGGERATION * 0.3, 0);
+    controls.target.copy(c);
+    camera.position.set(c.x + span * 0.55, c.y + span * 0.55, c.z + span * 0.6);
     controls.update();
   }
   resetView();
-
   let flight = null;
   function flyTo(key) {
-    const target = placePos[key].clone(); target.y += 40;
-    const offset = new THREE.Vector3().subVectors(camera.position, controls.target).setLength(700);
+    const target = placePos[key].clone(); target.y += key === 'house' ? hh / 2 : 40;
+    const dist = key === 'house' ? 180 : 700;
+    let offset = new THREE.Vector3().subVectors(camera.position, controls.target).setLength(dist);
+    if (key === 'house') {   // look at the front of the house, from the school side
+      offset = toSchool.clone().setY(0).normalize().multiplyScalar(dist * 0.8); offset.y = dist * 0.55;
+    }
     flight = { t: 0, fromT: controls.target.clone(), toT: target, fromC: camera.position.clone(), toC: target.clone().add(offset) };
     showInfo(key);
   }
-
   const chips = document.getElementById('place-chips');
-  PLACES.forEach(p => {
-    const b = document.createElement('button'); b.textContent = p.label; b.onclick = () => flyTo(p.key); chips.appendChild(b);
+  ['house', 'school', 'localjct', 'nhjct', 'greenvalley', 'kandy', 'selagarhi', 'pan', 'bijepur', 'dwarahat', 'village'].forEach(k => {
+    const b = document.createElement('button'); b.textContent = P[k].label; b.onclick = () => flyTo(k); chips.appendChild(b);
   });
 
-  // tap/click on a label or pin (ignored if the pointer moved, i.e. a drag)
   const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
   let downAt = null;
   canvas.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; });
@@ -412,7 +504,6 @@
     const hit = raycaster.intersectObjects(clickable, false)[0];
     if (hit) showInfo(hit.object.userData.placeKey);
   });
-
   document.getElementById('btn-reset').onclick = () => { flight = null; resetView(); };
   document.getElementById('btn-rotate').onclick = (e) => {
     controls.autoRotate = !controls.autoRotate; controls.autoRotateSpeed = 0.8;
@@ -421,7 +512,10 @@
 
   function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   window.addEventListener('resize', resize); resize();
+  const clock = new THREE.Clock();
   (function loop() {
+    const t = clock.getElapsedTime(), pulse = 0.5 + 0.5 * Math.sin(t * 2.2);
+    glowMats.forEach(m => { m.opacity = (m === ringMat ? 0.3 : 0.22) + pulse * 0.25; });
     if (flight) {
       flight.t = Math.min(1, flight.t + 0.025);
       const k = 1 - Math.pow(1 - flight.t, 3);
