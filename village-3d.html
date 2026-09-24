@@ -42,6 +42,16 @@
   .place-chips span { font-size: 13px; font-weight: 600; color: #8a6a58; margin-right: 4px; }
   .place-chips button { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-dark); background: #fff; color: var(--maroon); cursor: pointer; }
   .place-chips button:hover { background: var(--maroon); color: var(--paper-light); }
+  .help-pop { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(460px, calc(100% - 24px)); max-height: calc(100% - 24px); overflow-y: auto;
+    background: var(--paper-light); border-radius: 10px; box-shadow: 0 16px 40px rgba(0,0,0,0.4); padding: 18px 20px; font-size: 14px; color: var(--ink); z-index: 8; display: none; }
+  .help-pop h3 { font-family: var(--font-display); font-size: 19px; margin: 0 0 10px; }
+  .help-pop table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; }
+  .help-pop th, .help-pop td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .help-pop th { color: #8a6a58; font-size: 12px; }
+  .help-pop td:first-child { font-weight: 600; }
+  .help-pop p { margin: 0 0 8px; line-height: 1.5; }
+  .help-pop .close { position: absolute; top: 8px; right: 12px; border: none; background: none; font-size: 22px; cursor: pointer; color: var(--maroon); }
+  #btn-help { background: var(--gold); color: var(--maroon-deep); border-color: var(--gold); }
   @media (max-width: 640px) { .legend3d { font-size: 11.5px; } }
 </style>
 </head>
@@ -71,7 +81,7 @@
   <div class="aipan-border" style="margin-bottom:22px;"></div>
   <div class="wrap">
     <h1>Bairati in 3D</h1>
-    <p>Bairati and the two roads up from Dwarahat, as a model you can hold. Drag to rotate, pinch or scroll to zoom, two fingers (or right-drag) to pan.</p>
+    <p>Bairati and the two roads up from Dwarahat, as a model you can hold. Drag to move, two fingers to rotate, pinch to zoom. Tap “How to use” for more.</p>
   </div>
 </div>
 
@@ -80,6 +90,20 @@
 <div class="stage" id="stage">
   <canvas id="diorama"></canvas>
   <div class="overlay" id="status">Loading the terrain…</div>
+  <div class="help-pop" id="help-pop">
+    <button class="close" id="help-close" aria-label="Close">&times;</button>
+    <h3>Using the 3D map</h3>
+    <table>
+      <tr><th></th><th>Phone / tablet</th><th>Computer</th></tr>
+      <tr><td>Move the map</td><td>Drag with one finger</td><td>Drag with the left button</td></tr>
+      <tr><td>Rotate &amp; tilt</td><td>Drag with two fingers</td><td>Drag with the right button</td></tr>
+      <tr><td>Zoom</td><td>Pinch</td><td>Scroll wheel</td></tr>
+    </table>
+    <p><strong>Details about a place:</strong> tap its label or pin on the map. A card opens with its coordinates, how to reach it, and buttons for Google Maps and directions.</p>
+    <p><strong>Jump to a place:</strong> use the “Go to” buttons above the map. They move the camera without opening the card.</p>
+    <p><strong>Routes:</strong> the two glowing roads are the two ways up to the family house. Tap “Family house” in the Go-to bar to see it up close, then use the button in its card to walk around it in 3D.</p>
+    <p><strong>Lost?</strong> “Reset view” brings back the whole map.</p>
+  </div>
   <div class="info-card" id="info-card"><button class="close" id="info-close" aria-label="Close">&times;</button><div id="info-body"></div></div>
   <div class="legend3d">
     <div><i style="background:#ffd76a; box-shadow:0 0 6px #ffc53d"></i>Route 1: NH 109 → village road</div>
@@ -89,6 +113,7 @@
     <div style="margin-top:4px; color:#8a6a58;">Tap any label for details</div>
   </div>
   <div class="ctrl">
+    <button id="btn-help">How to use</button>
     <button id="btn-rotate">Auto-rotate</button>
     <button id="btn-reset">Reset view</button>
   </div>
@@ -469,6 +494,10 @@
   const controls = new THREE.OrbitControls(camera, canvas);
   controls.enableDamping = true; controls.dampingFactor = 0.08;
   controls.maxPolarAngle = Math.PI * 0.49; controls.minDistance = 60; controls.maxDistance = 9000;
+  controls.screenSpacePanning = false;          // dragging slides the map along the ground, like a normal map
+  controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+  controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+  controls.panSpeed = 1.2; controls.rotateSpeed = 0.7;
   const span = Math.max(widthM, depthM);
   function resetView() {
     const c = new THREE.Vector3(0, (maxH - minH) * EXAGGERATION * 0.3, 0);
@@ -486,7 +515,7 @@
       offset = toSchool.clone().setY(0).normalize().multiplyScalar(dist * 0.8); offset.y = dist * 0.55;
     }
     flight = { t: 0, fromT: controls.target.clone(), toT: target, fromC: camera.position.clone(), toC: target.clone().add(offset) };
-    showInfo(key);
+    card.style.display = 'none';
   }
   const chips = document.getElementById('place-chips');
   ['house', 'school', 'localjct', 'nhjct', 'greenvalley', 'kandy', 'selagarhi', 'pan', 'bijepur', 'dwarahat', 'village'].forEach(k => {
@@ -505,6 +534,11 @@
     if (hit) showInfo(hit.object.userData.placeKey);
   });
   document.getElementById('btn-reset').onclick = () => { flight = null; resetView(); };
+  const helpPop = document.getElementById('help-pop');
+  document.getElementById('btn-help').onclick = () => { helpPop.style.display = helpPop.style.display === 'block' ? 'none' : 'block'; };
+  document.getElementById('help-close').onclick = () => { helpPop.style.display = 'none'; };
+  // show the help once on a visitor's first visit
+  try { if (!localStorage.getItem('pandey_3dmap_help_seen')) { helpPop.style.display = 'block'; localStorage.setItem('pandey_3dmap_help_seen', '1'); } } catch (e) {}
   document.getElementById('btn-rotate').onclick = (e) => {
     controls.autoRotate = !controls.autoRotate; controls.autoRotateSpeed = 0.8;
     e.target.textContent = controls.autoRotate ? 'Stop rotating' : 'Auto-rotate';
