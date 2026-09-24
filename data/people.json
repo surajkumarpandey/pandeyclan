@@ -2286,14 +2286,14 @@
   },
   {
     "id": "varniya-pandey",
-    "name": "Varniya Pandey",
+    "name": "Varniya",
     "gender": "F",
     "parentId": "garima",
     "generation": 20,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Varniya Pandey",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -2302,7 +2302,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": "Kushagra Pandey",
+    "motherName": "Garima Pandey",
+    "birthPlace": "Indirapuram, Gaziabad",
+    "audioMessages": []
   },
   {
     "id": "meena-pandey",
