@@ -63,6 +63,21 @@
     .hero .wrap { padding-top: 56px; }
     .intro-grid, .explore-grid { grid-template-columns: 1fr; }
   }
+  .feature-3d { background: linear-gradient(180deg, var(--maroon-deep) 0%, #2a0d11 100%); padding: 44px 0 52px; }
+  .feature-3d .kicker { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.6px; color: var(--gold-light); margin-bottom: 6px; }
+  .feature-3d h2 { font-family: var(--font-display); font-weight: 600; font-size: 28px; color: var(--paper-light); margin: 0 0 22px; }
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .feature-card { background: linear-gradient(160deg, var(--ochre-deep), var(--maroon-deep)); position: relative; display: block; border-radius: 10px; overflow: hidden; min-height: 260px; text-decoration: none; color: var(--paper-light);
+    box-shadow: 0 0 0 2px rgba(240,183,92,0.55), 0 12px 32px rgba(0,0,0,0.45); transition: transform .15s ease, box-shadow .15s ease; }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--gold-light), 0 0 28px rgba(240,183,92,0.45), 0 16px 36px rgba(0,0,0,0.5); }
+  .feature-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .feature-card .shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(30,8,10,0.92) 0%, rgba(30,8,10,0.35) 55%, rgba(30,8,10,0.05) 100%); }
+  .feature-card .txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 20px 22px; }
+  .feature-card .badge3d { display: inline-block; background: var(--gold); color: var(--maroon-deep); font-weight: 800; font-size: 12px; letter-spacing: 0.5px; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
+  .feature-card h3 { font-family: var(--font-display); font-size: 22px; margin: 0 0 6px; }
+  .feature-card p { margin: 0 0 12px; font-size: 14.5px; color: rgba(255,251,243,0.88); max-width: 46ch; }
+  .feature-card .go { font-weight: 700; color: var(--gold-light); font-size: 14.5px; }
+  @media (max-width: 800px) { .feature-grid { grid-template-columns: 1fr; } .feature-card { min-height: 220px; } }
 </style>
 </head>
 <body>
@@ -108,6 +123,35 @@
     <div class="stat-item"><span class="num">1</span><span class="label" data-i18n="home.stat.village">ancestral village — Bairati, Almora</span></div>
   </div>
 </div>
+
+<section class="feature-3d">
+  <div class="wrap">
+    <div class="kicker">EXPLORE IN 3D</div>
+    <h2>Walk the village. Walk around the house.</h2>
+    <div class="feature-grid">
+      <a class="feature-card" href="village-3d.html">
+        <img src="assets/img/hero-village.jpg" alt="" onerror="this.style.display='none'">
+        <div class="shade"></div>
+        <div class="txt">
+          <span class="badge3d">3D MAP</span>
+          <h3>Bairati in 3D</h3>
+          <p>The real hillside from Dwarahat to Bairati, with both roads up to the family house glowing in gold. Move, rotate and zoom it like a model in your hands.</p>
+          <span class="go">Open the 3D map →</span>
+        </div>
+      </a>
+      <a class="feature-card" href="house-3d.html">
+        <img src="assets/house/photo-front.jpg" alt="" onerror="this.style.display='none'">
+        <div class="shade"></div>
+        <div class="txt">
+          <span class="badge3d">3D HOUSE</span>
+          <h3>The family house</h3>
+          <p>The last standing home of the Pandey clan, built from real photographs. See it as it stands today, or as a restored concept.</p>
+          <span class="go">Walk around the house →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
 
 <main>
   <section class="section wrap intro-grid">
