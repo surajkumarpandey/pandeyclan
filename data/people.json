@@ -2105,14 +2105,14 @@
   },
   {
     "id": "baby-pandey",
-    "name": "Baby Pandey",
+    "name": "Baby",
     "gender": "F",
     "parentId": null,
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Baby Pandey",
     "spouseId": "pradeep",
     "audioMessage": null,
     "birthDate": null,
@@ -2121,7 +2121,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": "Mohan Chandra Joshi",
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "kokil",
