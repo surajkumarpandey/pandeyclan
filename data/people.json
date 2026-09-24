@@ -2165,7 +2165,7 @@
   },
   {
     "id": "manoj_suresh_son",
-    "name": "Son2 Manoj",
+    "name": "Deepak",
     "gender": "M",
     "parentId": "manoj_suresh",
     "generation": 19,
@@ -2178,7 +2178,7 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
+    "fullName": "Deepak Pandey",
     "fatherName": "Manoj Kumar Pandey",
     "motherName": "Bhawana",
     "birthDate": null,
