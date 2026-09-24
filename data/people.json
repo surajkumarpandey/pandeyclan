@@ -3551,6 +3551,22 @@
         "lat": 25.0742823,
         "lng": 55.1885624,
         "note": null
+      },
+      {
+        "place": "Nainital",
+        "type": "lived",
+        "year": "2019",
+        "lat": 29.294995,
+        "lng": 79.4162511,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": "2021",
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
       }
     ],
     "photos": [
