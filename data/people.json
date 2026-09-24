@@ -1542,7 +1542,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "vinod"
   },
   {
     "id": "hem",
@@ -3451,6 +3452,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "kailash",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "vinod",
+    "name": "Vinod",
+    "gender": "M",
+    "parentId": null,
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "kailash_daughter_28",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
