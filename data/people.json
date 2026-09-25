@@ -909,7 +909,24 @@
     "photos": [],
     "bio": "",
     "occupation": "Retired",
-    "locations": [],
+    "locations": [
+      {
+        "place": "Delhi",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "visited",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      }
+    ],
     "fullName": "Gopal Dutt Pandey",
     "fatherName": "Jaikishan Pandey",
     "motherName": null,
