@@ -2349,7 +2349,40 @@
     "photos": [],
     "bio": "",
     "occupation": "Entrepreneur / Agriculturist",
-    "locations": [],
+    "locations": [
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
+      },
+      {
+        "place": "Bairati, Almora",
+        "type": "visited",
+        "year": null,
+        "lat": 29.8075451,
+        "lng": 79.4198012,
+        "note": null
+      },
+      {
+        "place": "Gaziabad",
+        "type": "visited",
+        "year": null,
+        "lat": 35.233837,
+        "lng": 71.33074,
+        "note": null
+      },
+      {
+        "place": "Haridwar",
+        "type": "visited",
+        "year": null,
+        "lat": 29.9384473,
+        "lng": 78.1452985,
+        "note": null
+      }
+    ],
     "fullName": "Harish Chandra Pandey",
     "fatherName": "Bhola Dutt Pandey",
     "motherName": "Manorama Pandey",
