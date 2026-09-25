@@ -86,18 +86,22 @@
     </div>
 
     <div id="archive-panel" class="hidden editor-layout">
-      <div class="person-list"><ul id="archive-ul"></ul></div>
+      <div class="person-list">
+        <button class="btn btn-gold btn-sm" id="new-archive-item-btn" style="margin:10px; width:calc(100% - 20px); justify-content:center;">+ Add a new item</button>
+        <ul id="archive-ul"></ul>
+      </div>
       <div id="archive-form-area">
-        <p class="muted">Select an item to edit it, or add a new one below.</p>
-        <button class="btn btn-gold btn-sm" id="new-archive-item-btn" style="margin-top:10px;">+ Add a new item</button>
+        <p class="muted">Select an item to edit it, or use “+ Add a new item”.</p>
       </div>
     </div>
 
     <div id="events-panel" class="hidden editor-layout">
-      <div class="person-list"><ul id="events-ul"></ul></div>
+      <div class="person-list">
+        <button class="btn btn-gold btn-sm" id="new-event-btn" style="margin:10px; width:calc(100% - 20px); justify-content:center;">+ Add a new event</button>
+        <ul id="events-ul"></ul>
+      </div>
       <div id="events-form-area">
-        <p class="muted">Select an event to edit it, or add a new one below.</p>
-        <button class="btn btn-gold btn-sm" id="new-event-btn" style="margin-top:10px;">+ Add a new event</button>
+        <p class="muted">Select an event to edit it, or use “+ Add a new event”.</p>
       </div>
     </div>
 
@@ -1060,6 +1064,11 @@
       <input type="file" id="ev-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
       <button class="btn btn-gold" id="save-event-btn">Save event</button>
       <span id="save-event-status" class="status-msg"></span>
+      ${ev ? `<hr style="margin:28px 0; border:none; border-top:1px solid var(--line);">
+      <h3 style="font-family:var(--font-display); font-size:18px; margin:0 0 8px; color:var(--ochre-deep);">Delete this event</h3>
+      <p class="muted" style="font-size:13.5px;">Removes it from the Events page. Its photos stay in the repository.</p>
+      <button class="btn btn-outline-dark btn-sm" id="delete-event-btn" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Delete event</button>
+      <span id="delete-event-status" class="status-msg"></span>` : ''}
     `;
     document.getElementById('ev-photo-input').addEventListener('change', (e) => {
       [...e.target.files].forEach(file => {
@@ -1082,6 +1091,8 @@
       });
     });
     document.getElementById('save-event-btn').addEventListener('click', saveEvent);
+    const delEvBtn = document.getElementById('delete-event-btn');
+    if (delEvBtn) delEvBtn.addEventListener('click', deleteEvent);
   }
 
   async function saveEvent() {
@@ -1114,6 +1125,22 @@
       renderEventList();
     } catch (e) {
       statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  async function deleteEvent() {
+    const statusEl = document.getElementById('delete-event-status');
+    if (!currentEvent || !currentEvent.id) return;
+    if (!confirm(`Delete the event "${currentEvent.title || 'Untitled'}"? This can't be undone from the site.`)) return;
+    statusEl.textContent = 'Deleting…'; statusEl.className = 'status-msg';
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/events.json', (events) => (events || []).filter(e => e.id !== currentEvent.id),
+        `Delete event: ${currentEvent.title || currentEvent.id} — by superadmin`, token);
+      currentEvent = null;
+      document.getElementById('events-form-area').innerHTML = '<p class="muted">Event deleted. Select another event, or use “+ Add a new event”.</p>';
+      renderEventList();
+    } catch (e) {
+      statusEl.textContent = 'Could not delete: ' + e.message; statusEl.className = 'status-msg error';
     }
   }
 
