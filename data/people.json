@@ -594,7 +594,7 @@
   },
   {
     "id": "harikishan_2",
-    "name": "Harikishan Pandey",
+    "name": "Harikishan I",
     "gender": "M",
     "parentId": "shibu",
     "generation": 12,
@@ -607,8 +607,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Harikishan Pandey I",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "harikishan_2_daughter_5",
