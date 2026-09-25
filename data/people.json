@@ -1852,12 +1852,12 @@
   },
   {
     "id": "bholadutt_daughter_30",
-    "name": "Daughter",
+    "name": "Prema",
     "gender": "F",
     "parentId": "bholadutt",
     "generation": 17,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
@@ -1865,7 +1865,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "premaspouse"
+    "spouseId": "premaspouse",
+    "fullName": "Prema",
+    "fatherName": "Bhola Dutt Pandey",
+    "motherName": "Padma Pandey",
+    "birthDate": null,
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "suresh",
