@@ -546,7 +546,7 @@
   },
   {
     "id": "harikishan_1",
-    "name": "Harikrishn Pandey II",
+    "name": "Harikrishn II",
     "gender": "M",
     "parentId": "kulanand",
     "generation": 14,
@@ -559,8 +559,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Harikrishn Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "harikishan_2",
