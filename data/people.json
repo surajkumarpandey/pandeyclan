@@ -5247,14 +5247,14 @@
   },
   {
     "id": "vinitaspouse",
-    "name": "VinitaSpouse",
+    "name": "Umesh",
     "gender": "M",
     "parentId": null,
     "generation": 17,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Umesh Chandra Joshi",
     "fatherName": null,
     "motherName": null,
     "spouseId": "bholadutt_daughter_31",
@@ -5265,7 +5265,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "son-vinita",
