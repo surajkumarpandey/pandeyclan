@@ -1961,7 +1961,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "spouseId": "naveen-pant"
   },
   {
     "id": "manoj_umesh",
@@ -5032,6 +5033,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "manoj_suresh",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "naveen-pant",
+    "name": "Naveen Pant",
+    "gender": "F",
+    "parentId": null,
+    "generation": 17,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "bholadutt_daughter_32",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
