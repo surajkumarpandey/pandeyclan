@@ -2902,6 +2902,62 @@
         "lat": 29.2144809,
         "lng": 79.5279012,
         "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Agra",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Mathura",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haridwar",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "visited",
+        "year": null,
+        "lat": 30.3255646,
+        "lng": 78.0436813,
+        "note": null
+      },
+      {
+        "place": "Someshwer",
+        "type": "visited",
+        "year": null,
+        "lat": 19.065909,
+        "lng": 72.8368045,
+        "note": null
+      },
+      {
+        "place": "Bairati",
+        "type": "visited",
+        "year": null,
+        "lat": 24.8176145,
+        "lng": 90.6369117,
+        "note": null
       }
     ],
     "photos": [],
