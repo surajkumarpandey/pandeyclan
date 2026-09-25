@@ -500,7 +500,7 @@
   },
   {
     "id": "gangadutt",
-    "name": "Ganga Dutt Pandey",
+    "name": "Ganga Dutt",
     "gender": "M",
     "parentId": "shibu",
     "generation": 12,
@@ -513,8 +513,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Ganga Dutt Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "kulanand",
