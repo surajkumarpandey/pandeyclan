@@ -1962,7 +1962,7 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "naveen-pant"
+    "spouseId": null
   },
   {
     "id": "manoj_umesh",
@@ -5056,7 +5056,7 @@
     "fullName": null,
     "fatherName": null,
     "motherName": null,
-    "spouseId": "bholadutt_daughter_32",
+    "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
