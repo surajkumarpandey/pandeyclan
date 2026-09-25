@@ -5269,16 +5269,16 @@
   },
   {
     "id": "son-vinita",
-    "name": "Son Vinita",
+    "name": "Amit",
     "gender": "M",
     "parentId": "bholadutt_daughter_31",
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Amit Joshi",
+    "fatherName": "Joshi ji",
+    "motherName": "Vinita Joshi",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -5288,7 +5288,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "audioMessages": []
   },
   {
     "id": "daughter-vinita",
