@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write an Article — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .write-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 44px 0 36px; }
+  .write-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 30px; margin: 0 0 8px; }
+  .write-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
+  .write-box { max-width: 720px; margin: 0 auto; }
+  .status-msg { font-size: 14px; margin-top: 10px; }
+  .status-msg.error { color: #b5432f; }
+  .status-msg.ok { color: var(--pine); }
+  textarea#w-body { min-height: 320px; font-size: 15.5px; line-height: 1.6; }
+  .photo-rows .row { display: grid; grid-template-columns: 84px 1fr auto; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .photo-rows img { width: 84px; height: 84px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
+  .done-card { text-align: center; padding: 40px 24px; }
+  .done-card h2 { font-family: var(--font-display); font-size: 24px; margin: 0 0 10px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="articles.html" data-i18n="nav.articles">Articles</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="write-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1>Write for the family</h1>
+    <p>A memory, a story about an elder, something about the village or our traditions. Your article is sent for review and appears on the Articles page once it's approved.</p>
+  </div>
+</div>
+
+<div class="section wrap write-box">
+
+  <div id="login-view" class="card">
+    <div class="field"><label>Family password</label><input type="password" id="w-password" placeholder="The password shared within the family"></div>
+    <button class="btn btn-gold" id="w-login-btn">Continue</button>
+    <div id="w-login-status" class="status-msg"></div>
+  </div>
+
+  <div id="form-view" class="hidden">
+    <div class="card">
+      <div class="field"><label>Your name</label><input type="text" id="w-author" placeholder="e.g. Hemlata Pandey"></div>
+      <div class="field"><label>How you're related (optional)</label><input type="text" id="w-relation" placeholder="e.g. daughter-in-law of Tara Dutt"></div>
+      <div class="field"><label>Title</label><input type="text" id="w-title" placeholder="e.g. Winters at the old house"></div>
+      <div class="field">
+        <label>Your article</label>
+        <textarea id="w-body" placeholder="Write in Hindi, Kumaoni or English. Leave an empty line between paragraphs."></textarea>
+      </div>
+      <div class="field">
+        <label>Photos (optional, up to 6)</label>
+        <div class="photo-rows" id="w-photos"></div>
+        <input type="file" id="w-photo-input" accept="image/*" multiple>
+        <p class="muted" style="font-size:12.5px; margin-top:6px;">Photos are resized for the web before sending.</p>
+      </div>
+      <button class="btn btn-gold" id="w-submit">Send for review</button>
+      <div id="w-status" class="status-msg"></div>
+    </div>
+  </div>
+
+  <div id="done-view" class="card done-card hidden">
+    <h2>Thank you!</h2>
+    <p>Your article has been sent for review. It will appear on the <a href="articles.html">Articles page</a> once it's approved.</p>
+    <button class="btn btn-outline-dark btn-sm" id="w-another">Write another</button>
+  </div>
+
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/crypto.js"></script>
+<script src="js/github.js"></script>
+<script>
+(function () {
+  const API = 'https://api.github.com';
+  const repoURL = `${API}/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}`;
+  const MAX_PHOTOS = 6;
+  // GitHub comments hold up to 65,536 characters, so each photo is
+  // compressed until its encoded form fits in one comment.
+  const MAX_ENCODED = 60000;
+  let submitToken = null;
+  let photos = [];   // { dataUrl, caption }
+
+  const $ = (id) => document.getElementById(id);
+  const show = (id) => ['login-view', 'form-view', 'done-view'].forEach(v => $(v).classList.toggle('hidden', v !== id));
+
+  // ---------- Sign in with the shared family password ----------
+  $('w-login-btn').addEventListener('click', async () => {
+    const pw = $('w-password').value, st = $('w-login-status');
+    if (!pw) { st.textContent = 'Enter the family password.'; st.className = 'status-msg error'; return; }
+    st.textContent = 'Checking…'; st.className = 'status-msg';
+    try {
+      const res = await fetch('data/contributors.json?_=' + Date.now(), { cache: 'no-store' });
+      const data = res.ok ? await res.json() : { entries: [] };
+      let found = null;
+      for (const entry of data.entries || []) {
+        const t = await PandeyCrypto.decryptToken(entry, pw);
+        if (t) { found = t; break; }
+      }
+      if (!found) { st.textContent = 'That password isn\u2019t right.'; st.className = 'status-msg error'; return; }
+      submitToken = found;
+      show('form-view');
+    } catch (e) {
+      st.textContent = 'Could not check the password right now. Please try again.'; st.className = 'status-msg error';
+    }
+  });
+
+  // ---------- Photos ----------
+  function compress(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          for (const maxDim of [1100, 900, 720, 560]) {
+            let { width, height } = img;
+            if (width > maxDim || height > maxDim) { const s = maxDim / Math.max(width, height); width = Math.round(width * s); height = Math.round(height * s); }
+            const c = document.createElement('canvas'); c.width = width; c.height = height;
+            c.getContext('2d').drawImage(img, 0, 0, width, height);
+            for (const q of [0.72, 0.6, 0.5, 0.4]) {
+              const url = c.toDataURL('image/jpeg', q);
+              if (url.length < MAX_ENCODED) return resolve(url);
+            }
+          }
+          reject(new Error('This photo could not be made small enough to send.'));
+        };
+        img.onerror = () => reject(new Error('Could not read that image.'));
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  function renderPhotos() {
+    $('w-photos').innerHTML = photos.map((p, i) => `
+      <div class="row">
+        <img src="${p.dataUrl}" alt="">
+        <input type="text" data-cap="${i}" placeholder="Caption (optional)" value="${(p.caption || '').replace(/"/g, '&quot;')}">
+        <button type="button" class="btn btn-outline-dark btn-sm" data-remove="${i}">Remove</button>
+      </div>`).join('');
+    $('w-photos').querySelectorAll('[data-cap]').forEach(inp => inp.oninput = () => { photos[+inp.dataset.cap].caption = inp.value; });
+    $('w-photos').querySelectorAll('[data-remove]').forEach(b => b.onclick = () => { photos.splice(+b.dataset.remove, 1); renderPhotos(); });
+    $('w-photo-input').disabled = photos.length >= MAX_PHOTOS;
+  }
+  $('w-photo-input').addEventListener('change', async (e) => {
+    const st = $('w-status');
+    for (const file of [...e.target.files]) {
+      if (photos.length >= MAX_PHOTOS) break;
+      try { photos.push({ dataUrl: await compress(file), caption: '' }); }
+      catch (err) { st.textContent = err.message; st.className = 'status-msg error'; }
+    }
+    e.target.value = '';
+    renderPhotos();
+  });
+
+  // ---------- Submit: one GitHub issue for the text, one comment per photo ----------
+  async function gh(path, body) {
+    const res = await fetch(repoURL + path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${submitToken}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(`GitHub said ${res.status}`);
+    return res.json();
+  }
+  $('w-submit').addEventListener('click', async () => {
+    const st = $('w-status');
+    const article = {
+      author: $('w-author').value.trim(), relation: $('w-relation').value.trim(),
+      title: $('w-title').value.trim(), body: $('w-body').value.trim(),
+      submittedAt: new Date().toISOString()
+    };
+    if (!article.author || !article.title || !article.body) { st.textContent = 'Please fill in your name, a title and the article.'; st.className = 'status-msg error'; return; }
+    $('w-submit').disabled = true;
+    st.textContent = 'Sending…'; st.className = 'status-msg';
+    try {
+      const readable = `**By:** ${article.author}${article.relation ? ` (${article.relation})` : ''}\n\n${article.body}`;
+      const meta = `<!--pandey-article ${JSON.stringify(article).replace(/--/g, '\\u002d\\u002d')} -->`;
+      const issue = await gh('/issues', { title: `[Article] ${article.title}`, body: readable + '\n\n' + meta });
+      for (let i = 0; i < photos.length; i++) {
+        st.textContent = `Sending photo ${i + 1} of ${photos.length}…`;
+        const p = photos[i];
+        await gh(`/issues/${issue.number}/comments`, { body: `pandey-photo ${JSON.stringify({ caption: p.caption || '' })}\n${p.dataUrl}` });
+      }
+      photos = []; renderPhotos();
+      ['w-title', 'w-body'].forEach(id => $(id).value = '');
+      show('done-view');
+    } catch (e) {
+      st.textContent = 'Could not send the article (' + e.message + '). Please try again.'; st.className = 'status-msg error';
+    } finally {
+      $('w-submit').disabled = false;
+    }
+  });
+  $('w-another').addEventListener('click', () => { $('w-status').textContent = ''; show('form-view'); });
+})();
+</script>
+</body>
+</html>
