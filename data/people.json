@@ -5099,16 +5099,16 @@
   },
   {
     "id": "daughter2-pushpa",
-    "name": "Daughter2 Pushpa",
+    "name": "Gudiya",
     "gender": "F",
     "parentId": "bholadutt_daughter_32",
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Gudiya Joshi",
+    "fatherName": "Jeewan Chandra Tiwari",
+    "motherName": "Hema Tiwari",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -5118,7 +5118,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "audioMessages": []
   },
   {
     "id": "daughter1-pushpa-3",
