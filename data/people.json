@@ -1520,14 +1520,6 @@
     "occupation": "Service / Agriculturist",
     "locations": [
       {
-        "place": "Dewelchaur Bandobasti",
-        "type": "origin",
-        "year": "1962",
-        "lat": null,
-        "lng": null,
-        "note": null
-      },
-      {
         "place": "Delhi",
         "type": "visited",
         "year": null,
@@ -1568,7 +1560,7 @@
         "note": null
       },
       {
-        "place": "Haldwani",
+        "place": "Dewelchour Bandobasti",
         "type": "current",
         "year": null,
         "lat": null,
@@ -1598,6 +1590,14 @@
         "lat": -7.3416596,
         "lng": 108.2244736,
         "note": null
+      },
+      {
+        "place": "Asaam",
+        "type": "lived",
+        "year": null,
+        "lat": 7.1195283,
+        "lng": -1.4657222,
+        "note": null
       }
     ],
     "spouseId": "hemlata-pant",
@@ -1609,7 +1609,8 @@
     ],
     "sortOrder": 2,
     "fatherName": "Tara Dutt Pandey",
-    "motherName": "Durga Devi Pandey"
+    "motherName": "Durga Devi Pandey",
+    "birthPlace": "Dewelchour Bandobasti"
   },
   {
     "id": "suraj",
