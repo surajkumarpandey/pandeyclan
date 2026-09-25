@@ -523,7 +523,7 @@
   },
   {
     "id": "kulanand",
-    "name": "Kulanand Pandey",
+    "name": "Kulanand",
     "gender": "M",
     "parentId": "gangadutt",
     "generation": 13,
@@ -536,8 +536,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Kulanand Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "harikishan_1",
