@@ -1949,12 +1949,12 @@
   },
   {
     "id": "bholadutt_daughter_32",
-    "name": "Daughter",
+    "name": "Hema",
     "gender": "F",
     "parentId": "bholadutt",
     "generation": 17,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
@@ -1962,7 +1962,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "jeewan-2"
+    "spouseId": "jeewan-2",
+    "fullName": "Hema Tiwari",
+    "fatherName": "Bhola Dutt Pandey",
+    "motherName": "Padma Pandey",
+    "birthDate": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "manoj_umesh",
