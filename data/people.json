@@ -1449,10 +1449,58 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
+    "occupation": "Service",
+    "locations": [
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Bangalore",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Nasik",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "spouseId": "baby-pandey",
-    "sortOrder": 0
+    "sortOrder": 0,
+    "fullName": "Pradeep Kumar Pandey",
+    "fatherName": "Tara Dutt Pandey",
+    "motherName": "Durga Devi Pandey",
+    "birthDate": "1956-07-15",
+    "birthPlace": "Dewelchour Bandobasti",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "ashok",
