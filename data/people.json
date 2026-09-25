@@ -270,7 +270,7 @@
   },
   {
     "id": "purushu",
-    "name": "Purushu Pandey",
+    "name": "Purushu",
     "gender": "M",
     "parentId": "danjyu",
     "generation": 7,
@@ -283,8 +283,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Purushu Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "premnidhi",
