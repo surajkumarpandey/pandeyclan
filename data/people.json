@@ -2748,7 +2748,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Mohit Kumar Pandey",
     "spouseId": "kokil",
     "audioMessage": null,
     "birthDate": null,
@@ -2757,7 +2757,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "rohanika",
