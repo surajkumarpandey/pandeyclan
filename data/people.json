@@ -157,7 +157,7 @@
   },
   {
     "id": "bhusa",
-    "name": "Musa Pandey",
+    "name": "Musa",
     "gender": "M",
     "parentId": "samapati",
     "generation": 5,
@@ -170,8 +170,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Musa Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bissu",
