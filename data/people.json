@@ -93,7 +93,7 @@
   },
   {
     "id": "samapati",
-    "name": "Sabhapati Pandey",
+    "name": "Sabhapati",
     "gender": "M",
     "parentId": "bhramdas",
     "generation": 4,
@@ -106,8 +106,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Sabhapati Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "guja",
