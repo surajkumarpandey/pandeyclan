@@ -42,7 +42,7 @@
   },
   {
     "id": "gunankar",
-    "name": "Gunankar Pandey",
+    "name": "Gunankar",
     "gender": "M",
     "parentId": "sukhdev",
     "generation": 2,
@@ -55,8 +55,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Gunankar Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bhramdas",
