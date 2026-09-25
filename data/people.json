@@ -329,7 +329,7 @@
   },
   {
     "id": "deepu",
-    "name": "Dippu Pandey",
+    "name": "Dippu",
     "gender": "M",
     "parentId": "danjyu",
     "generation": 7,
@@ -342,8 +342,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Dippu Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "anand",
