@@ -477,7 +477,7 @@
   },
   {
     "id": "shibu",
-    "name": "Shibu Pandey",
+    "name": "Shibu",
     "gender": "M",
     "parentId": "bhagirath",
     "generation": 11,
@@ -490,8 +490,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Shibu Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "gangadutt",
