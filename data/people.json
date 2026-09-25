@@ -2080,6 +2080,30 @@
         "lat": 29.8075451,
         "lng": 79.4198012,
         "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Kichcha",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
       }
     ],
     "spouseId": "prema-2",
