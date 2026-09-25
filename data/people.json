@@ -208,7 +208,7 @@
   },
   {
     "id": "danjyu",
-    "name": "Danjyu Pandey",
+    "name": "Danjyu",
     "gender": "M",
     "parentId": "guja",
     "generation": 6,
@@ -221,8 +221,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Danjyu Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bissu_daughter_1",
