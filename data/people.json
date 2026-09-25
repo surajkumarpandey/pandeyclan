@@ -1843,7 +1843,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/ashok_daughter_22_1790360311099.jpg"
+    ],
     "bio": "",
     "occupation": "Service",
     "locations": [
