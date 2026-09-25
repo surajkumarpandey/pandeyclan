@@ -2268,7 +2268,16 @@
     "photos": [],
     "bio": "\"Departed for his heavenly abode on 28 September  2021 in Haldwani.\"",
     "occupation": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Bairati, Almora",
+        "type": "lived",
+        "year": null,
+        "lat": 29.8075451,
+        "lng": 79.4198012,
+        "note": null
+      }
+    ],
     "spouseId": "rajeshwari",
     "fullName": "Suresh Chandra Pandey",
     "fatherName": "Bhola Dutt Pandey",
