@@ -408,7 +408,7 @@
   },
   {
     "id": "narayan",
-    "name": "Narayan Pandey",
+    "name": "Narayan",
     "gender": "M",
     "parentId": "keshav",
     "generation": 8,
@@ -421,8 +421,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Narayan Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "shripati",
