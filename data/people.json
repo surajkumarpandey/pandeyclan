@@ -1285,6 +1285,22 @@
         "lat": 23.1885131,
         "lng": 75.7716562,
         "note": null
+      },
+      {
+        "place": "Haridwar",
+        "type": "visited",
+        "year": null,
+        "lat": 29.9384473,
+        "lng": 78.1452985,
+        "note": null
+      },
+      {
+        "place": "Dewelchour Bandobasti, Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
       }
     ],
     "fullName": "Tara Dutt Pandey",
