@@ -116,7 +116,7 @@
   },
   {
     "id": "guja",
-    "name": "Guja Pandey",
+    "name": "Guja",
     "gender": "M",
     "parentId": "samapati",
     "generation": 5,
@@ -129,8 +129,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Guja Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "sudhir",
