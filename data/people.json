@@ -1893,12 +1893,12 @@
   },
   {
     "id": "bholadutt_daughter_31",
-    "name": "Daughter",
+    "name": "Vinita",
     "gender": "F",
     "parentId": "bholadutt",
     "generation": 17,
     "tree": "A",
-    "unnamedPlaceholder": true,
+    "unnamedPlaceholder": false,
     "notes": null,
     "birthYear": null,
     "deathYear": null,
@@ -1906,7 +1906,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "vinitaspouse"
+    "spouseId": "vinitaspouse",
+    "fullName": "Vinita Joshi",
+    "fatherName": "Bhola Dutt Pandey",
+    "motherName": "Manorama Pandey",
+    "birthDate": "1961-08-07",
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "lalit",
