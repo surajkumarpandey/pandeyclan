@@ -3807,16 +3807,16 @@
   },
   {
     "id": "pushpa",
-    "name": "Pushpa",
+    "name": "Hema",
     "gender": "F",
     "parentId": null,
     "generation": 17,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Hema Tiwari",
+    "fatherName": "Bhola Dutt Pandey",
+    "motherName": "Padma Pandey",
     "spouseId": "kailash",
     "audioMessage": null,
     "birthDate": null,
@@ -3825,7 +3825,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "vinod",
