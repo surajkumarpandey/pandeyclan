@@ -1314,8 +1314,8 @@
     "locations": [
       {
         "place": "Bairati Almora",
-        "type": "origin",
-        "year": "1932",
+        "type": "lived",
+        "year": null,
         "lat": 29.8075451,
         "lng": 79.4198012,
         "note": null
@@ -1366,6 +1366,14 @@
         "year": null,
         "lat": null,
         "lng": null,
+        "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "visited",
+        "year": null,
+        "lat": 30.3255646,
+        "lng": 78.0436813,
         "note": null
       }
     ],
