@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Articles — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .articles-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 50px 0 42px; }
+  .articles-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 32px; margin: 0 0 8px; }
+  .articles-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0 0 16px; }
+  .article-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
+  .a-card { background: var(--paper-light); border: 1px solid var(--line); text-decoration: none; color: inherit; display: block; transition: transform .12s ease, box-shadow .12s ease; }
+  .a-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(62,18,24,0.12); }
+  .a-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+  .a-card .noimg { height: 8px; background: linear-gradient(90deg, var(--ochre), var(--gold)); }
+  .a-card .body { padding: 16px 18px; }
+  .a-card h3 { font-family: var(--font-display); font-size: 19px; margin: 0 0 6px; }
+  .a-card .by { font-size: 13px; color: #8a6a58; margin-bottom: 8px; }
+  .a-card p { font-size: 14px; color: #5a3a2e; margin: 0; }
+  .reader { max-width: 720px; margin: 0 auto; }
+  .reader h1 { font-family: var(--font-display); font-size: 32px; margin: 0 0 8px; line-height: 1.2; }
+  .reader .by { color: #8a6a58; font-size: 14.5px; margin-bottom: 26px; }
+  .reader .text p { font-size: 17px; line-height: 1.75; margin: 0 0 18px; color: var(--ink); }
+  .reader figure { margin: 26px 0; }
+  .reader figure img { width: 100%; border-radius: 4px; }
+  .reader figcaption { font-size: 13.5px; color: #8a6a58; margin-top: 6px; text-align: center; }
+  .empty-state { padding: 60px 0; text-align: center; color: #8a6a58; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="map.html" data-i18n="nav.map">Journeys Map</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><a href="village-3d.html">Bairati in 3D</a></li>
+      <li><a href="kumaon.html" data-i18n="nav.kumaon">Discover Kumaon</a></li>
+      <li><a href="utilities.html" data-i18n="nav.utilities">Kumaoni Utilities</a></li>
+      <li><a href="events.html" data-i18n="nav.events">Events</a></li>
+      <li><a href="articles.html" class="active" data-i18n="nav.articles">Articles</a></li>
+      <li><a href="archive.html" data-i18n="nav.archive">Archive</a></li>
+      <li><a href="audit.html" data-i18n="nav.audit">Log of Changes</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="articles-hero" id="list-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1 data-i18n="articles.title">Articles</h1>
+    <p data-i18n="articles.lede">Memories, stories and writing by members of the family.</p>
+    <a class="btn btn-gold btn-sm" href="write.html" data-i18n="articles.write">Write an article</a>
+  </div>
+</div>
+
+<div class="section wrap" id="content"></div>
+
+<footer class="site-footer">
+  <div class="aipan-border"></div>
+  <div class="wrap">
+    <span>The Pandey Clan of Bairati — a family record, kept by the family.</span>
+    <span><a href="write.html">Write an article</a></span>
+  </div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(async function () {
+  const content = document.getElementById('content');
+  let articles = [];
+  try { const res = await fetch('data/articles.json?_=' + Date.now()); if (res.ok) articles = await res.json(); } catch (e) {}
+  articles.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
+  const esc = (t) => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fmt = (d) => d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  const byline = (a) => `${esc(a.author)}${a.relation ? ', ' + esc(a.relation) : ''}${a.publishedAt ? ' · ' + fmt(a.publishedAt) : ''}`;
+
+  const id = new URLSearchParams(location.search).get('id');
+  const one = id && articles.find(a => a.id === id);
+  if (one) {
+    document.getElementById('list-hero').style.display = 'none';
+    document.title = one.title + ' — The Pandey Clan of Bairati';
+    const paras = esc(one.body).split(/\n\s*\n/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+    const figs = (one.photos || []).map(p => `<figure><img src="${p.url}" alt=""><figcaption>${esc(p.caption)}</figcaption></figure>`).join('');
+    content.innerHTML = `<article class="reader">
+        <p><a href="articles.html">← All articles</a></p>
+        <h1>${esc(one.title)}</h1>
+        <div class="by">${byline(one)}</div>
+        ${one.photos && one.photos[0] ? `<figure><img src="${one.photos[0].url}" alt=""><figcaption>${esc(one.photos[0].caption)}</figcaption></figure>` : ''}
+        <div class="text">${paras}</div>
+        ${(one.photos || []).slice(1).map(p => `<figure><img src="${p.url}" alt=""><figcaption>${esc(p.caption)}</figcaption></figure>`).join('')}
+      </article>`;
+    return;
+  }
+  if (!articles.length) {
+    content.innerHTML = `<div class="empty-state">No articles yet. <a href="write.html">Be the first to write one.</a></div>`;
+    return;
+  }
+  content.innerHTML = `<div class="article-list">${articles.map(a => {
+    const preview = esc((a.body || '').split(/\n\s*\n/)[0]).slice(0, 180);
+    return `<a class="a-card" href="articles.html?id=${encodeURIComponent(a.id)}">
+      ${a.photos && a.photos[0] ? `<img src="${a.photos[0].url}" alt="">` : '<div class="noimg"></div>'}
+      <div class="body"><h3>${esc(a.title)}</h3><div class="by">${byline(a)}</div><p>${preview}${(a.body || '').length > 180 ? '…' : ''}</p></div>
+    </a>`;
+  }).join('')}</div>`;
+})();
+</script>
+</body>
+</html>
