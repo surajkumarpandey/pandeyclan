@@ -139,7 +139,7 @@
   },
   {
     "id": "sudhir",
-    "name": "Sudhir Pandey",
+    "name": "Sudhir",
     "gender": "M",
     "parentId": "samapati",
     "generation": 5,
@@ -152,8 +152,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Sudhir Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bhusa",
