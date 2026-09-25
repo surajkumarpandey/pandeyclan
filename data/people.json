@@ -1841,12 +1841,60 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "birthYear": "1990",
+    "birthYear": null,
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": []
+    "occupation": "Service",
+    "locations": [
+      {
+        "place": "Nasik",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": 28.6328027,
+        "lng": 77.2197713,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Gurgaon",
+        "type": "lived",
+        "year": null,
+        "lat": 28.4646148,
+        "lng": 77.0299194,
+        "note": null
+      },
+      {
+        "place": "Alwar",
+        "type": "lived",
+        "year": null,
+        "lat": 27.4140049,
+        "lng": 76.6170387,
+        "note": null
+      }
+    ],
+    "fullName": "Pallavi Pandey",
+    "fatherName": "Ashok Kumar Pandey",
+    "motherName": "Hemlata Pandey",
+    "birthDate": "1989-05-19",
+    "birthPlace": "Nashik",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "khajan",
