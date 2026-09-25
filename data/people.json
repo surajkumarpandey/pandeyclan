@@ -5063,5 +5063,28 @@
     "photos": [],
     "bio": "",
     "occupation": null
+  },
+  {
+    "id": "ghanshyam-2",
+    "name": "Ghanshyam",
+    "gender": "M",
+    "parentId": "bholadutt_daughter_32",
+    "generation": 18,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": null,
+    "audioMessage": null,
+    "birthDate": null,
+    "birthPlace": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
   }
 ]
