@@ -767,7 +767,7 @@
   },
   {
     "id": "jaikishan",
-    "name": "Jaikishan Pandey",
+    "name": "Jaikishan II",
     "gender": "M",
     "parentId": "laxmidutt",
     "generation": 16,
@@ -780,9 +780,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
+    "fullName": "Jai Kishan Pandey",
     "birthDate": null,
-    "sortOrder": 1
+    "sortOrder": 1,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "jaikishan_daughter_12",
