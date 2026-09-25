@@ -1714,12 +1714,20 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "",
+    "bio": "\"Departed for his heavenly abode on 04 February 2025 in Haldwani.\"",
     "occupation": "Entrepreneur / Politician / Agriculturist",
     "locations": [
       {
         "place": "Dewelchour Bandobasti",
         "type": "origin",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
         "year": null,
         "lat": null,
         "lng": null,
@@ -1733,7 +1741,8 @@
     "motherName": "Durga Devi Pandey",
     "birthDate": "2026-06-30",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "birthPlace": "Haldwani"
   },
   {
     "id": "dev",
