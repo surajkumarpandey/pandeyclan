@@ -1169,7 +1169,7 @@
       }
     ],
     "sortOrder": 2,
-    "spouseId": "pushpa",
+    "spouseId": null,
     "fullName": "Kailash Chandra Pandey",
     "fatherName": "Anand Ballabh Pandey",
     "motherName": "Saroj Devi Pandey",
@@ -3817,7 +3817,7 @@
     "fullName": "Hema Tiwari",
     "fatherName": "Bhola Dutt Pandey",
     "motherName": "Padma Pandey",
-    "spouseId": "kailash",
+    "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
