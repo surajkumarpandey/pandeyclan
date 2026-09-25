@@ -2036,7 +2036,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "spouseId": "rajeshwari"
+    "spouseId": "rajeshwari",
+    "fullName": "Suresh Chandra Pandey",
+    "fatherName": "Bhola Dutt Pandey",
+    "motherName": "Padma Pandey",
+    "birthDate": null,
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "bholadutt_daughter_31",
