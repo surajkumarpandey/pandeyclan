@@ -1228,7 +1228,48 @@
     ],
     "bio": "\"Departed for his heavenly abode on 05 April 1990 in Haldwani.\"",
     "occupation": "Agriculturist / Entrepreneur",
-    "locations": [],
+    "locations": [
+      {
+        "place": "Agra",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Secunderabad",
+        "type": "lived",
+        "year": null,
+        "lat": 17.4337246,
+        "lng": 78.5006827,
+        "note": null
+      },
+      {
+        "place": "Jammu",
+        "type": "visited",
+        "year": null,
+        "lat": 32.7185614,
+        "lng": 74.8580917,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Ujjain",
+        "type": "visited",
+        "year": null,
+        "lat": 23.1885131,
+        "lng": 75.7716562,
+        "note": null
+      }
+    ],
     "fullName": "Tara Dutt Pandey",
     "spouseId": "durga-devi-pandey",
     "fatherName": "Anand Ballabh Pandey",
