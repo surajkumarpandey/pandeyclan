@@ -185,7 +185,7 @@
   },
   {
     "id": "bissu",
-    "name": "Bissu Pandey",
+    "name": "Bissu",
     "gender": "M",
     "parentId": "guja",
     "generation": 6,
@@ -198,8 +198,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Bissu Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "danjyu",
