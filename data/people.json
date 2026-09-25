@@ -873,13 +873,22 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "",
+    "bio": "\"Departed for his heavenly abode on 25 Jan 1997 in Haldwani.\"",
     "occupation": "Educationist",
-    "locations": [],
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "fullName": "Prayag Dutt Pandey",
     "fatherName": "Jaikishan Pandey",
     "motherName": null,
-    "birthDate": null,
+    "birthDate": "1927-01-01",
     "birthPlace": "Bairati Almora",
     "audioMessages": [],
     "audioMessage": null,
