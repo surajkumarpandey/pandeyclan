@@ -342,7 +342,7 @@
   },
   {
     "id": "anand",
-    "name": "Anantjyu Pandey",
+    "name": "Anantjyu",
     "gender": "M",
     "parentId": "danjyu",
     "generation": 7,
@@ -355,8 +355,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Anantjyu Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "purushu_daughter_2",
