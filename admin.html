@@ -67,6 +67,7 @@
       <button id="tab-generations">Generation stories</button>
       <button id="tab-archive">Archive</button>
       <button id="tab-events">Events</button>
+      <button id="tab-articles">Articles</button>
       <button id="tab-village">Village page</button>
       <button id="tab-kumaon">Discover Kumaon page</button>
       <button id="tab-backup">Backup &amp; Restore</button>
@@ -102,6 +103,28 @@
       </div>
       <div id="events-form-area">
         <p class="muted">Select an event to edit it, or use “+ Add a new event”.</p>
+      </div>
+    </div>
+
+
+    <div id="articles-panel" class="hidden">
+      <div class="card" style="max-width:760px; margin-bottom:20px;">
+        <h3 style="margin-top:0; font-family:var(--font-display);">Waiting for review</h3>
+        <div id="pending-list"><p class="muted">Loading…</p></div>
+      </div>
+      <div id="article-review" class="card hidden" style="max-width:760px; margin-bottom:20px;"></div>
+      <div class="card" style="max-width:760px; margin-bottom:20px;">
+        <h3 style="margin-top:0; font-family:var(--font-display);">Published</h3>
+        <div id="published-list"></div>
+      </div>
+      <div class="card" style="max-width:760px;">
+        <h3 style="margin-top:0; font-family:var(--font-display);">Family password for writers</h3>
+        <p class="muted" style="font-size:13.5px;">Anyone with this password can open the <a href="write.html">Write an article</a> page and send an article for your review. It unlocks a separate GitHub key that can only create submissions, so it cannot change anything on the site.</p>
+        <div class="field"><label>Submit-only GitHub key</label><input type="password" id="c-token" placeholder="Fine-grained token with only “Issues: Read and write”"></div>
+        <div class="field"><label>Family password to share</label><input type="text" id="c-password" placeholder="Choose the password you'll tell the family"></div>
+        <button class="btn btn-gold btn-sm" id="c-save">Set family password</button>
+        <span id="c-status" class="status-msg"></span>
+        <p class="muted" style="font-size:12.5px; margin-top:10px;">Setting a new password replaces the old one, so anyone using the old password will need the new one.</p>
       </div>
     </div>
 
@@ -211,12 +234,13 @@
   document.getElementById('signout-btn').addEventListener('click', () => location.reload());
 
   // ---------- Tabs ----------
-  const TABS = ['people', 'generations', 'archive', 'events', 'village', 'kumaon', 'backup'];
+  const TABS = ['people', 'generations', 'archive', 'events', 'articles', 'village', 'kumaon', 'backup'];
   TABS.forEach(t => document.getElementById('tab-' + t).addEventListener('click', () => {
     switchTab(t);
     if (t === 'generations') renderGenerationList();
     if (t === 'archive') renderArchiveList();
     if (t === 'events') renderEventList();
+    if (t === 'articles') loadArticlesTab();
     if (t === 'village') loadVillageForm();
     if (t === 'kumaon') loadKumaonForm();
   }));
@@ -1141,6 +1165,164 @@
       renderEventList();
     } catch (e) {
       statusEl.textContent = 'Could not delete: ' + e.message; statusEl.className = 'status-msg error';
+    }
+  }
+
+  // ================= ARTICLES =================
+  const GH_API = 'https://api.github.com';
+  const REPO_URL = () => `${GH_API}/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}`;
+  const escA = (t) => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  async function ghGet(path) {
+    // try with the admin key; if it lacks Issues access, public issues can still be read without it
+    let res = await fetch(REPO_URL() + path, { cache: 'no-store', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } });
+    if (res.status === 403 || res.status === 401) res = await fetch(REPO_URL() + path, { cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } });
+    if (!res.ok) throw new Error(`GitHub said ${res.status}`);
+    return res.json();
+  }
+  async function ghSend(method, path, body) {
+    const res = await fetch(REPO_URL() + path, { method, headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error(`GitHub said ${res.status}`);
+    return res.json();
+  }
+  // mark a submission as handled on GitHub (needs "Issues" permission on the admin key)
+  async function closeSubmission(number, message) {
+    try {
+      await ghSend('POST', `/issues/${number}/comments`, { body: message });
+      await ghSend('PATCH', `/issues/${number}`, { state: 'closed' });
+      return true;
+    } catch (e) { return false; }
+  }
+  function parseSubmission(issue) {
+    const m = (issue.body || '').match(/<!--pandey-article ([\s\S]*?) -->/);
+    if (!m) return null;
+    try { return JSON.parse(m[1]); } catch (e) { return null; }
+  }
+
+  async function loadArticlesTab() {
+    document.getElementById('c-save').onclick = saveFamilyPassword;
+    const pending = document.getElementById('pending-list');
+    pending.innerHTML = '<p class="muted">Loading…</p>';
+    let published = [];
+    try { const { content } = await PandeyGitHub.getFile('data/articles.json', token); published = content ? JSON.parse(content) : []; } catch (e) {}
+    renderPublished(published);
+    try {
+      const issues = await ghGet('/issues?state=open&per_page=100');
+      const done = new Set(published.map(a => a.sourceIssue));
+      const subs = issues.filter(i => !i.pull_request && (i.title || '').startsWith('[Article] ') && !done.has(i.number))
+        .map(i => ({ issue: i, data: parseSubmission(i) })).filter(x => x.data);
+      if (!subs.length) { pending.innerHTML = '<p class="muted">Nothing waiting for review.</p>'; return; }
+      pending.innerHTML = subs.map(x => `<div class="editor-row">
+          <span><strong>${escA(x.data.title)}</strong><br><span class="muted" style="font-size:13px;">by ${escA(x.data.author)} · ${new Date(x.data.submittedAt || x.issue.created_at).toLocaleDateString('en-GB')}</span></span>
+          <button class="btn btn-gold btn-sm" data-review="${x.issue.number}">Review</button></div>`).join('');
+      pending.querySelectorAll('[data-review]').forEach(b => b.onclick = () => reviewSubmission(subs.find(x => x.issue.number === +b.dataset.review)));
+    } catch (e) {
+      pending.innerHTML = `<p class="status-msg error">Could not load submissions: ${escA(e.message)}</p>`;
+    }
+  }
+
+  let reviewing = null;
+  async function reviewSubmission(sub) {
+    const box = document.getElementById('article-review');
+    box.classList.remove('hidden');
+    box.innerHTML = '<p class="muted">Loading the article and its photos…</p>';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    let photos = [];
+    try {
+      const comments = await ghGet(`/issues/${sub.issue.number}/comments?per_page=100`);
+      photos = comments.filter(c => (c.body || '').startsWith('pandey-photo ')).map(c => {
+        const nl = c.body.indexOf('\n');
+        let meta = {}; try { meta = JSON.parse(c.body.slice('pandey-photo '.length, nl)); } catch (e) {}
+        return { dataUrl: c.body.slice(nl + 1).trim(), caption: meta.caption || '', keep: true };
+      }).filter(p => p.dataUrl.startsWith('data:image/'));
+    } catch (e) { /* show the text even if photos can't be loaded */ }
+    reviewing = { number: sub.issue.number, photos };
+    const d = sub.data;
+    box.innerHTML = `
+      <h3 style="margin-top:0; font-family:var(--font-display);">Review: ${escA(d.title)}</h3>
+      <div class="field"><label>Title</label><input type="text" id="r-title" value="${escA(d.title)}"></div>
+      <div class="field"><label>Author</label><input type="text" id="r-author" value="${escA(d.author)}"></div>
+      <div class="field"><label>Relation (optional)</label><input type="text" id="r-relation" value="${escA(d.relation)}"></div>
+      <div class="field"><label>Article (you can correct typos before publishing)</label><textarea id="r-body" style="min-height:260px;">${escA(d.body)}</textarea></div>
+      ${photos.length ? `<div class="field"><label>Photos — untick any you don't want to publish</label>${photos.map((p, i) => `
+        <div class="editor-row"><img src="${p.dataUrl}" style="width:84px; height:84px; object-fit:cover; border-radius:4px;">
+          <input type="text" data-rcap="${i}" value="${escA(p.caption)}" placeholder="Caption" style="flex:1;">
+          <label style="margin:0; white-space:nowrap;"><input type="checkbox" data-rkeep="${i}" checked> keep</label></div>`).join('')}</div>` : ''}
+      <button class="btn btn-gold" id="r-publish">Publish</button>
+      <span id="r-status" class="status-msg"></span>
+      <hr style="margin:24px 0; border:none; border-top:1px solid var(--line);">
+      <div class="field"><label>Or send it back — note to the author (optional)</label><input type="text" id="r-note" placeholder="e.g. Please add who is in the photos"></div>
+      <button class="btn btn-outline-dark btn-sm" id="r-reject" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Send back without publishing</button>`;
+    box.querySelectorAll('[data-rcap]').forEach(inp => inp.oninput = () => { reviewing.photos[+inp.dataset.rcap].caption = inp.value; });
+    box.querySelectorAll('[data-rkeep]').forEach(cb => cb.onchange = () => { reviewing.photos[+cb.dataset.rkeep].keep = cb.checked; });
+    document.getElementById('r-publish').onclick = publishReviewed;
+    document.getElementById('r-reject').onclick = rejectReviewed;
+  }
+
+  async function publishReviewed() {
+    const st = document.getElementById('r-status');
+    const title = document.getElementById('r-title').value.trim(), body = document.getElementById('r-body').value.trim();
+    if (!title || !body) { st.textContent = 'Title and article can\u2019t be empty.'; st.className = 'status-msg error'; return; }
+    st.textContent = 'Publishing…'; st.className = 'status-msg';
+    try {
+      const id = 'article-' + Date.now();
+      const photos = [];
+      const keep = reviewing.photos.filter(p => p.keep);
+      for (let i = 0; i < keep.length; i++) {
+        const path = `uploads/articles/${id}_${i + 1}.jpg`;
+        await PandeyGitHub.putFileRaw(path, keep[i].dataUrl.split(',')[1], `Add photo for article: ${title}`, token);
+        photos.push({ url: path, caption: keep[i].caption });
+      }
+      const article = { id, title, author: document.getElementById('r-author').value.trim(), relation: document.getElementById('r-relation').value.trim(),
+        body, photos, publishedAt: new Date().toISOString(), sourceIssue: reviewing.number };
+      await PandeyGitHub.readModifyWriteJSON('data/articles.json', (list) => { list = list || []; list.push(article); return list; },
+        `Publish article: ${title} — by superadmin`, token);
+      const closed = await closeSubmission(reviewing.number, 'Published on the family website. Thank you!');
+      st.textContent = closed ? 'Published.' : 'Published. (The submission couldn\u2019t be marked done on GitHub — add “Issues: Read and write” to your admin key. It won\u2019t show here again either way.)';
+      st.className = 'status-msg ok';
+      setTimeout(() => { document.getElementById('article-review').classList.add('hidden'); loadArticlesTab(); }, 1500);
+    } catch (e) {
+      st.textContent = 'Could not publish: ' + e.message; st.className = 'status-msg error';
+    }
+  }
+
+  async function rejectReviewed() {
+    const st = document.getElementById('r-status');
+    if (!confirm('Send this article back without publishing it?')) return;
+    const note = document.getElementById('r-note').value.trim();
+    const ok = await closeSubmission(reviewing.number, 'Not published this time.' + (note ? ' Note from the editor: ' + note : ''));
+    if (!ok) { st.textContent = 'Could not update the submission on GitHub — your admin key needs “Issues: Read and write” permission.'; st.className = 'status-msg error'; return; }
+    document.getElementById('article-review').classList.add('hidden');
+    loadArticlesTab();
+  }
+
+  function renderPublished(list) {
+    const el = document.getElementById('published-list');
+    const sorted = [...list].sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
+    el.innerHTML = sorted.length ? sorted.map(a => `<div class="editor-row">
+        <span><a href="articles.html?id=${encodeURIComponent(a.id)}" target="_blank">${escA(a.title)}</a><br><span class="muted" style="font-size:13px;">by ${escA(a.author)}</span></span>
+        <button class="btn btn-outline-dark btn-sm" data-unpublish="${escA(a.id)}" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Remove</button></div>`).join('')
+      : '<p class="muted">No articles published yet.</p>';
+    el.querySelectorAll('[data-unpublish]').forEach(b => b.onclick = async () => {
+      const art = list.find(a => a.id === b.dataset.unpublish);
+      if (!confirm(`Remove "${art.title}" from the Articles page?`)) return;
+      await PandeyGitHub.readModifyWriteJSON('data/articles.json', (l) => (l || []).filter(a => a.id !== art.id), `Remove article: ${art.title} — by superadmin`, token);
+      loadArticlesTab();
+    });
+  }
+
+  async function saveFamilyPassword() {
+    const st = document.getElementById('c-status');
+    const submitKey = document.getElementById('c-token').value.trim(), pw = document.getElementById('c-password').value;
+    if (!submitKey || !pw) { st.textContent = 'Enter both the key and the password.'; st.className = 'status-msg error'; return; }
+    if (submitKey === token) { st.textContent = 'That\u2019s your admin key. Create a separate key with only Issues permission.'; st.className = 'status-msg error'; return; }
+    st.textContent = 'Saving…'; st.className = 'status-msg';
+    try {
+      const entry = await PandeyCrypto.encryptToken(submitKey, pw);
+      await PandeyGitHub.readModifyWriteJSON('data/contributors.json', () => ({ entries: [entry] }), 'Set family writers\u2019 password — by superadmin', token);
+      document.getElementById('c-token').value = ''; document.getElementById('c-password').value = '';
+      st.textContent = 'Saved. Share the password with the family.'; st.className = 'status-msg ok';
+    } catch (e) {
+      st.textContent = 'Could not save: ' + e.message; st.className = 'status-msg error';
     }
   }
 
