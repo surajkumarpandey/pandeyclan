@@ -633,7 +633,7 @@
   },
   {
     "id": "devidutt_small",
-    "name": "Devidutt Pandey",
+    "name": "Devidutt I",
     "gender": "M",
     "parentId": "shibu",
     "generation": 12,
@@ -646,8 +646,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Devidutt Pandey I",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "devidutt_small_daughter_6",
