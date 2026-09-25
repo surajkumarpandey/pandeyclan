@@ -828,7 +828,8 @@
     "motherName": null,
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "spouse-jai"
   },
   {
     "id": "jaikishan_daughter_12",
@@ -5562,6 +5563,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "nityanand",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "spouse-jai",
+    "name": "Spouse Jai",
+    "gender": "F",
+    "parentId": null,
+    "generation": 16,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "jaikishan",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
