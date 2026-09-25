@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "event-1790331018230",
+    "eventNumber": 1,
+    "title": "Website created on 22 Sep 2026 for Pandey clan headed by Shri Sukhdev Pandey ji rooted in Bairati (Uttarakhand).",
+    "date": "2026-09-22",
+    "location": "Haldwani",
+    "description": "\"An initiative to honor the legacy of our great ancestors.\"",
+    "photos": [
+      "uploads/event_1790331003239_cnt.jpg",
+      "uploads/event_1790331003306_y4a.jpg",
+      "uploads/event_1790331003364_tb2.jpg"
+    ],
+    "addedAt": "2026-09-25T10:10:18.230Z"
+  }
+]
