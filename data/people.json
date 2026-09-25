@@ -798,7 +798,8 @@
     "motherName": "Tulsi Devi Pandey",
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "spouseId": "spouse-nitya"
   },
   {
     "id": "jaikishan",
@@ -5534,6 +5535,28 @@
     "fatherName": null,
     "motherName": null,
     "spouseId": "son-vinita",
+    "audioMessage": null,
+    "birthDate": null,
+    "birthYear": null,
+    "deathYear": null,
+    "locations": [],
+    "photos": [],
+    "bio": "",
+    "occupation": null
+  },
+  {
+    "id": "spouse-nitya",
+    "name": "Spouse nitya",
+    "gender": "F",
+    "parentId": null,
+    "generation": 16,
+    "tree": "A",
+    "unnamedPlaceholder": false,
+    "notes": null,
+    "fullName": null,
+    "fatherName": null,
+    "motherName": null,
+    "spouseId": "nityanand",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
