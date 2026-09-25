@@ -454,7 +454,7 @@
   },
   {
     "id": "bhagirath",
-    "name": "Bhageerath Pandey",
+    "name": "Bhageerath",
     "gender": "M",
     "parentId": "shripati",
     "generation": 10,
@@ -467,8 +467,13 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
-    "birthDate": null
+    "fullName": "Bhageerath Pandey",
+    "birthDate": null,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "shibu",
