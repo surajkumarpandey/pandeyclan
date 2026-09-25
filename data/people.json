@@ -1864,11 +1864,11 @@
     "occupation": "Entrepreneur / Politician / Agriculturist",
     "locations": [
       {
-        "place": "Dewelchour Bandobasti",
-        "type": "origin",
+        "place": "Haldwani",
+        "type": "lived",
         "year": null,
-        "lat": null,
-        "lng": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
         "note": null
       },
       {
@@ -1877,6 +1877,54 @@
         "year": null,
         "lat": null,
         "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haridwar",
+        "type": "visited",
+        "year": null,
+        "lat": 29.9384473,
+        "lng": 78.1452985,
+        "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "visited",
+        "year": null,
+        "lat": 30.3255646,
+        "lng": 78.0436813,
+        "note": null
+      },
+      {
+        "place": "Someshwer",
+        "type": "visited",
+        "year": null,
+        "lat": 19.065909,
+        "lng": 72.8368045,
+        "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "visited",
+        "year": null,
+        "lat": 30.3255646,
+        "lng": 78.0436813,
+        "note": null
+      },
+      {
+        "place": "Betalghat",
+        "type": "visited",
+        "year": null,
+        "lat": 29.5387223,
+        "lng": 79.339948,
+        "note": null
+      },
+      {
+        "place": "Kichha",
+        "type": "visited",
+        "year": null,
+        "lat": 28.9129428,
+        "lng": 79.519706,
         "note": null
       }
     ],
@@ -1888,7 +1936,7 @@
     "birthDate": "2026-06-30",
     "audioMessages": [],
     "audioMessage": null,
-    "birthPlace": "Haldwani"
+    "birthPlace": "Dewelchour Bandobasti"
   },
   {
     "id": "dev",
