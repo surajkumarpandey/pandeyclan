@@ -794,14 +794,23 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
+    "occupation": "Defence Service",
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "fullName": "Nityanand Pandey",
     "birthDate": null,
     "sortOrder": 0,
     "fatherName": "Lakshmi Dutt Pandey",
     "motherName": "Tulsi Devi Pandey",
-    "birthPlace": null,
+    "birthPlace": "Bairati Almora",
     "audioMessages": [],
     "audioMessage": null,
     "spouseId": "spouse-nitya"
