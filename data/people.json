@@ -1090,7 +1090,7 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "",
+    "bio": "\"Departed for his heavenly abode on 01 Aug 1994 in Haldwani.\"",
     "occupation": "Entrepreneur / Agriculturist",
     "locations": [
       {
@@ -1099,6 +1099,38 @@
         "year": "1902",
         "lat": 24.8176145,
         "lng": 90.6369117,
+        "note": null
+      },
+      {
+        "place": "Ranikhet",
+        "type": "lived",
+        "year": null,
+        "lat": 29.6323007,
+        "lng": 79.4154142,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "lived",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      },
+      {
+        "place": "Visakhapattnam",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       }
     ],
@@ -1109,7 +1141,8 @@
     "motherName": "Tulsi Devi Pandey",
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "saroj"
+    "spouseId": "saroj",
+    "birthPlace": "Bairati Almora"
   },
   {
     "id": "bholadutt",
