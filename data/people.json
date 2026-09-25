@@ -880,8 +880,16 @@
         "place": "Haldwani",
         "type": "lived",
         "year": null,
-        "lat": null,
-        "lng": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Bairati, Almora",
+        "type": "lived",
+        "year": null,
+        "lat": 29.8075451,
+        "lng": 79.4198012,
         "note": null
       }
     ],
