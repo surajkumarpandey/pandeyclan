@@ -30,7 +30,11 @@
     "date": "2026-09-22",
     "location": "Haldwani",
     "description": "\"An initiative to honor the legacy of our great ancestors.\"",
-    "photos": [],
+    "photos": [
+      "uploads/event_1790321126511_1b4.jpg",
+      "uploads/event_1790321126571_39u.jpg",
+      "uploads/event_1790321126635_1qr.jpg"
+    ],
     "addedAt": "2026-09-25T07:17:45.800Z"
   }
 ]
