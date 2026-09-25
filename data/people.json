@@ -1123,9 +1123,34 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "",
+    "bio": "\"Departed for his heavenly abode on 02 July 2005 in Haldwani.\"",
     "occupation": "Politician / Agriculturist",
-    "locations": [],
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Pilani",
+        "type": "lived",
+        "year": null,
+        "lat": 28.3622661,
+        "lng": 75.6042342,
+        "note": null
+      },
+      {
+        "place": "Lucknow",
+        "type": "lived",
+        "year": null,
+        "lat": 26.8381,
+        "lng": 80.9346001,
+        "note": null
+      }
+    ],
     "fullName": "Bhola Dutt Pandey",
     "birthDate": "1914-01-01",
     "sortOrder": 3,
