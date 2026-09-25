@@ -778,7 +778,7 @@
   },
   {
     "id": "nityanand",
-    "name": "Nityanand Pandey",
+    "name": "Nityanand",
     "gender": "M",
     "parentId": "laxmidutt",
     "generation": 16,
@@ -791,9 +791,14 @@
     "bio": "",
     "occupation": null,
     "locations": [],
-    "fullName": null,
+    "fullName": "Nityanand Pandey",
     "birthDate": null,
-    "sortOrder": 0
+    "sortOrder": 0,
+    "fatherName": null,
+    "motherName": null,
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "jaikishan",
