@@ -1574,7 +1574,7 @@
   },
   {
     "id": "dev",
-    "name": "Dev",
+    "name": "Devvrat",
     "gender": "M",
     "parentId": "khajan",
     "generation": 19,
@@ -1586,7 +1586,14 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "locations": []
+    "locations": [],
+    "fullName": "Devvrat Pandey",
+    "fatherName": "Khajan Chandra Pandey",
+    "motherName": "Meena Pandey",
+    "birthDate": "2007-08-04",
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "khajan_daughter_23",
