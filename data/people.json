@@ -849,7 +849,8 @@
     "fullName": null,
     "birthDate": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "sortOrder": 0
   },
   {
     "id": "prayagdutt",
@@ -873,7 +874,8 @@
     "birthPlace": "Bairati Almora",
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "kamala"
+    "spouseId": "kamala",
+    "sortOrder": 3
   },
   {
     "id": "gopaldutt",
@@ -897,7 +899,8 @@
     "birthPlace": "Bairati, Almora",
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "hema"
+    "spouseId": "hema",
+    "sortOrder": 1
   },
   {
     "id": "prayagdutt_daughter_16",
@@ -2689,7 +2692,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "sortOrder": 4
   },
   {
     "id": "jaya-devi",
@@ -2709,7 +2713,8 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "sortOrder": 2
   },
   {
     "id": "baby-pandey",
