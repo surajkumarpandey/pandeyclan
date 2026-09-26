@@ -3025,7 +3025,7 @@
       {
         "place": "Pali, Gangolihat",
         "type": "origin",
-        "year": "1966",
+        "year": null,
         "lat": null,
         "lng": null,
         "note": null
@@ -3041,7 +3041,7 @@
       {
         "place": "Lalkuan",
         "type": "lived",
-        "year": "1986",
+        "year": null,
         "lat": 29.0678634,
         "lng": 79.5166143,
         "note": null
@@ -3049,7 +3049,7 @@
       {
         "place": "Nasik",
         "type": "lived",
-        "year": "1989",
+        "year": null,
         "lat": 19.9480582,
         "lng": 73.8420837,
         "note": null
@@ -3057,7 +3057,7 @@
       {
         "place": "Delhi",
         "type": "lived",
-        "year": "1998",
+        "year": null,
         "lat": 28.6664535,
         "lng": 77.2169781,
         "note": null
@@ -3065,7 +3065,7 @@
       {
         "place": "Haldwani",
         "type": "current",
-        "year": "1988",
+        "year": null,
         "lat": 29.2144809,
         "lng": 79.5279012,
         "note": null
@@ -3082,8 +3082,8 @@
         "place": "Agra",
         "type": "visited",
         "year": null,
-        "lat": null,
-        "lng": null,
+        "lat": 27.1752554,
+        "lng": 78.0098161,
         "note": null
       },
       {
