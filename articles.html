@@ -26,6 +26,15 @@
   .reader figure img { width: 100%; border-radius: 4px; }
   .reader figcaption { font-size: 13.5px; color: #8a6a58; margin-top: 6px; text-align: center; }
   .empty-state { padding: 60px 0; text-align: center; color: #8a6a58; }
+  .pdf-box { margin: 26px 0; border: 1px solid var(--line-dark); border-radius: 6px; overflow: hidden; background: #fff; }
+  .pdf-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 14px; background: var(--paper); border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .pdf-bar .name { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pdf-bar a { font-weight: 600; color: var(--ochre-deep); text-decoration: none; white-space: nowrap; }
+  .pdf-frame { height: 78vh; min-height: 420px; overflow-y: auto; background: #5b5b5b; padding: 12px 0; -webkit-overflow-scrolling: touch; }
+  .pdf-page { display: block; margin: 0 auto 12px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.35); }
+  .pdf-msg { color: #fff; text-align: center; padding: 30px 16px; font-size: 14px; }
+  .pdf-msg a { color: var(--gold-light); }
+  .a-card .pdf-tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.4px; background: var(--ochre); color: #fff; padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
 </style>
 </head>
 <body>
@@ -94,9 +103,15 @@
         <h1>${esc(one.title)}</h1>
         <div class="by">${byline(one)}</div>
         ${one.photos && one.photos[0] ? `<figure><img src="${one.photos[0].url}" alt=""><figcaption>${esc(one.photos[0].caption)}</figcaption></figure>` : ''}
-        <div class="text">${paras}</div>
+        ${one.body ? `<div class="text">${paras}</div>` : ''}
+        ${one.pdf ? `<div class="pdf-box">
+          <div class="pdf-bar"><span class="name">📄 ${esc(one.pdf.name || 'Article PDF')}</span><span id="pdf-pages"></span>
+            <a href="${one.pdf.url}" target="_blank" rel="noopener">Open full screen</a><a href="${one.pdf.url}" download>Download</a></div>
+          <div class="pdf-frame" id="pdf-frame"><div class="pdf-msg">Loading the PDF…</div></div>
+        </div>` : ''}
         ${(one.photos || []).slice(1).map(p => `<figure><img src="${p.url}" alt=""><figcaption>${esc(p.caption)}</figcaption></figure>`).join('')}
       </article>`;
+    if (one.pdf) showPdf(one.pdf.url);
     return;
   }
   if (!articles.length) {
@@ -107,9 +122,47 @@
     const preview = esc((a.body || '').split(/\n\s*\n/)[0]).slice(0, 180);
     return `<a class="a-card" href="articles.html?id=${encodeURIComponent(a.id)}">
       ${a.photos && a.photos[0] ? `<img src="${a.photos[0].url}" alt="">` : '<div class="noimg"></div>'}
-      <div class="body"><h3>${esc(a.title)}</h3><div class="by">${byline(a)}</div><p>${preview}${(a.body || '').length > 180 ? '…' : ''}</p></div>
+      <div class="body"><h3>${esc(a.title)}${a.pdf ? '<span class="pdf-tag">PDF</span>' : ''}</h3><div class="by">${byline(a)}</div><p>${preview || (a.pdf ? 'Read the attached PDF.' : '')}${(a.body || '').length > 180 ? '…' : ''}</p></div>
     </a>`;
   }).join('')}</div>`;
+
+  // ---------- PDF viewer ----------
+  // Pages are drawn with Mozilla's PDF.js rather than an <iframe>, because
+  // phone browsers often show a blank box or only the first page otherwise.
+  function loadScript(src) {
+    return new Promise((resolve, reject) => { const el = document.createElement('script'); el.src = src; el.onload = resolve; el.onerror = reject; document.head.appendChild(el); });
+  }
+  async function showPdf(url) {
+    const frame = document.getElementById('pdf-frame');
+    const fail = () => { frame.innerHTML = `<div class="pdf-msg">The PDF couldn't be shown here. <a href="${url}" target="_blank" rel="noopener">Open it directly</a>.</div>`; };
+    try {
+      const base = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/';
+      await loadScript(base + 'pdf.min.js');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = base + 'pdf.worker.min.js';
+      const doc = await pdfjsLib.getDocument(url).promise;
+      document.getElementById('pdf-pages').textContent = `${doc.numPages} page${doc.numPages > 1 ? 's' : ''}`;
+      frame.innerHTML = '';
+      const width = frame.clientWidth - 24, dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // placeholders at the right size first, so the scroll bar is correct straight away
+      const first = await doc.getPage(1), ratio = first.getViewport({ scale: 1 }).height / first.getViewport({ scale: 1 }).width;
+      const slots = [];
+      for (let n = 1; n <= doc.numPages; n++) {
+        const c = document.createElement('canvas'); c.className = 'pdf-page';
+        c.style.width = width + 'px'; c.style.height = Math.round(width * ratio) + 'px'; c.dataset.page = n;
+        frame.appendChild(c); slots.push(c);
+      }
+      const drawn = new Set();
+      async function draw(c) {
+        const n = +c.dataset.page; if (drawn.has(n)) return; drawn.add(n);
+        const page = await doc.getPage(n);
+        const vp1 = page.getViewport({ scale: 1 }), scale = width / vp1.width, vp = page.getViewport({ scale: scale * dpr });
+        c.width = vp.width; c.height = vp.height; c.style.height = Math.round(vp.height / dpr) + 'px';
+        await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+      }
+      const io = new IntersectionObserver((entries) => entries.forEach(e => { if (e.isIntersecting) draw(e.target); }), { root: frame, rootMargin: '600px 0px' });
+      slots.forEach(c => io.observe(c));
+    } catch (e) { fail(); }
+  }
 })();
 </script>
 </body>
