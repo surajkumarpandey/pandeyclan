@@ -2192,7 +2192,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/shekhar_daughter_26_1790438848339.jpg"
+    ],
     "bio": "",
     "occupation": "Educationist",
     "locations": [
