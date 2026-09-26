@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.addEventListener('click', () => links.classList.toggle('open'));
   }
   addSiteCredit();
+  initSiteStats();
 });
 
 /* ---------- Site credit: "Created and maintained by …" ----------
@@ -92,4 +93,37 @@ function showFatalError(message) {
   bar.style.cssText = 'position:sticky; top:0; z-index:50; background:#8C2F1F; color:#FFFBF3; padding:14px 20px; font-family:sans-serif; font-size:14.5px; text-align:center;';
   bar.textContent = message;
   document.body.prepend(bar);
+}
+
+/* ---------- Visitor statistics (GoatCounter) ----------
+   Fill these two settings in once, after creating a free GoatCounter account.
+   Until goatcounterCode is set, nothing is counted and no widget is shown. */
+const SITE_STATS = {
+  goatcounterCode: '',   // e.g. 'pandey-bairati' for https://pandey-bairati.goatcounter.com
+  dashboardUrl: ''       // GoatCounter's shareable dashboard link (the one ending in ?access-token=…)
+};
+function statsBase() { return SITE_STATS.goatcounterCode ? `https://${SITE_STATS.goatcounterCode}.goatcounter.com` : null; }
+function fetchVisitCount(params) {
+  const base = statsBase(); if (!base) return Promise.resolve(null);
+  return fetch(`${base}/counter/TOTAL.json${params || ''}`).then(r => r.ok ? r.json() : null).then(d => d ? d.count : null).catch(() => null);
+}
+function initSiteStats() {
+  if (!document.querySelector('.site-nav .links')) return;   // never count the admin or setup pages
+  const base = statsBase(); if (!base) return;
+  const tag = document.createElement('script');
+  tag.async = true; tag.src = 'https://gc.zgo.at/count.js'; tag.dataset.goatcounter = base + '/count';
+  document.head.appendChild(tag);
+  // small widget under the site credit
+  const credit = document.getElementById('site-credit');
+  if (!credit || document.getElementById('site-stats-widget')) return;
+  const w = document.createElement('a');
+  w.id = 'site-stats-widget'; w.href = 'stats.html';
+  w.style.cssText = 'display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:4px 12px; border-radius:999px; font-size:12.5px; text-decoration:none;'
+                  + 'color:inherit; border:1px solid rgba(224,149,42,0.55); background:rgba(224,149,42,0.12);';
+  w.innerHTML = '<span aria-hidden="true">👁</span><span id="site-stats-count">…</span>';
+  credit.appendChild(document.createElement('br')); credit.appendChild(w);
+  fetchVisitCount().then(n => {
+    const hi = (typeof PandeyI18n !== 'undefined' && PandeyI18n.currentLang() !== 'en');
+    document.getElementById('site-stats-count').textContent = n ? (hi ? `${n} विज़िट · आँकड़े देखें` : `${n} visits · site stats`) : (hi ? 'साइट के आँकड़े' : 'Site stats');
+  });
 }
