@@ -99,7 +99,9 @@
   .panel .avatar-lg { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold); margin-bottom: 14px; }
   .panel .avatar-lg-placeholder { width: 88px; height: 88px; border-radius: 50%; margin-bottom: 14px; background: var(--ochre); opacity: 0.25; }
   .panel h2 { font-family: var(--font-display); font-weight: 600; font-size: 24px; margin: 4px 0 6px; }
-  .panel .chain { font-size: 13px; color: #8a6a58; margin-bottom: 18px; }
+  .panel .rel { font-size: 15px; line-height: 1.5; color: var(--ink); margin: 0 0 6px; }
+  .panel .rel strong { font-weight: 600; }
+  .panel .chain { font-size: 13px; color: #8a6a58; margin: 10px 0 18px; }
   .panel dl { margin: 0; }
   .panel dt { font-size: 12px; font-weight: 600; color: #8a6a58; margin-top: 14px; }
   .panel dd { margin: 3px 0 0; }
@@ -497,8 +499,56 @@
     return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  // ---------- Relationship sentences for the detail panel ----------
+  // e.g. "Suraj Kumar Pandey, son of Ashok Kumar Pandey and Hemlata Pandey"
+  //      "Husband of Hemlata Pandey, daughter of … and …"
+  const fullNameOf = (x) => x.unnamedPlaceholder ? PandeyData.displayName(x) : (x.fullName || x.name);
+  // stand-in names such as "Spouse nitya" or "PremaSpouse" aren't real names — leave them out of sentences
+  const isRealName = (n) => !!n && !/spouse/i.test(n) && !/not recorded/i.test(n);
+  function parentNamesOf(x) {
+    // The parent in the tree plus that parent's spouse; for someone who married
+    // into the family, the father's/mother's names typed on their own record.
+    const parent = x.parentId ? people.find(q => q.id === x.parentId) : null;
+    const parentSpouse = parent && parent.spouseId ? people.find(q => q.id === parent.spouseId) : null;
+    let father = null, mother = null;
+    if (parent) {
+      if (parent.gender === 'F') { mother = fullNameOf(parent); father = parentSpouse ? fullNameOf(parentSpouse) : x.fatherName; }
+      else { father = fullNameOf(parent); mother = parentSpouse ? fullNameOf(parentSpouse) : x.motherName; }
+    } else {
+      father = x.fatherName; mother = x.motherName;
+    }
+    return [father, mother].filter(isRealName);
+  }
+  function relationLines(p) {
+    const hi = PandeyI18n.currentLang() !== 'en';
+    const joinAnd = (names) => names.join(hi ? ' एवं ' : ' and ');
+    const childWord = (g) => hi ? (g === 'M' ? 'के पुत्र' : g === 'F' ? 'की पुत्री' : 'की संतान') : (g === 'M' ? 'son of' : g === 'F' ? 'daughter of' : 'child of');
+    const lines = [];
+    const parents = parentNamesOf(p);
+    const me = `<strong>${fullNameOf(p)}</strong>`;
+    if (parents.length) {
+      lines.push(hi ? `${me}, ${joinAnd(parents)} ${childWord(p.gender)}` : `${me}, ${childWord(p.gender)} ${joinAnd(parents)}`);
+    } else if (p.fullName && p.fullName !== p.name) {
+      lines.push(me);
+    }
+    const spouse = p.spouseId ? people.find(x => x.id === p.spouseId) : null;
+    if (spouse && !isRealName(fullNameOf(spouse))) {
+      lines.push(hi ? 'विवाहित (जीवनसाथी का नाम दर्ज नहीं)' : 'Married (spouse\u2019s name not recorded)');
+    } else if (spouse) {
+      const sp = fullNameOf(spouse), spParents = parentNamesOf(spouse);
+      const tie = hi ? (p.gender === 'M' ? `${sp} के पति` : p.gender === 'F' ? `${sp} की पत्नी` : `${sp} के जीवनसाथी`)
+                     : (p.gender === 'M' ? `Husband of ${sp}` : p.gender === 'F' ? `Wife of ${sp}` : `Married to ${sp}`);
+      const spRel = spParents.length
+        ? (hi ? ` (${joinAnd(spParents)} ${childWord(spouse.gender)})` : `, ${childWord(spouse.gender)} ${joinAnd(spParents)}`)
+        : '';
+      lines.push(tie + spRel);
+    }
+    return lines.map(l => `<p class="rel">${l}</p>`).join('');
+  }
+
   function openPanel(p) {
     const t = PandeyI18n.t;
+    const audioList = p.audioMessages || (p.audioMessage ? [p.audioMessage] : []);
     const chain = PandeyData.ancestorChain(people, p.id).map(n => PandeyData.displayName(n)).join(' → ');
     const photos = (p.photos || []).map(src => `<img src="${src}" alt="">`).join('');
     const avatarHtml = (p.photos && p.photos.length) ? `<img class="avatar-lg" src="${p.photos[0]}" alt="">` : `<div class="avatar-lg-placeholder"></div>`;
@@ -509,15 +559,10 @@
     panelBody.innerHTML = `
       ${avatarHtml}
       <h2>${PandeyData.displayName(p)}</h2>
+      ${relationLines(p)}
       <div class="chain">${chain}</div>
       ${p.unnamedPlaceholder ? `<span class="badge badge-placeholder">${t('tree.field.namenotrecorded', 'Name not recorded')}</span>` : ''}
       <dl>
-        ${p.fullName ? `<dt>${t('tree.field.fullname', 'Full name')}</dt><dd>${p.fullName}</dd>` : ''}
-        ${spouse ? `<dt>${t('tree.field.spouse', 'Spouse')}</dt><dd>${PandeyData.displayName(spouse)}</dd>` : ''}
-        ${spouse && spouse.fatherName ? `<dt>${t('tree.field.spousefather', "Spouse's father")}</dt><dd>${spouse.fatherName}</dd>` : ''}
-        ${spouse && spouse.motherName ? `<dt>${t('tree.field.spousemother', "Spouse's mother")}</dt><dd>${spouse.motherName}</dd>` : ''}
-        ${!spouse && p.fatherName ? `<dt>${t('tree.field.fathername', "Father's name")}</dt><dd>${p.fatherName}</dd>` : ''}
-        ${!spouse && p.motherName ? `<dt>${t('tree.field.mothername', "Mother's name")}</dt><dd>${p.motherName}</dd>` : ''}
         ${p.occupation ? `<dt>${t('tree.field.occupation', 'Occupation')}</dt><dd>${p.occupation}</dd>` : ''}
         ${(p.birthDate || p.birthYear) ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${formatBirthDate(p.birthDate, p.birthYear)}${p.birthPlace ? ', ' + p.birthPlace : ''}</dd>` : (p.birthPlace ? `<dt>${t('tree.field.born', 'Born')}</dt><dd>${p.birthPlace}</dd>` : '')}
         ${current ? `<dt>${t('tree.field.currentlocation', 'Current location')}</dt><dd>${current.place}</dd>` : ''}
@@ -526,7 +571,7 @@
         ${p.notes ? `<dt>${t('tree.field.note', 'Note')}</dt><dd class="muted">${p.notes}</dd>` : ''}
       </dl>
       ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.photos', 'Photos')}</dt><div class="photos">${photos}</div>` : ''}
-      ${p.audioMessage ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.voicemessage', 'Voice message')}</dt><audio controls src="${p.audioMessage}" style="width:100%; margin-top:6px;"></audio>` : ''}
+      ${audioList.length ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.voicemessage', 'Voice message')}</dt>${audioList.map(src => `<audio controls src="${src}" style="width:100%; margin-top:6px;"></audio>`).join('')}` : ''}
       ${(p.locations || []).length ? `<p style="margin-top:22px;"><a class="btn btn-outline-dark btn-sm" href="map.html?person=${p.id}">${t('tree.field.journey', "See their journey")}</a></p>` : ''}
     `;
     panel.classList.add('open');
