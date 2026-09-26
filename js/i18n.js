@@ -65,6 +65,7 @@ const PandeyI18n = (() => {
     'tree.download.pdf': { hi: 'PDF के रूप में डाउनलोड करें' },
     'tree.field.fullname': { hi: 'पूरा नाम' },
     'tree.field.spouse': { hi: 'जीवनसाथी' },
+    'tree.field.lineage': { hi: 'वंशावली' },
     'tree.field.spousefather': { hi: 'जीवनसाथी के पिता' },
     'tree.field.spousemother': { hi: 'जीवनसाथी की माता' },
     'tree.field.fathername': { hi: 'पिता का नाम' },
