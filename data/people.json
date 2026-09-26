@@ -2299,9 +2299,57 @@
     "deathYear": null,
     "photos": [],
     "bio": "",
-    "occupation": null,
-    "locations": [],
-    "spouseId": "preeti-2"
+    "occupation": "AVP (MNC)",
+    "locations": [
+      {
+        "place": "Mumbai",
+        "type": "lived",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      },
+      {
+        "place": "Visakhapatnam",
+        "type": "lived",
+        "year": null,
+        "lat": 17.6935526,
+        "lng": 83.2921297,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Bairati",
+        "type": "visited",
+        "year": null,
+        "lat": 24.8176145,
+        "lng": 90.6369117,
+        "note": null
+      }
+    ],
+    "spouseId": "preeti-2",
+    "fullName": "Hem Chandra Pandey",
+    "fatherName": "Kailash Chandra Pandey",
+    "motherName": "Pushpa Pandey",
+    "birthDate": "1976-07-01",
+    "birthPlace": null,
+    "audioMessages": [],
+    "audioMessage": null
   },
   {
     "id": "vedansh",
