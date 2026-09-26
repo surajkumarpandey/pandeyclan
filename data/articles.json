@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "article-1790407503422",
+    "title": "Exploring our roots",
+    "author": "Suraj Kumar Pandey",
+    "relation": "Descendant of Pandey clan",
+    "body": "",
+    "photos": [],
+    "pdf": {
+      "url": "uploads/articles/article-1790407503422.pdf",
+      "name": "From-Kannauj-to-Bairati.pdf"
+    },
+    "publishedAt": "2026-09-26T07:25:06.636Z",
+    "sourceIssue": 1
+  }
+]
