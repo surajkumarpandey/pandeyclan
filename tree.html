@@ -47,10 +47,10 @@
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
     /* the aipan tile, softened by a translucent dark layer so the tree stands out */
-    background-image: linear-gradient(rgba(40, 8, 10, 0.42), rgba(40, 8, 10, 0.42)), url('assets/img/tree-backdrop-aipan.jpg');
+    background-image: linear-gradient(rgba(74, 18, 22, 0.82), rgba(74, 18, 22, 0.82)), url('assets/img/tree-backdrop-aipan.jpg');
     background-repeat: repeat, repeat;
     background-size: auto, 704px auto;
-    background-color: #5a1a14;
+    background-color: #4a1216;
   }
   .tree-canvas { position: relative; transform-origin: top left; }
   #tree-zoom-sizer { position: relative; }
@@ -59,10 +59,10 @@
      zoomed canvas, so it stays behind the right members at every zoom level */
   .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; z-index: 0;
     border-top: 1px solid rgba(179,64,42,0.10); }
-  .gen-marker.band-a { background: rgba(255, 244, 225, 0.16); }
-  .gen-marker.band-b { background: rgba(28, 6, 8, 0.34); }
+  .gen-marker.band-a { background: rgba(255, 244, 225, 0.09); }
+  .gen-marker.band-b { background: rgba(20, 4, 6, 0.30); }
   .gen-marker { border-top: 1px solid rgba(255, 236, 200, 0.35); }
-  .gen-marker .band-num { position: absolute; left: 14px; top: 10px; font-family: var(--font-display); font-size: 34px;
+  .gen-marker .band-num { position: absolute; left: 12px; top: 4px; font-family: var(--font-display); font-size: 28px;
     font-weight: 700; color: #FFF3DC; opacity: 0.92; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55); letter-spacing: 0.5px; }
   #tree-svg { position: relative; z-index: 1; }
   .gen-label-tag {
@@ -73,7 +73,7 @@
   }
 
   .link {
-    fill: none; stroke: var(--gold); stroke-opacity: 0.95; stroke-width: 2.4px; stroke-linejoin: miter;
+    fill: none; stroke: var(--gold); stroke-opacity: 0.95; stroke-width: 4px; stroke-linejoin: miter;
     filter: drop-shadow(0 0 3px rgba(224,149,42,0.9)) drop-shadow(0 0 7px rgba(224,149,42,0.5));
   }
   .link.dim { stroke-opacity: 0.1; filter: none; }
@@ -89,8 +89,8 @@
   .node image { cursor: pointer; }
   .node:hover circle.avatar-ring { stroke-width: 4.5px; }
   .node text {
-    font-family: var(--font-body); font-size: 11px; font-weight: 600; fill: #FFF6E6; cursor: pointer; text-anchor: middle;
-    paint-order: stroke fill; stroke: rgba(36, 8, 10, 0.88); stroke-width: 3.5px; stroke-linejoin: round;
+    font-family: var(--font-body); font-size: 17px; font-weight: 600; fill: #FFF6E6; cursor: pointer; text-anchor: middle;
+    paint-order: stroke fill; stroke: rgba(36, 8, 10, 0.9); stroke-width: 4.5px; stroke-linejoin: round;
   }
   .node.placeholder text { fill: #EBCFAE; }
   .node.dim { opacity: 0.15; }
@@ -98,7 +98,7 @@
   .node.highlight circle.avatar-ring { stroke: var(--gold) !important; stroke-width: 4px; }
 
   .root-node circle.avatar-ring { stroke: var(--gold); stroke-width: 3.5px; }
-  .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: #FFE066; }
+  .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 22px; fill: #FFE066; }
 
   .panel {
     position: fixed; top: 0; right: 0; width: 340px; max-width: 88vw; height: 100%;
@@ -125,8 +125,8 @@
   /* expand / collapse control on nodes that have children */
   .node .toggle { cursor: pointer; }
   .node .toggle circle { fill: var(--maroon); stroke: #FFFBF3; stroke-width: 2px; }
-  .node .toggle text { fill: #FFFBF3; stroke: none; font-size: 15px; font-weight: 700; text-anchor: middle; pointer-events: none; }
-  .node .toggle .count { fill: var(--maroon); font-size: 11px; font-weight: 700; text-anchor: start; paint-order: stroke fill; stroke: #FFFBF3; stroke-width: 3px; }
+  .node .toggle text { fill: #FFFBF3; stroke: none; font-size: 19px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+  .node .toggle .count { fill: var(--maroon); font-size: 14px; font-weight: 700; text-anchor: start; paint-order: stroke fill; stroke: #FFFBF3; stroke-width: 3px; }
 
   /* generation rail: pinned to the left edge on phones, never scrolls sideways */
   .tree-area { position: relative; min-width: 0; }
@@ -251,10 +251,10 @@
   const rootPerson = people.find(p => !p.parentId && !people.some(x => x.spouseId === p.id && x.parentId)) || people.find(p => !p.parentId);
   const fullMaxDepth = d3.max(d3.hierarchy(buildNode(rootPerson), d => d.children).descendants(), d => d.depth);
 
-  const DX = 120;  // horizontal spacing between siblings — wide enough for bigger avatars + labels
-  const DY = 168;  // vertical spacing between generations
+  const DX = 170;  // horizontal spacing between siblings — wide enough for bigger avatars + labels
+  const DY = 210;  // vertical spacing between generations
   const MARGIN_TOP = 60, MARGIN_SIDE = 60;
-  const R = 20, ROOT_R = 34;
+  const R = 28, ROOT_R = 46;
   const spouseGap = Math.max(DX * 0.62, R * 2.6);
   const isMobile = () => window.matchMedia('(max-width: 800px)').matches;
   const RAIL_W = 100;                      // space reserved on the left for the generation rail on phones
@@ -272,7 +272,7 @@
     const nodeY = (gen - 1) * DY + MARGIN_TOP;
     const band = document.createElement('div');
     band.className = 'gen-marker ' + (gen % 2 ? 'band-a' : 'band-b'); band.dataset.gen = gen;
-    band.style.top = (nodeY - 48) + 'px'; band.style.height = DY + 'px';
+    band.style.top = (nodeY - 62) + 'px'; band.style.height = DY + 'px';
     band.innerHTML = `<span class="band-num">Gen ${gen}</span>`;
     canvas.appendChild(band);
   }
@@ -336,7 +336,9 @@
     sizer.style.height = (totalHeight * zoomLevel) + 'px';
     sizer.style.marginLeft = '0';
   }
-  const defaultZoom = () => Math.max(0.3, Math.min(1, (scrollWrap.clientWidth * 2.4) / totalWidth));
+  // phones open close enough to read names (the whole tree is several thousand pixels wide,
+  // so fitting it all on a phone would shrink names to a few pixels); zoom out with the − button
+  const defaultZoom = () => isMobile() ? 0.62 : Math.max(0.45, Math.min(1, (scrollWrap.clientWidth * 2.4) / totalWidth));
   document.getElementById('zoom-in-btn').addEventListener('click', () => { zoomLevel = Math.min(1.4, zoomLevel + 0.15); applyZoom(); });
   document.getElementById('zoom-out-btn').addEventListener('click', () => { zoomLevel = Math.max(0.2, zoomLevel - 0.15); applyZoom(); });
   document.getElementById('zoom-reset-btn').addEventListener('click', () => { zoomLevel = defaultZoom(); applyZoom(); });
@@ -380,7 +382,7 @@
     } else {
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', isRoot ? '#FFD21F' : '#FFFBF3').attr('stroke', isRoot ? '#FFB300' : ringColor);
     }
-    const label = sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
+    const label = sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 24);
     wrapLabel(label, DX - 14, 1.15);
   }
 
@@ -431,9 +433,9 @@
         .attr('transform', `translate(${r * 0.95},${-r * 0.95})`)
         .attr('aria-label', d.data.isCollapsed ? 'Expand' : 'Collapse')
         .on('click', (event) => { event.stopPropagation(); toggleBranch(d.data.id); });
-      tg.append('circle').attr('r', 11);
+      tg.append('circle').attr('r', 14);
       tg.append('text').attr('dy', '0.36em').text(d.data.isCollapsed ? '+' : '−');
-      if (d.data.isCollapsed) tg.append('text').attr('class', 'count').attr('x', 15).attr('dy', '0.36em').text(`${countDescendants(d.data.id)} more`);
+      if (d.data.isCollapsed) tg.append('text').attr('class', 'count').attr('x', 19).attr('dy', '0.36em').text(`${countDescendants(d.data.id)} more`);
     });
 
     // spouses beside their partner, joined by a marriage line
@@ -480,7 +482,7 @@
   }
 
   draw();
-  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, (offsetX - 60) * zoomLevel); });
+  requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, offsetX * zoomLevel - scrollWrap.clientWidth / 2); });
 
   // ---------- Sticky generation story, driven by scroll position ----------
   const sidebar = document.getElementById('story-sidebar');
