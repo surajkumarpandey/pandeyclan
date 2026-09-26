@@ -5937,10 +5937,39 @@
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
-    "photos": [],
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "lived",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      },
+      {
+        "place": "Visakhapatnam",
+        "type": "lived",
+        "year": null,
+        "lat": 17.6935526,
+        "lng": 83.2921297,
+        "note": null
+      }
+    ],
+    "photos": [
+      "uploads/pushpa-2_1790441047443.jpg"
+    ],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "jeewan-2",
