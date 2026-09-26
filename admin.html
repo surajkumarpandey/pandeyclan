@@ -838,7 +838,22 @@
 
   // ================= GENERATIONS =================
   let currentGeneration = null;
+  // ---------- shared: removable photo thumbnails ----------
+  // Existing photos get data-existing (added to a "removed" set on click);
+  // photos picked but not yet saved get data-pending (dropped from the queue).
+  const thumbHTML = (src, attr) => `<div class="thumb"><img src="${src}"><button type="button" class="remove" title="Remove" ${attr}>&times;</button></div>`;
+  function wireGridRemovers(gridId, removedSet, getPending, setPending) {
+    document.querySelectorAll(`#${gridId} .remove`).forEach(btn => {
+      btn.onclick = () => {
+        if (btn.dataset.existing) removedSet.add(btn.dataset.existing);
+        if (btn.dataset.pending) setPending(getPending().filter(x => x.filename !== btn.dataset.pending));
+        btn.closest('.thumb').remove();
+      };
+    });
+  }
+
   let pendingGenPhotos = [];
+  let removedGenPhotos = new Set();
   async function renderGenerationList() {
     const ul = document.getElementById('generation-ul');
     const { content } = await PandeyGitHub.getFile('data/generations.json', token);
@@ -848,17 +863,23 @@
   }
   function loadGenerationForm(genNum, gens) {
     currentGeneration = gens.find(g => g.generation === genNum) || { generation: genNum, title: '', description: '', photos: [] };
-    pendingGenPhotos = [];
+    pendingGenPhotos = []; removedGenPhotos = new Set();
     const area = document.getElementById('generation-form-area');
     area.innerHTML = `
       <h2 style="font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 20px;">Generation ${genNum}</h2>
       <div class="field"><label>Title</label><input type="text" id="g-title" value="${currentGeneration.title || ''}"></div>
       <div class="field"><label>Story</label><textarea id="g-description" style="min-height:160px;">${currentGeneration.description || ''}</textarea></div>
-      <div class="field"><label>Photos</label><div class="photo-grid" id="g-photo-grid">${(currentGeneration.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+      <div class="field"><label>Photos</label><div class="photo-grid" id="g-photo-grid">${(currentGeneration.photos || []).map(src => thumbHTML(src, `data-existing="${src}"`)).join('')}</div>
       <input type="file" id="g-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
       <button class="btn btn-gold" id="save-gen-btn">Save generation story</button>
       <span id="save-gen-status" class="status-msg"></span>
+      <hr style="margin:28px 0; border:none; border-top:1px solid var(--line);">
+      <h3 style="font-family:var(--font-display); font-size:18px; margin:0 0 8px; color:var(--ochre-deep);">Clear this story</h3>
+      <p class="muted" style="font-size:13.5px;">Removes this generation\u2019s title, story and photos from the site. The generation itself stays in the tree.</p>
+      <button class="btn btn-outline-dark btn-sm" id="clear-gen-btn" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Clear story</button>
     `;
+    wireGridRemovers('g-photo-grid', removedGenPhotos, () => pendingGenPhotos, v => { pendingGenPhotos = v; });
+    document.getElementById('clear-gen-btn').onclick = clearGeneration;
     document.getElementById('g-photo-input').addEventListener('change', (e) => {
       [...e.target.files].forEach(file => {
         const reader = new FileReader();
@@ -872,7 +893,8 @@
             const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
             const filename = `gen${currentGeneration.generation}_${Date.now()}.jpg`;
             pendingGenPhotos.push({ dataUrl, filename });
-            document.getElementById('g-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+            document.getElementById('g-photo-grid').insertAdjacentHTML('beforeend', thumbHTML(dataUrl, `data-pending="${filename}"`));
+            wireGridRemovers('g-photo-grid', removedGenPhotos, () => pendingGenPhotos, v => { pendingGenPhotos = v; });
           };
           img.src = ev.target.result;
         };
@@ -880,6 +902,18 @@
       });
     });
     document.getElementById('save-gen-btn').addEventListener('click', saveGeneration);
+  }
+  async function clearGeneration() {
+    const g = currentGeneration.generation;
+    if (!confirm(`Clear the story for Generation ${g}? Its title, text and photos will be removed from the site.`)) return;
+    const statusEl = document.getElementById('save-gen-status');
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/generations.json', (gens) => (gens || []).filter(x => x.generation !== g),
+        `Clear Generation ${g} story — by superadmin`, token);
+      statusEl.textContent = 'Cleared.'; statusEl.className = 'status-msg ok';
+      renderGenerationList();
+      document.getElementById('generation-form-area').innerHTML = '<p class="muted">Story cleared. Select a generation to edit.</p>';
+    } catch (e) { statusEl.textContent = 'Could not clear: ' + e.message; statusEl.className = 'status-msg error'; }
   }
   async function saveGeneration() {
     const statusEl = document.getElementById('save-gen-status');
@@ -896,11 +930,11 @@
         gens = gens || [];
         const idx = gens.findIndex(g => g.generation === currentGeneration.generation);
         const before = idx >= 0 ? gens[idx] : { photos: [] };
-        const updated = { generation: currentGeneration.generation, title: titleVal, description: descVal, photos: [...(before.photos || []), ...newPhotoUrls] };
+        const updated = { generation: currentGeneration.generation, title: titleVal, description: descVal, photos: [...(before.photos || []).filter(p => !removedGenPhotos.has(p)), ...newPhotoUrls] };
         if (idx >= 0) gens[idx] = updated; else gens.push(updated);
         return gens;
       }, `Edit Generation ${currentGeneration.generation} story — by superadmin`, token);
-      pendingGenPhotos = [];
+      pendingGenPhotos = []; removedGenPhotos = new Set();
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
     } catch (e) {
       statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';
@@ -960,6 +994,10 @@
       </div>
       <button class="btn btn-gold" id="save-archive-btn">Save item</button>
       <span id="save-archive-status" class="status-msg"></span>
+      ${item ? `<hr style="margin:28px 0; border:none; border-top:1px solid var(--line);">
+      <h3 style="font-family:var(--font-display); font-size:18px; margin:0 0 8px; color:var(--ochre-deep);">Delete this item</h3>
+      <p class="muted" style="font-size:13.5px;">Removes it from the Archive page. Its files stay in the repository.</p>
+      <button class="btn btn-outline-dark btn-sm" id="delete-archive-btn" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Delete item</button>` : ''}
     `;
     document.getElementById('a-photo-input').addEventListener('change', (e) => {
       [...e.target.files].forEach(file => {
@@ -1011,6 +1049,7 @@
     });
     wireArchiveMediaRemovers();
     document.getElementById('save-archive-btn').addEventListener('click', saveArchiveItem);
+    const delArc = document.getElementById('delete-archive-btn'); if (delArc) delArc.onclick = deleteArchiveItem;
   }
 
   function wireArchiveMediaRemovers() {
@@ -1029,6 +1068,18 @@
     });
   }
 
+  async function deleteArchiveItem() {
+    if (!currentArchiveItem || !currentArchiveItem.id) return;
+    if (!confirm(`Delete "${currentArchiveItem.title || 'Untitled'}" from the Archive?`)) return;
+    const statusEl = document.getElementById('save-archive-status');
+    try {
+      await PandeyGitHub.readModifyWriteJSON('data/archive.json', (items) => (items || []).filter(i => i.id !== currentArchiveItem.id),
+        `Delete archive item: ${currentArchiveItem.title || currentArchiveItem.id} — by superadmin`, token);
+      currentArchiveItem = null;
+      document.getElementById('archive-form-area').innerHTML = '<p class="muted">Item deleted. Select another item, or use \u201c+ Add a new item\u201d.</p>';
+      renderArchiveList();
+    } catch (e) { statusEl.textContent = 'Could not delete: ' + e.message; statusEl.className = 'status-msg error'; }
+  }
   async function saveArchiveItem() {
     const statusEl = document.getElementById('save-archive-status');
     statusEl.textContent = 'Saving…'; statusEl.className = 'status-msg';
@@ -1069,6 +1120,7 @@
   // ================= EVENTS =================
   let currentEvent = null;
   let pendingEventPhotos = [];
+  let removedEventPhotos = new Set();
 
   async function renderEventList() {
     const ul = document.getElementById('events-ul');
@@ -1086,7 +1138,7 @@
 
   function loadEventForm(ev, allEvents) {
     currentEvent = ev || { id: null, eventNumber: null, title: '', date: '', description: '', location: '' };
-    pendingEventPhotos = [];
+    pendingEventPhotos = []; removedEventPhotos = new Set();
     const nextNumber = ev ? ev.eventNumber : (Math.max(0, ...allEvents.map(e => e.eventNumber || 0)) + 1);
     const area = document.getElementById('events-form-area');
     area.innerHTML = `
@@ -1096,7 +1148,7 @@
       <div class="field"><label>Date</label><input type="date" id="ev-date" value="${currentEvent.date || ''}"></div>
       <div class="field"><label>Location</label><input type="text" id="ev-location" value="${currentEvent.location || ''}"></div>
       <div class="field"><label>Description</label><textarea id="ev-description">${currentEvent.description || ''}</textarea></div>
-      <div class="field"><label>Photos</label><div class="photo-grid" id="ev-photo-grid">${(currentEvent.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('')}</div>
+      <div class="field"><label>Photos</label><div class="photo-grid" id="ev-photo-grid">${(currentEvent.photos || []).map(src => thumbHTML(src, `data-existing="${src}"`)).join('')}</div>
       <input type="file" id="ev-photo-input" accept="image/*" multiple style="margin-top:10px;"></div>
       <button class="btn btn-gold" id="save-event-btn">Save event</button>
       <span id="save-event-status" class="status-msg"></span>
@@ -1119,7 +1171,8 @@
             const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
             const filename = `event_${Date.now()}_${Math.random().toString(36).slice(2,5)}.jpg`;
             pendingEventPhotos.push({ dataUrl, filename });
-            document.getElementById('ev-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+            document.getElementById('ev-photo-grid').insertAdjacentHTML('beforeend', thumbHTML(dataUrl, `data-pending="${filename}"`));
+            wireGridRemovers('ev-photo-grid', removedEventPhotos, () => pendingEventPhotos, v => { pendingEventPhotos = v; });
           };
           img.src = ev2.target.result;
         };
@@ -1127,6 +1180,7 @@
       });
     });
     document.getElementById('save-event-btn').addEventListener('click', saveEvent);
+    wireGridRemovers('ev-photo-grid', removedEventPhotos, () => pendingEventPhotos, v => { pendingEventPhotos = v; });
     const delEvBtn = document.getElementById('delete-event-btn');
     if (delEvBtn) delEvBtn.addEventListener('click', deleteEvent);
   }
@@ -1150,13 +1204,13 @@
         events = events || [];
         if (currentEvent.id) {
           const idx = events.findIndex(e => e.id === currentEvent.id);
-          if (idx >= 0) events[idx] = { ...events[idx], eventNumber, title: titleVal, date: dateVal, location: locationVal, description: descVal, photos: [...(events[idx].photos || []), ...newPhotoUrls] };
+          if (idx >= 0) events[idx] = { ...events[idx], eventNumber, title: titleVal, date: dateVal, location: locationVal, description: descVal, photos: [...(events[idx].photos || []).filter(p => !removedEventPhotos.has(p)), ...newPhotoUrls] };
         } else {
           events.push({ id: 'event-' + Date.now(), eventNumber, title: titleVal, date: dateVal, location: locationVal, description: descVal, photos: newPhotoUrls, addedAt: new Date().toISOString() });
         }
         return events;
       }, `${currentEvent.id ? 'Edit' : 'Add'} event: ${titleVal} — by superadmin`, token);
-      pendingEventPhotos = [];
+      pendingEventPhotos = []; removedEventPhotos = new Set();
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
       renderEventList();
     } catch (e) {
@@ -1501,14 +1555,16 @@
 
   // ================= VILLAGE =================
   let pendingVillagePhotos = [];
+  let removedVillagePhotos = new Set();
   async function loadVillageForm() {
-    pendingVillagePhotos = [];
+    pendingVillagePhotos = []; removedVillagePhotos = new Set();
     const { content } = await PandeyGitHub.getFile('data/village.json', token);
     const v = content ? JSON.parse(content) : { intro: '', history: '', aipan: '', photos: [] };
     document.getElementById('v-intro').value = v.intro || '';
     document.getElementById('v-history').value = v.history || '';
     document.getElementById('v-aipan').value = v.aipan || '';
-    document.getElementById('v-photo-grid').innerHTML = (v.photos || []).map(src => `<div class="thumb"><img src="${src}"></div>`).join('');
+    document.getElementById('v-photo-grid').innerHTML = (v.photos || []).map(src => thumbHTML(src, `data-existing="${src}"`)).join('');
+    wireGridRemovers('v-photo-grid', removedVillagePhotos, () => pendingVillagePhotos, x => { pendingVillagePhotos = x; });
     document.getElementById('v-photo-input').onchange = (e) => {
       [...e.target.files].forEach(file => {
         const reader = new FileReader();
@@ -1522,7 +1578,8 @@
             const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
             const filename = `village_${Date.now()}.jpg`;
             pendingVillagePhotos.push({ dataUrl, filename });
-            document.getElementById('v-photo-grid').insertAdjacentHTML('beforeend', `<div class="thumb"><img src="${dataUrl}"></div>`);
+            document.getElementById('v-photo-grid').insertAdjacentHTML('beforeend', thumbHTML(dataUrl, `data-pending="${filename}"`));
+            wireGridRemovers('v-photo-grid', removedVillagePhotos, () => pendingVillagePhotos, x => { pendingVillagePhotos = x; });
           };
           img.src = ev.target.result;
         };
@@ -1545,9 +1602,9 @@
       const aipan = document.getElementById('v-aipan').value.trim();
       await PandeyGitHub.readModifyWriteJSON('data/village.json', (v) => {
         v = v || { photos: [] };
-        return { intro, history, aipan, photos: [...(v.photos || []), ...newPhotoUrls] };
+        return { intro, history, aipan, photos: [...(v.photos || []).filter(p => !removedVillagePhotos.has(p)), ...newPhotoUrls] };
       }, `Edit village page — by superadmin`, token);
-      pendingVillagePhotos = [];
+      pendingVillagePhotos = []; removedVillagePhotos = new Set();
       statusEl.textContent = 'Saved.'; statusEl.className = 'status-msg ok';
     } catch (e) {
       statusEl.textContent = 'Could not save: ' + e.message; statusEl.className = 'status-msg error';

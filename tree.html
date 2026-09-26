@@ -47,7 +47,7 @@
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
     /* the aipan tile, softened by a translucent dark layer so the tree stands out */
-    background-image: linear-gradient(rgba(74, 18, 22, 0.82), rgba(74, 18, 22, 0.82)), url('assets/img/tree-backdrop-aipan.jpg');
+    background-image: linear-gradient(rgba(74, 18, 22, 0.78), rgba(74, 18, 22, 0.78)), url('assets/img/tree-backdrop-aipan.jpg');
     background-repeat: repeat, repeat;
     background-size: auto, 704px auto;
     background-color: #4a1216;
@@ -55,15 +55,6 @@
   .tree-canvas { position: relative; transform-origin: top left; }
   #tree-zoom-sizer { position: relative; }
 
-  /* one soft band per generation, behind its row of people; it lives inside the
-     zoomed canvas, so it stays behind the right members at every zoom level */
-  .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; z-index: 0;
-    border-top: 1px solid rgba(179,64,42,0.10); }
-  .gen-marker.band-a { background: rgba(255, 244, 225, 0.09); }
-  .gen-marker.band-b { background: rgba(20, 4, 6, 0.30); }
-  .gen-marker { border-top: 1px solid rgba(255, 236, 200, 0.35); }
-  .gen-marker .band-num { position: absolute; left: 12px; top: 4px; font-family: var(--font-display); font-size: 28px;
-    font-weight: 700; color: #FFF3DC; opacity: 0.92; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55); letter-spacing: 0.5px; }
   #tree-svg { position: relative; z-index: 1; }
   .gen-label-tag {
     position: absolute; left: 14px;
@@ -115,6 +106,7 @@
   .panel .rel-key { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ochre-deep); margin-bottom: 2px; }
   .panel .rel-name { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.35; }
   .panel .rel-of { font-size: 14.5px; color: #5a3a2e; line-height: 1.45; }
+  .panel .rel-gen { font-weight: 400; font-size: 14px; color: var(--ochre-deep); white-space: nowrap; }
   .panel .chain { font-size: 13px; color: #8a6a58; margin: 2px 0 18px; line-height: 1.5; }
   .panel dl { margin: 0; }
   .panel dt { font-size: 12px; font-weight: 600; color: #8a6a58; margin-top: 14px; }
@@ -249,7 +241,13 @@
   }
   // the root is the ancestor with no parent who isn't simply someone's spouse
   const rootPerson = people.find(p => !p.parentId && !people.some(x => x.spouseId === p.id && x.parentId)) || people.find(p => !p.parentId);
-  const fullMaxDepth = d3.max(d3.hierarchy(buildNode(rootPerson), d => d.children).descendants(), d => d.depth);
+  const fullHierarchy = d3.hierarchy(buildNode(rootPerson), d => d.children);
+  const fullMaxDepth = d3.max(fullHierarchy.descendants(), d => d.depth);
+  // generation of every member (Sukhdev = 1); someone who married in shares their partner's generation
+  const genOf = new Map();
+  fullHierarchy.each(d => genOf.set(d.data.id, d.depth + 1));
+  const generationOf = (p) => genOf.get(p.id) || (p.spouseId ? genOf.get(p.spouseId) : null) ||
+    (() => { const partner = people.find(x => x.spouseId === p.id && genOf.has(x.id)); return partner ? genOf.get(partner.id) : null; })();
 
   const DX = 170;  // horizontal spacing between siblings — wide enough for bigger avatars + labels
   const DY = 210;  // vertical spacing between generations
@@ -266,16 +264,6 @@
   const totalHeight = fullMaxDepth * DY + MARGIN_TOP * 2;
   canvas.style.height = totalHeight + 'px';
   let root, totalWidth, offsetX, nodeSel, linkSel, spouseLayer, spouseRenderList, zoomLevel = null;
-
-  // ---------- Generation bands: a shaded row behind each generation ----------
-  for (let gen = 1; gen <= fullMaxDepth + 1; gen++) {
-    const nodeY = (gen - 1) * DY + MARGIN_TOP;
-    const band = document.createElement('div');
-    band.className = 'gen-marker ' + (gen % 2 ? 'band-a' : 'band-b'); band.dataset.gen = gen;
-    band.style.top = (nodeY - 62) + 'px'; band.style.height = DY + 'px';
-    band.innerHTML = `<span class="band-num">Gen ${gen}</span>`;
-    canvas.appendChild(band);
-  }
 
   // Generation headings show the number only. The date ranges that used to
   // appear here were early estimates, not family records, so they are hidden,
@@ -380,7 +368,7 @@
         .attr('clip-path', `url(#${clipId})`).attr('preserveAspectRatio', 'xMidYMid slice');
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', 'none').attr('stroke', ringColor);
     } else {
-      sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', isRoot ? '#FFD21F' : '#FFFBF3').attr('stroke', isRoot ? '#FFB300' : ringColor);
+      sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', '#FFD21F').attr('stroke', isRoot ? '#FFB300' : ringColor);
     }
     const label = sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 24);
     wrapLabel(label, DX - 14, 1.15);
@@ -541,7 +529,9 @@
     const ofLine = (g, names) => hi
       ? `${joinAnd(names)} ${g === 'M' ? 'के पुत्र' : g === 'F' ? 'की पुत्री' : 'की संतान'}`
       : `${g === 'M' ? 'Son of' : g === 'F' ? 'Daughter of' : 'Child of'} ${joinAnd(names)}`;
-    let html = `<div class="rel-block"><div class="rel-name">${fullNameOf(p)}</div>`;
+    const g = generationOf(p);
+    const genText = g ? ` <span class="rel-gen">(${hi ? 'पीढ़ी' : 'Generation'} ${g})</span>` : '';
+    let html = `<div class="rel-block"><div class="rel-name">${fullNameOf(p)}${genText}</div>`;
     const parents = parentNamesOf(p);
     if (parents.length) html += `<div class="rel-of">${ofLine(p.gender, parents)}</div>`;
     html += '</div>';
