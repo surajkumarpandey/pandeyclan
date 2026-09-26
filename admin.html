@@ -1389,13 +1389,92 @@
     }
   }
 
+  // ---------- Edit a published article: text, captions, photos and PDF ----------
+  let editing = null;   // { id, photos: [{url, caption, remove}], newPhotos: [File], pdfRemove, newPdf }
+  function editArticle(a) {
+    if (!a) return;
+    editing = { id: a.id, photos: (a.photos || []).map(p => ({ ...p, remove: false })), newPhotos: [], pdf: a.pdf || null, pdfRemove: false, newPdf: null };
+    const box = document.getElementById('article-review');
+    box.classList.remove('hidden');
+    box.innerHTML = `
+      <h3 style="margin-top:0; font-family:var(--font-display);">Edit: ${escA(a.title)}</h3>
+      <div class="field"><label>Title</label><input type="text" id="e-title" value="${escA(a.title)}"></div>
+      <div class="field"><label>Author</label><input type="text" id="e-author" value="${escA(a.author)}"></div>
+      <div class="field"><label>Relation (optional)</label><input type="text" id="e-relation" value="${escA(a.relation)}"></div>
+      <div class="field"><label>Text</label><textarea id="e-body" style="min-height:220px;">${escA(a.body)}</textarea></div>
+      <div class="field"><label>Photos</label>
+        <div id="e-photos">${editing.photos.map((p, i) => `
+          <div class="editor-row"><img src="${p.url}" style="width:84px; height:84px; object-fit:cover; border-radius:4px;">
+            <input type="text" data-ecap="${i}" value="${escA(p.caption)}" placeholder="Caption" style="flex:1;">
+            <label style="margin:0; white-space:nowrap;"><input type="checkbox" data-eremove="${i}"> remove</label></div>`).join('') || '<p class="muted" style="font-size:13.5px;">No photos.</p>'}</div>
+        <label style="margin-top:8px;">Add photos</label><input type="file" id="e-add-photos" accept="image/*" multiple>
+      </div>
+      <div class="field"><label>PDF</label>
+        ${a.pdf ? `<div class="editor-row"><span>📄 <a href="${a.pdf.url}" target="_blank">${escA(a.pdf.name || 'PDF')}</a></span>
+          <label style="margin:0; white-space:nowrap;"><input type="checkbox" id="e-pdf-remove"> remove</label></div>` : '<p class="muted" style="font-size:13.5px;">No PDF.</p>'}
+        <label style="margin-top:8px;">${a.pdf ? 'Replace with a new PDF' : 'Add a PDF'} (up to 10 MB)</label><input type="file" id="e-pdf" accept="application/pdf">
+      </div>
+      <button class="btn btn-gold" id="e-save">Save changes</button>
+      <button class="btn btn-outline-dark btn-sm" id="e-cancel" style="margin-left:8px;">Cancel</button>
+      <span id="e-status" class="status-msg"></span>`;
+    box.querySelectorAll('[data-ecap]').forEach(inp => inp.oninput = () => { editing.photos[+inp.dataset.ecap].caption = inp.value; });
+    box.querySelectorAll('[data-eremove]').forEach(cb => cb.onchange = () => { editing.photos[+cb.dataset.eremove].remove = cb.checked; });
+    const pr = document.getElementById('e-pdf-remove'); if (pr) pr.onchange = () => { editing.pdfRemove = pr.checked; };
+    document.getElementById('e-add-photos').onchange = (e) => { editing.newPhotos = [...e.target.files]; };
+    document.getElementById('e-pdf').onchange = (e) => { editing.newPdf = e.target.files[0] || null; };
+    document.getElementById('e-cancel').onclick = () => { box.classList.add('hidden'); editing = null; };
+    document.getElementById('e-save').onclick = saveArticleEdit;
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function saveArticleEdit() {
+    const st = document.getElementById('e-status');
+    const title = document.getElementById('e-title').value.trim(), author = document.getElementById('e-author').value.trim();
+    const body = document.getElementById('e-body').value.trim();
+    const keepsPdf = (editing.pdf && !editing.pdfRemove) || editing.newPdf;
+    if (!title || !author || (!body && !keepsPdf)) { st.textContent = 'An article needs a title, an author, and either text or a PDF.'; st.className = 'status-msg error'; return; }
+    if (editing.newPdf && editing.newPdf.size > 10 * 1024 * 1024) { st.textContent = 'That PDF is over 10 MB. Try compressing it first.'; st.className = 'status-msg error'; return; }
+    st.textContent = 'Saving…'; st.className = 'status-msg';
+    try {
+      const stamp = Date.now();
+      let pdf = editing.pdfRemove ? null : editing.pdf;
+      if (editing.newPdf) {
+        st.textContent = 'Uploading the PDF…';
+        const path = `uploads/articles/${editing.id}_${stamp}.pdf`;
+        await PandeyGitHub.putFileRaw(path, await readAsBase64(editing.newPdf), `Replace PDF for article: ${title}`, token);
+        pdf = { url: path, name: editing.newPdf.name };
+      }
+      const photos = editing.photos.filter(p => !p.remove).map(p => ({ url: p.url, caption: p.caption || '' }));
+      const extra = editing.newPhotos.slice(0, Math.max(0, 12 - photos.length));
+      for (let i = 0; i < extra.length; i++) {
+        st.textContent = `Uploading photo ${i + 1} of ${extra.length}…`;
+        const path = `uploads/articles/${editing.id}_${stamp}_${i + 1}.jpg`;
+        await PandeyGitHub.putFileRaw(path, await resizePhoto(extra[i]), `Add photo to article: ${title}`, token);
+        photos.push({ url: path, caption: '' });
+      }
+      const relation = document.getElementById('e-relation').value.trim();
+      await PandeyGitHub.readModifyWriteJSON('data/articles.json', (list) => {
+        list = list || [];
+        const i = list.findIndex(x => x.id === editing.id);
+        if (i >= 0) list[i] = { ...list[i], title, author, relation, body, photos, pdf, editedAt: new Date().toISOString() };
+        return list;
+      }, `Edit article: ${title} — by superadmin`, token);
+      st.textContent = 'Saved.'; st.className = 'status-msg ok';
+      setTimeout(() => { document.getElementById('article-review').classList.add('hidden'); editing = null; loadArticlesTab(); }, 1000);
+    } catch (e) {
+      st.textContent = 'Could not save: ' + e.message; st.className = 'status-msg error';
+    }
+  }
+
   function renderPublished(list) {
     const el = document.getElementById('published-list');
     const sorted = [...list].sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
     el.innerHTML = sorted.length ? sorted.map(a => `<div class="editor-row">
         <span><a href="articles.html?id=${encodeURIComponent(a.id)}" target="_blank">${escA(a.title)}</a><br><span class="muted" style="font-size:13px;">by ${escA(a.author)}</span></span>
-        <button class="btn btn-outline-dark btn-sm" data-unpublish="${escA(a.id)}" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Remove</button></div>`).join('')
+        <span style="display:flex; gap:6px;"><button class="btn btn-outline-dark btn-sm" data-edit="${escA(a.id)}">Edit</button>
+        <button class="btn btn-outline-dark btn-sm" data-unpublish="${escA(a.id)}" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Remove</button></span></div>`).join('')
       : '<p class="muted">No articles published yet.</p>';
+    el.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => editArticle(list.find(a => a.id === b.dataset.edit)));
     el.querySelectorAll('[data-unpublish]').forEach(b => b.onclick = async () => {
       const art = list.find(a => a.id === b.dataset.unpublish);
       if (!confirm(`Remove "${art.title}" from the Articles page?`)) return;

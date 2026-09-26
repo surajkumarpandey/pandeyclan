@@ -22,11 +22,8 @@
   }
   .zoom-controls button:hover { background: var(--maroon); color: var(--paper-light); }
 
-  .tree-body {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    align-items: start;
-  }
+  .tree-body { display: block; }
+  .story-sidebar, .gen-rail, .gen-label-tag { display: none !important; }
   .story-sidebar {
     position: sticky;
     top: 64px;
@@ -45,6 +42,10 @@
 
   .tree-scroll-wrap {
     overflow-x: auto;
+    overflow-y: hidden;              /* otherwise browsers make this a vertical scroll box too, trapping swipes on phones */
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
     background-image: url('assets/img/tree-backdrop.jpg');
     background-repeat: repeat;
     background-size: 620px auto;
@@ -53,7 +54,15 @@
   .tree-canvas { position: relative; transform-origin: top left; }
   #tree-zoom-sizer { position: relative; }
 
-  .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; }
+  /* one soft band per generation, behind its row of people; it lives inside the
+     zoomed canvas, so it stays behind the right members at every zoom level */
+  .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; z-index: 0;
+    border-top: 1px solid rgba(179,64,42,0.10); }
+  .gen-marker.band-a { background: linear-gradient(180deg, rgba(224,149,42,0.16), rgba(224,149,42,0.07)); }
+  .gen-marker.band-b { background: linear-gradient(180deg, rgba(92,31,39,0.07), rgba(92,31,39,0.025)); }
+  .gen-marker .band-num { position: absolute; left: 12px; top: 8px; font-family: var(--font-display); font-size: 13px;
+    font-weight: 700; color: var(--maroon-deep); opacity: 0.45; }
+  #tree-svg { position: relative; z-index: 1; }
   .gen-label-tag {
     position: absolute; left: 14px;
     font-family: var(--font-display); font-size: 13px; font-weight: 700;
@@ -103,7 +112,7 @@
   .panel .rel-key { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ochre-deep); margin-bottom: 2px; }
   .panel .rel-name { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.35; }
   .panel .rel-of { font-size: 14.5px; color: #5a3a2e; line-height: 1.45; }
-  .panel .chain { font-size: 13px; color: #8a6a58; margin: 10px 0 18px; }
+  .panel .chain { font-size: 13px; color: #8a6a58; margin: 2px 0 18px; line-height: 1.5; }
   .panel dl { margin: 0; }
   .panel dt { font-size: 12px; font-weight: 600; color: #8a6a58; margin-top: 14px; }
   .panel dd { margin: 3px 0 0; }
@@ -136,9 +145,6 @@
 
   @media (max-width: 800px) {
     .tree-body { grid-template-columns: 1fr; }
-    .story-sidebar { display: none; }
-    .gen-rail { display: block; }
-    .gen-label-tag { display: none; }
   }
 
   @media print {
@@ -259,17 +265,14 @@
   canvas.style.height = totalHeight + 'px';
   let root, totalWidth, offsetX, nodeSel, linkSel, spouseLayer, spouseRenderList, zoomLevel = null;
 
-  // ---------- Generation rows: in-canvas labels + scroll markers (desktop sidebar) ----------
+  // ---------- Generation bands: a shaded row behind each generation ----------
   for (let gen = 1; gen <= fullMaxDepth + 1; gen++) {
-    const y = (gen - 1) * DY + MARGIN_TOP;
-    const marker = document.createElement('div');
-    marker.className = 'gen-marker'; marker.dataset.gen = gen;
-    marker.style.top = y + 'px'; marker.style.height = DY + 'px';
-    canvas.appendChild(marker);
-    const tag = document.createElement('div');
-    tag.className = 'gen-label-tag'; tag.style.top = (y + 6) + 'px';
-    tag.textContent = genTitle(gen);
-    canvas.appendChild(tag);
+    const nodeY = (gen - 1) * DY + MARGIN_TOP;
+    const band = document.createElement('div');
+    band.className = 'gen-marker ' + (gen % 2 ? 'band-a' : 'band-b'); band.dataset.gen = gen;
+    band.style.top = (nodeY - 48) + 'px'; band.style.height = DY + 'px';
+    band.innerHTML = `<span class="band-num">${gen}</span>`;
+    canvas.appendChild(band);
   }
 
   // Generation headings show the number only. The date ranges that used to
@@ -329,8 +332,7 @@
     canvas.style.transform = `scale(${zoomLevel})`;
     sizer.style.width = (totalWidth * zoomLevel) + 'px';
     sizer.style.height = (totalHeight * zoomLevel) + 'px';
-    sizer.style.marginLeft = isMobile() ? RAIL_W + 'px' : '0';
-    positionRail();
+    sizer.style.marginLeft = '0';
   }
   const defaultZoom = () => Math.max(0.3, Math.min(1, (scrollWrap.clientWidth * 2.4) / totalWidth));
   document.getElementById('zoom-in-btn').addEventListener('click', () => { zoomLevel = Math.min(1.4, zoomLevel + 0.15); applyZoom(); });
@@ -476,7 +478,6 @@
   }
 
   draw();
-  buildRail();
   requestAnimationFrame(() => { scrollWrap.scrollLeft = Math.max(0, (offsetX - 60) * zoomLevel); });
 
   // ---------- Sticky generation story, driven by scroll position ----------
@@ -492,14 +493,6 @@
       ${story && story.description ? storyText(story.description).split('\n\n').map(para => `<p>${para}</p>`).join('') : `<p class="empty">${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</p>`}
     `;
   }
-  renderStory(1);
-
-  const markers = document.querySelectorAll('.gen-marker');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) renderStory(parseInt(entry.target.dataset.gen, 10)); });
-  }, { root: null, rootMargin: '-42% 0px -42% 0px', threshold: 0 });
-  markers.forEach(m => observer.observe(m));
-
   // ---------- Detail panel ----------
   const panel = document.getElementById('panel');
   let currentPanelPersonId = null;
@@ -577,7 +570,7 @@
       ${avatarHtml}
       <h2>${PandeyData.displayName(p)}</h2>
       ${relationLines(p)}
-      <div class="chain">${chain}</div>
+      ${chain ? `<div class="rel-key">${t('tree.field.lineage', 'Lineage')}</div><div class="chain">${chain}</div>` : ''}
       ${p.unnamedPlaceholder ? `<span class="badge badge-placeholder">${t('tree.field.namenotrecorded', 'Name not recorded')}</span>` : ''}
       <dl>
         ${p.occupation ? `<dt>${t('tree.field.occupation', 'Occupation')}</dt><dd>${p.occupation}</dd>` : ''}
@@ -585,7 +578,6 @@
         ${current ? `<dt>${t('tree.field.currentlocation', 'Current location')}</dt><dd>${current.place}</dd>` : ''}
         ${othersStr ? `<dt>${t('tree.field.placesvisited', 'Places visited')}</dt><dd>${othersStr}</dd>` : ''}
         ${p.bio ? `<dt>${t('tree.field.description', 'Description')}</dt><dd>${p.bio}</dd>` : ''}
-        ${p.notes ? `<dt>${t('tree.field.note', 'Note')}</dt><dd class="muted">${p.notes}</dd>` : ''}
       </dl>
       ${photos ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.photos', 'Photos')}</dt><div class="photos">${photos}</div>` : ''}
       ${audioList.length ? `<dt style="font-size:12px;font-weight:600;color:#8a6a58;margin-top:14px;">${t('tree.field.voicemessage', 'Voice message')}</dt>${audioList.map(src => `<audio controls src="${src}" style="width:100%; margin-top:6px;"></audio>`).join('')}` : ''}
@@ -696,15 +688,12 @@
   // they were built once at load time)
   window.addEventListener('pandey-lang-changed', () => {
     draw();
-    buildRail();
     document.getElementById('search-box').setAttribute('placeholder', PandeyI18n.t('tree.search.placeholder', 'Search a name…'));
     document.getElementById('download-pdf-btn').textContent = PandeyI18n.t('tree.download.pdf', 'Download as PDF');
     if (currentPanelPersonId) {
       const p = people.find(x => x.id === currentPanelPersonId);
       if (p) openPanel(p);
     }
-    const activeGen = document.querySelector('.story-sidebar .gen-num');
-    if (activeGen) renderStory(parseInt(activeGen.textContent.replace('GENERATION ', ''), 10) || 1);
   });
 })();
 </script>
