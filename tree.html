@@ -99,8 +99,10 @@
   .panel .avatar-lg { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold); margin-bottom: 14px; }
   .panel .avatar-lg-placeholder { width: 88px; height: 88px; border-radius: 50%; margin-bottom: 14px; background: var(--ochre); opacity: 0.25; }
   .panel h2 { font-family: var(--font-display); font-weight: 600; font-size: 24px; margin: 4px 0 6px; }
-  .panel .rel { font-size: 15px; line-height: 1.5; color: var(--ink); margin: 0 0 6px; }
-  .panel .rel strong { font-weight: 600; }
+  .panel .rel-block { margin: 0 0 12px; }
+  .panel .rel-key { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ochre-deep); margin-bottom: 2px; }
+  .panel .rel-name { font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+  .panel .rel-of { font-size: 14.5px; color: #5a3a2e; line-height: 1.45; }
   .panel .chain { font-size: 13px; color: #8a6a58; margin: 10px 0 18px; }
   .panel dl { margin: 0; }
   .panel dt { font-size: 12px; font-weight: 600; color: #8a6a58; margin-top: 14px; }
@@ -266,8 +268,20 @@
     canvas.appendChild(marker);
     const tag = document.createElement('div');
     tag.className = 'gen-label-tag'; tag.style.top = (y + 6) + 'px';
-    tag.textContent = (genById[gen] && genById[gen].title) || `Generation ${gen}`;
+    tag.textContent = genTitle(gen);
     canvas.appendChild(tag);
+  }
+
+  // Generation headings show the number only. The date ranges that used to
+  // appear here were early estimates, not family records, so they are hidden,
+  // along with the note that explained how they were estimated.
+  function genTitle(gen) {
+    const t = (genById[gen] && genById[gen].title) || '';
+    return t.split(' \u2014 ')[0].trim() || `Generation ${gen}`;
+  }
+  function storyText(desc) {
+    const cleaned = desc.replace(/\n*\(Dates are estimated[^)]*\)\s*$/, '').trim();
+    return fillStoryTokens(cleaned);
   }
 
   // ---------- Generation rail (phones): one card per generation, pinned left ----------
@@ -278,9 +292,9 @@
     const range = parts[1] || '';
     const photos = story.photos && story.photos.length ? story.photos.map(src => `<img src="${src}" alt="">`).join('') : '';
     const body = story.description
-      ? fillStoryTokens(story.description).split('\n\n').map(p => `<p>${p}</p>`).join('')
+      ? storyText(story.description).split('\n\n').map(p => `<p>${p}</p>`).join('')
       : `<p><em>${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</em></p>`;
-    return `<div class="gc-num">Gen ${gen}</div><div class="gc-range">${range}</div><div class="gc-more">Read ▸</div><div class="gc-body">${photos ? `<div>${photos}</div>` : ''}${body}</div>`;
+    return `<div class="gc-num">Gen ${gen}</div><div class="gc-more">Read ▸</div><div class="gc-body">${photos ? `<div>${photos}</div>` : ''}${body}</div>`;
   }
   function buildRail() {
     rail.innerHTML = '';
@@ -473,9 +487,9 @@
       ? `<div class="story-photos">${story.photos.map(src => `<img src="${src}">`).join('')}</div>` : '';
     sidebar.innerHTML = `
       <div class="gen-num">GENERATION ${gen}</div>
-      <h2>${(story && story.title) || 'Generation ' + gen}</h2>
+      <h2>${genTitle(gen)}</h2>
       ${photos}
-      ${story && story.description ? fillStoryTokens(story.description).split('\n\n').map(para => `<p>${para}</p>`).join('') : `<p class="empty">${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</p>`}
+      ${story && story.description ? storyText(story.description).split('\n\n').map(para => `<p>${para}</p>`).join('') : `<p class="empty">${PandeyI18n.t('tree.sidebar.empty', 'No story added for this generation yet.')}</p>`}
     `;
   }
   renderStory(1);
@@ -520,30 +534,33 @@
     return [father, mother].filter(isRealName);
   }
   function relationLines(p) {
+    // Layout:            Dr. Suraj Kumar Pandey
+    //                    Son of Ashok Kumar Pandey and Hemlata Pant
+    //                    SPOUSE
+    //                    Vibha Pandey
+    //                    Daughter of Shashikant Dixit and Suman Dixit
     const hi = PandeyI18n.currentLang() !== 'en';
     const joinAnd = (names) => names.join(hi ? ' एवं ' : ' and ');
-    const childWord = (g) => hi ? (g === 'M' ? 'के पुत्र' : g === 'F' ? 'की पुत्री' : 'की संतान') : (g === 'M' ? 'son of' : g === 'F' ? 'daughter of' : 'child of');
-    const lines = [];
+    const ofLine = (g, names) => hi
+      ? `${joinAnd(names)} ${g === 'M' ? 'के पुत्र' : g === 'F' ? 'की पुत्री' : 'की संतान'}`
+      : `${g === 'M' ? 'Son of' : g === 'F' ? 'Daughter of' : 'Child of'} ${joinAnd(names)}`;
+    let html = `<div class="rel-block"><div class="rel-name">${fullNameOf(p)}</div>`;
     const parents = parentNamesOf(p);
-    const me = `<strong>${fullNameOf(p)}</strong>`;
-    if (parents.length) {
-      lines.push(hi ? `${me}, ${joinAnd(parents)} ${childWord(p.gender)}` : `${me}, ${childWord(p.gender)} ${joinAnd(parents)}`);
-    } else if (p.fullName && p.fullName !== p.name) {
-      lines.push(me);
-    }
+    if (parents.length) html += `<div class="rel-of">${ofLine(p.gender, parents)}</div>`;
+    html += '</div>';
     const spouse = p.spouseId ? people.find(x => x.id === p.spouseId) : null;
-    if (spouse && !isRealName(fullNameOf(spouse))) {
-      lines.push(hi ? 'विवाहित (जीवनसाथी का नाम दर्ज नहीं)' : 'Married (spouse\u2019s name not recorded)');
-    } else if (spouse) {
-      const sp = fullNameOf(spouse), spParents = parentNamesOf(spouse);
-      const tie = hi ? (p.gender === 'M' ? `${sp} के पति` : p.gender === 'F' ? `${sp} की पत्नी` : `${sp} के जीवनसाथी`)
-                     : (p.gender === 'M' ? `Husband of ${sp}` : p.gender === 'F' ? `Wife of ${sp}` : `Married to ${sp}`);
-      const spRel = spParents.length
-        ? (hi ? ` (${joinAnd(spParents)} ${childWord(spouse.gender)})` : `, ${childWord(spouse.gender)} ${joinAnd(spParents)}`)
-        : '';
-      lines.push(tie + spRel);
+    if (spouse) {
+      html += `<div class="rel-block"><div class="rel-key">${hi ? 'जीवनसाथी' : 'Spouse'}</div>`;
+      if (!isRealName(fullNameOf(spouse))) {
+        html += `<div class="rel-name muted">${hi ? 'नाम दर्ज नहीं' : 'Name not recorded'}</div>`;
+      } else {
+        html += `<div class="rel-name">${fullNameOf(spouse)}</div>`;
+        const spParents = parentNamesOf(spouse);
+        if (spParents.length) html += `<div class="rel-of">${ofLine(spouse.gender, spParents)}</div>`;
+      }
+      html += '</div>';
     }
-    return lines.map(l => `<p class="rel">${l}</p>`).join('');
+    return html;
   }
 
   function openPanel(p) {
