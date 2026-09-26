@@ -4825,7 +4825,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Anil Kumar Pant",
     "fatherName": null,
     "motherName": null,
     "spouseId": "shekhar_daughter_25",
@@ -4833,10 +4833,21 @@
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Dehradun",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": "Retired SP (PPS UKD)",
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "anurita",
