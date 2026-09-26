@@ -2330,7 +2330,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/hem_1790442290505.jpg"
+    ],
     "bio": "",
     "occupation": "AVP (MNC)",
     "locations": [
