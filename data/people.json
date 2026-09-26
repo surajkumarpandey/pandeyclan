@@ -1332,7 +1332,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/shekhar_1790399092684.jpg"
+    ],
     "bio": "",
     "occupation": "Retired",
     "locations": [
