@@ -57,8 +57,14 @@
       <div class="field"><label>How you're related (optional)</label><input type="text" id="w-relation" placeholder="e.g. daughter-in-law of Tara Dutt"></div>
       <div class="field"><label>Title</label><input type="text" id="w-title" placeholder="e.g. Winters at the old house"></div>
       <div class="field">
-        <label>Your article</label>
+        <label>Your article <span class="muted" style="font-weight:400;">(or attach a PDF below)</span></label>
         <textarea id="w-body" placeholder="Write in Hindi, Kumaoni or English. Leave an empty line between paragraphs."></textarea>
+      </div>
+      <div class="field">
+        <label>Or attach a PDF (optional, up to 3 MB)</label>
+        <p class="muted" style="font-size:12.5px; margin:0 0 6px;">Already written it somewhere else? Attach it as a PDF. It will be shown inside the article. If you attach a PDF, the text box above can be left empty or used for a short introduction.</p>
+        <div id="w-pdf-info" class="muted" style="font-size:13.5px; margin-bottom:6px;"></div>
+        <input type="file" id="w-pdf-input" accept="application/pdf">
       </div>
       <div class="field">
         <label>Photos (optional, up to 6)</label>
@@ -93,6 +99,11 @@
   const MAX_ENCODED = 60000;
   let submitToken = null;
   let photos = [];   // { dataUrl, caption }
+  let pdf = null;    // { name, size, base64 }
+  const MAX_PDF_BYTES = 3 * 1024 * 1024;
+  // a PDF is too big for one GitHub comment, so it travels in numbered pieces
+  const PDF_CHUNK = 60000;
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const $ = (id) => document.getElementById(id);
   const show = (id) => ['login-view', 'form-view', 'done-view'].forEach(v => $(v).classList.toggle('hidden', v !== id));
@@ -165,6 +176,27 @@
     renderPhotos();
   });
 
+  // ---------- PDF ----------
+  function renderPdf() {
+    const info = $('w-pdf-info');
+    if (!pdf) { info.innerHTML = ''; return; }
+    info.innerHTML = `📄 <strong>${pdf.name.replace(/[<>&]/g, '')}</strong> (${(pdf.size / 1024 / 1024).toFixed(2)} MB) <button type="button" class="btn btn-outline-dark btn-sm" id="w-pdf-remove" style="margin-left:8px;">Remove</button>`;
+    $('w-pdf-remove').onclick = () => { pdf = null; renderPdf(); };
+  }
+  $('w-pdf-input').addEventListener('change', (e) => {
+    const file = e.target.files[0], st = $('w-status');
+    e.target.value = '';
+    if (!file) return;
+    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) { st.textContent = 'Please choose a PDF file.'; st.className = 'status-msg error'; return; }
+    if (file.size > MAX_PDF_BYTES) {
+      st.textContent = `That PDF is ${(file.size / 1024 / 1024).toFixed(1)} MB. The limit here is 3 MB. Send larger files to the site admin, who can add them directly.`;
+      st.className = 'status-msg error'; return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => { pdf = { name: file.name, size: file.size, base64: ev.target.result.split(',')[1] }; st.textContent = ''; renderPdf(); };
+    reader.readAsDataURL(file);
+  });
+
   // ---------- Submit: one GitHub issue for the text, one comment per photo ----------
   async function gh(path, body) {
     const res = await fetch(repoURL + path, {
@@ -182,11 +214,13 @@
       title: $('w-title').value.trim(), body: $('w-body').value.trim(),
       submittedAt: new Date().toISOString()
     };
-    if (!article.author || !article.title || !article.body) { st.textContent = 'Please fill in your name, a title and the article.'; st.className = 'status-msg error'; return; }
+    if (!article.author || !article.title || (!article.body && !pdf)) { st.textContent = 'Please fill in your name, a title, and either write the article or attach a PDF.'; st.className = 'status-msg error'; return; }
+    const chunks = pdf ? Math.ceil(pdf.base64.length / PDF_CHUNK) : 0;
+    if (pdf) article.pdf = { name: pdf.name, size: pdf.size, chunks };
     $('w-submit').disabled = true;
     st.textContent = 'Sending…'; st.className = 'status-msg';
     try {
-      const readable = `**By:** ${article.author}${article.relation ? ` (${article.relation})` : ''}\n\n${article.body}`;
+      const readable = `**By:** ${article.author}${article.relation ? ` (${article.relation})` : ''}\n\n${article.body || ''}${article.pdf ? `\n\n📄 PDF attached: ${article.pdf.name}` : ''}`;
       const meta = `<!--pandey-article ${JSON.stringify(article).replace(/--/g, '\\u002d\\u002d')} -->`;
       const issue = await gh('/issues', { title: `[Article] ${article.title}`, body: readable + '\n\n' + meta });
       for (let i = 0; i < photos.length; i++) {
@@ -194,7 +228,13 @@
         const p = photos[i];
         await gh(`/issues/${issue.number}/comments`, { body: `pandey-photo ${JSON.stringify({ caption: p.caption || '' })}\n${p.dataUrl}` });
       }
-      photos = []; renderPhotos();
+      for (let i = 0; i < chunks; i++) {
+        st.textContent = `Sending the PDF… ${Math.round((i / chunks) * 100)}%`;
+        const piece = pdf.base64.slice(i * PDF_CHUNK, (i + 1) * PDF_CHUNK);
+        await gh(`/issues/${issue.number}/comments`, { body: `pandey-pdf ${JSON.stringify({ i, n: chunks })}\n${piece}` });
+        await sleep(350);   // stay well inside GitHub's limits on rapid posting
+      }
+      photos = []; renderPhotos(); pdf = null; renderPdf();
       ['w-title', 'w-body'].forEach(id => $(id).value = '');
       show('done-view');
     } catch (e) {
