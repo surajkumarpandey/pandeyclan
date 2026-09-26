@@ -114,6 +114,18 @@
       </div>
       <div id="article-review" class="card hidden" style="max-width:760px; margin-bottom:20px;"></div>
       <div class="card" style="max-width:760px; margin-bottom:20px;">
+        <h3 style="margin-top:0; font-family:var(--font-display);">Publish an article yourself</h3>
+        <p class="muted" style="font-size:13.5px;">For your own articles, or ones sent to you directly. This is also the way to add PDFs larger than the 3 MB members can send (up to 10 MB here).</p>
+        <div class="field"><label>Title</label><input type="text" id="n-title"></div>
+        <div class="field"><label>Author</label><input type="text" id="n-author"></div>
+        <div class="field"><label>Relation (optional)</label><input type="text" id="n-relation"></div>
+        <div class="field"><label>Text (optional if you attach a PDF)</label><textarea id="n-body" style="min-height:140px;"></textarea></div>
+        <div class="field"><label>PDF (optional, up to 10 MB)</label><input type="file" id="n-pdf" accept="application/pdf"></div>
+        <div class="field"><label>Photos (optional, up to 6)</label><input type="file" id="n-photos" accept="image/*" multiple></div>
+        <button class="btn btn-gold" id="n-publish">Publish</button>
+        <span id="n-status" class="status-msg"></span>
+      </div>
+      <div class="card" style="max-width:760px; margin-bottom:20px;">
         <h3 style="margin-top:0; font-family:var(--font-display);">Published</h3>
         <div id="published-list"></div>
       </div>
@@ -1200,6 +1212,7 @@
 
   async function loadArticlesTab() {
     document.getElementById('c-save').onclick = saveFamilyPassword;
+    document.getElementById('n-publish').onclick = publishOwnArticle;
     const pending = document.getElementById('pending-list');
     pending.innerHTML = '<p class="muted">Loading…</p>';
     let published = [];
@@ -1226,23 +1239,42 @@
     box.classList.remove('hidden');
     box.innerHTML = '<p class="muted">Loading the article and its photos…</p>';
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    let photos = [];
+    let photos = [], pdfData = null;
     try {
-      const comments = await ghGet(`/issues/${sub.issue.number}/comments?per_page=100`);
+      let comments = [];
+      for (let page = 1; page <= 5; page++) {
+        const batch = await ghGet(`/issues/${sub.issue.number}/comments?per_page=100&page=${page}`);
+        comments = comments.concat(batch);
+        if (batch.length < 100) break;
+      }
+      // PDF: numbered pieces, joined back together in order
+      const pieces = comments.filter(c => (c.body || '').startsWith('pandey-pdf ')).map(c => {
+        const nl = c.body.indexOf('\n'); let meta = {};
+        try { meta = JSON.parse(c.body.slice('pandey-pdf '.length, nl)); } catch (e) {}
+        return { i: meta.i, n: meta.n, data: c.body.slice(nl + 1).trim() };
+      }).sort((a, b) => a.i - b.i);
+      if (sub.data.pdf) {
+        const expected = sub.data.pdf.chunks;
+        const complete = pieces.length === expected && pieces.every((p, k) => p.i === k);
+        pdfData = complete ? { name: sub.data.pdf.name, size: sub.data.pdf.size, base64: pieces.map(p => p.data).join('') } : { missing: true, got: pieces.length, expected };
+      }
       photos = comments.filter(c => (c.body || '').startsWith('pandey-photo ')).map(c => {
         const nl = c.body.indexOf('\n');
         let meta = {}; try { meta = JSON.parse(c.body.slice('pandey-photo '.length, nl)); } catch (e) {}
         return { dataUrl: c.body.slice(nl + 1).trim(), caption: meta.caption || '', keep: true };
       }).filter(p => p.dataUrl.startsWith('data:image/'));
     } catch (e) { /* show the text even if photos can't be loaded */ }
-    reviewing = { number: sub.issue.number, photos };
+    reviewing = { number: sub.issue.number, photos, pdf: pdfData && !pdfData.missing ? pdfData : null };
     const d = sub.data;
     box.innerHTML = `
       <h3 style="margin-top:0; font-family:var(--font-display);">Review: ${escA(d.title)}</h3>
       <div class="field"><label>Title</label><input type="text" id="r-title" value="${escA(d.title)}"></div>
       <div class="field"><label>Author</label><input type="text" id="r-author" value="${escA(d.author)}"></div>
       <div class="field"><label>Relation (optional)</label><input type="text" id="r-relation" value="${escA(d.relation)}"></div>
-      <div class="field"><label>Article (you can correct typos before publishing)</label><textarea id="r-body" style="min-height:260px;">${escA(d.body)}</textarea></div>
+      <div class="field"><label>Article (you can correct typos before publishing)</label><textarea id="r-body" style="min-height:${d.pdf ? 120 : 260}px;">${escA(d.body)}</textarea></div>
+      ${pdfData ? (pdfData.missing
+        ? `<p class="status-msg error">The attached PDF arrived incomplete (${pdfData.got} of ${pdfData.expected} pieces). Publishing will leave it out. Ask the author to send it again or email it to you.</p>`
+        : `<div class="field"><label>Attached PDF</label><div class="editor-row"><span>📄 ${escA(pdfData.name)} (${(pdfData.size / 1024 / 1024).toFixed(2)} MB)</span><a href="#" id="r-pdf-preview">Preview</a></div></div>`) : ''}
       ${photos.length ? `<div class="field"><label>Photos — untick any you don't want to publish</label>${photos.map((p, i) => `
         <div class="editor-row"><img src="${p.dataUrl}" style="width:84px; height:84px; object-fit:cover; border-radius:4px;">
           <input type="text" data-rcap="${i}" value="${escA(p.caption)}" placeholder="Caption" style="flex:1;">
@@ -1254,6 +1286,8 @@
       <button class="btn btn-outline-dark btn-sm" id="r-reject" style="border-color:var(--ochre-deep); color:var(--ochre-deep);">Send back without publishing</button>`;
     box.querySelectorAll('[data-rcap]').forEach(inp => inp.oninput = () => { reviewing.photos[+inp.dataset.rcap].caption = inp.value; });
     box.querySelectorAll('[data-rkeep]').forEach(cb => cb.onchange = () => { reviewing.photos[+cb.dataset.rkeep].keep = cb.checked; });
+    const pv = document.getElementById('r-pdf-preview');
+    if (pv) pv.onclick = (e) => { e.preventDefault(); window.open(URL.createObjectURL(base64ToBlob(reviewing.pdf.base64, 'application/pdf')), '_blank'); };
     document.getElementById('r-publish').onclick = publishReviewed;
     document.getElementById('r-reject').onclick = rejectReviewed;
   }
@@ -1261,7 +1295,7 @@
   async function publishReviewed() {
     const st = document.getElementById('r-status');
     const title = document.getElementById('r-title').value.trim(), body = document.getElementById('r-body').value.trim();
-    if (!title || !body) { st.textContent = 'Title and article can\u2019t be empty.'; st.className = 'status-msg error'; return; }
+    if (!title || (!body && !reviewing.pdf)) { st.textContent = 'The article needs a title, and either text or a PDF.'; st.className = 'status-msg error'; return; }
     st.textContent = 'Publishing…'; st.className = 'status-msg';
     try {
       const id = 'article-' + Date.now();
@@ -1272,8 +1306,15 @@
         await PandeyGitHub.putFileRaw(path, keep[i].dataUrl.split(',')[1], `Add photo for article: ${title}`, token);
         photos.push({ url: path, caption: keep[i].caption });
       }
+      let pdfRef = null;
+      if (reviewing.pdf) {
+        st.textContent = 'Uploading the PDF…';
+        const pdfPath = `uploads/articles/${id}.pdf`;
+        await PandeyGitHub.putFileRaw(pdfPath, reviewing.pdf.base64, `Add PDF for article: ${title}`, token);
+        pdfRef = { url: pdfPath, name: reviewing.pdf.name };
+      }
       const article = { id, title, author: document.getElementById('r-author').value.trim(), relation: document.getElementById('r-relation').value.trim(),
-        body, photos, publishedAt: new Date().toISOString(), sourceIssue: reviewing.number };
+        body, photos, pdf: pdfRef, publishedAt: new Date().toISOString(), sourceIssue: reviewing.number };
       await PandeyGitHub.readModifyWriteJSON('data/articles.json', (list) => { list = list || []; list.push(article); return list; },
         `Publish article: ${title} — by superadmin`, token);
       const closed = await closeSubmission(reviewing.number, 'Published on the family website. Thank you!');
@@ -1293,6 +1334,59 @@
     if (!ok) { st.textContent = 'Could not update the submission on GitHub — your admin key needs “Issues: Read and write” permission.'; st.className = 'status-msg error'; return; }
     document.getElementById('article-review').classList.add('hidden');
     loadArticlesTab();
+  }
+
+  function base64ToBlob(b64, type) {
+    const bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type });
+  }
+  const readAsBase64 = (file) => new Promise((resolve, reject) => {
+    const r = new FileReader(); r.onload = () => resolve(r.result.split(',')[1]); r.onerror = reject; r.readAsDataURL(file);
+  });
+  const resizePhoto = (file) => new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = (ev) => { const img = new Image(); img.onload = () => {
+      const maxDim = 1600; let { width, height } = img;
+      if (width > maxDim || height > maxDim) { const k = maxDim / Math.max(width, height); width = Math.round(width * k); height = Math.round(height * k); }
+      const c = document.createElement('canvas'); c.width = width; c.height = height; c.getContext('2d').drawImage(img, 0, 0, width, height);
+      resolve(c.toDataURL('image/jpeg', 0.82).split(',')[1]);
+    }; img.onerror = reject; img.src = ev.target.result; };
+    r.onerror = reject; r.readAsDataURL(file);
+  });
+
+  async function publishOwnArticle() {
+    const st = document.getElementById('n-status');
+    const title = document.getElementById('n-title').value.trim(), author = document.getElementById('n-author').value.trim();
+    const body = document.getElementById('n-body').value.trim(), pdfFile = document.getElementById('n-pdf').files[0];
+    const photoFiles = [...document.getElementById('n-photos').files].slice(0, 6);
+    if (!title || !author || (!body && !pdfFile)) { st.textContent = 'Add a title, an author, and either text or a PDF.'; st.className = 'status-msg error'; return; }
+    if (pdfFile && pdfFile.size > 10 * 1024 * 1024) { st.textContent = `That PDF is ${(pdfFile.size / 1024 / 1024).toFixed(1)} MB; the limit is 10 MB. Try compressing it first.`; st.className = 'status-msg error'; return; }
+    st.textContent = 'Publishing…'; st.className = 'status-msg';
+    try {
+      const id = 'article-' + Date.now();
+      let pdfRef = null;
+      if (pdfFile) {
+        st.textContent = 'Uploading the PDF…';
+        const path = `uploads/articles/${id}.pdf`;
+        await PandeyGitHub.putFileRaw(path, await readAsBase64(pdfFile), `Add PDF for article: ${title}`, token);
+        pdfRef = { url: path, name: pdfFile.name };
+      }
+      const photos = [];
+      for (let i = 0; i < photoFiles.length; i++) {
+        st.textContent = `Uploading photo ${i + 1} of ${photoFiles.length}…`;
+        const path = `uploads/articles/${id}_${i + 1}.jpg`;
+        await PandeyGitHub.putFileRaw(path, await resizePhoto(photoFiles[i]), `Add photo for article: ${title}`, token);
+        photos.push({ url: path, caption: '' });
+      }
+      const article = { id, title, author, relation: document.getElementById('n-relation').value.trim(), body, photos, pdf: pdfRef, publishedAt: new Date().toISOString() };
+      await PandeyGitHub.readModifyWriteJSON('data/articles.json', (list) => { list = list || []; list.push(article); return list; }, `Publish article: ${title} — by superadmin`, token);
+      ['n-title', 'n-author', 'n-relation', 'n-body', 'n-pdf', 'n-photos'].forEach(k => { document.getElementById(k).value = ''; });
+      st.textContent = 'Published.'; st.className = 'status-msg ok';
+      loadArticlesTab();
+    } catch (e) {
+      st.textContent = 'Could not publish: ' + e.message; st.className = 'status-msg error';
+    }
   }
 
   function renderPublished(list) {
