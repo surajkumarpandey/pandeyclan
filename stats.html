@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Statistics — The Pandey Clan of Bairati</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .stats-hero { background: linear-gradient(165deg, var(--maroon) 0%, var(--maroon-deep) 100%); color: var(--paper-light); padding: 46px 0 38px; }
+  .stats-hero h1 { font-family: var(--font-display); font-weight: 600; font-size: 32px; margin: 0 0 8px; }
+  .stats-hero p { max-width: 68ch; color: rgba(255,251,243,0.88); margin: 0; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 26px; }
+  .stat-card { background: var(--paper-light); border: 1px solid var(--line); border-top: 4px solid var(--gold); padding: 22px 24px; text-align: center; }
+  .stat-card .num { font-family: var(--font-display); font-size: 40px; color: var(--maroon); line-height: 1.1; }
+  .stat-card .lbl { font-size: 13px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: #8a6a58; margin-top: 6px; }
+  .place-card { background: var(--paper-light); border: 1px solid var(--line); border-left: 4px solid var(--ochre); padding: 22px 24px; }
+  .place-card h2 { font-family: var(--font-display); font-size: 21px; margin: 0 0 8px; }
+  .place-card p { font-size: 14.5px; color: #5a3a2e; margin: 0 0 12px; }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">The Pandey Clan <em>of Bairati</em></a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="links">
+      <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+      <li><a href="tree.html" data-i18n="nav.tree">Family Tree</a></li>
+      <li><a href="articles.html" data-i18n="nav.articles">Articles</a></li>
+      <li><a href="village.html" data-i18n="nav.village">Bairati Village</a></li>
+      <li><button class="lang-toggle" id="lang-toggle">हिंदी</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="stats-hero">
+  <div class="aipan-border" style="margin-bottom:22px;"></div>
+  <div class="wrap">
+    <h1 data-i18n="stats.title">Site statistics</h1>
+    <p data-i18n="stats.lede">How many people have visited this family record, and roughly where they are visiting from.</p>
+  </div>
+</div>
+
+<div class="section wrap">
+  <div id="stats-off" class="place-card" style="display:none;">
+    <h2>Statistics aren’t switched on yet</h2>
+    <p>Visitor counting will begin once the site’s administrator connects it.</p>
+  </div>
+  <div id="stats-on" style="display:none;">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="s-total">…</div><div class="lbl" data-i18n="stats.total">Visits in total</div></div>
+      <div class="stat-card"><div class="num" id="s-30">…</div><div class="lbl" data-i18n="stats.30">In the last 30 days</div></div>
+      <div class="stat-card"><div class="num" id="s-7">…</div><div class="lbl" data-i18n="stats.7">In the last 7 days</div></div>
+    </div>
+    <div class="place-card">
+      <h2 data-i18n="stats.where">Where visitors come from</h2>
+      <p>The full dashboard shows visitors by country and, for many, by state or region, along with which pages are read most. Locations are worked out approximately from each visit and no personal information is stored.</p>
+      <a class="btn btn-gold btn-sm" id="s-dashboard" href="#" target="_blank" rel="noopener" style="display:none;">Open the full statistics →</a>
+      <p id="s-no-dash" class="muted" style="font-size:13px; display:none; margin-top:10px;">The detailed dashboard hasn’t been shared yet.</p>
+    </div>
+    <p class="muted" style="font-size:12.5px; margin-top:18px;">Counts refresh every few hours. Counted with GoatCounter, which does not track personal data.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="aipan-border"></div>
+  <div class="wrap"><span>The Pandey Clan of Bairati — a family record, kept by the family.</span><span><a href="index.html">Home</a></span></div>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(function () {
+  if (!statsBase()) { document.getElementById('stats-off').style.display = 'block'; return; }
+  document.getElementById('stats-on').style.display = 'block';
+  const day = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
+  fetchVisitCount().then(n => { document.getElementById('s-total').textContent = n || '0'; });
+  fetchVisitCount(`?start=${day(30)}`).then(n => { document.getElementById('s-30').textContent = n || '0'; });
+  fetchVisitCount(`?start=${day(7)}`).then(n => { document.getElementById('s-7').textContent = n || '0'; });
+  const dash = document.getElementById('s-dashboard');
+  if (SITE_STATS.dashboardUrl) { dash.href = SITE_STATS.dashboardUrl; dash.style.display = 'inline-flex'; }
+  else document.getElementById('s-no-dash').style.display = 'block';
+})();
+</script>
+</body>
+</html>

@@ -46,10 +46,11 @@
     touch-action: pan-x pan-y;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    background-image: url('assets/img/tree-backdrop.jpg');
-    background-repeat: repeat;
-    background-size: 620px auto;
-    background-color: var(--paper);
+    /* the aipan tile, softened by a translucent dark layer so the tree stands out */
+    background-image: linear-gradient(rgba(40, 8, 10, 0.42), rgba(40, 8, 10, 0.42)), url('assets/img/tree-backdrop-aipan.jpg');
+    background-repeat: repeat, repeat;
+    background-size: auto, 704px auto;
+    background-color: #5a1a14;
   }
   .tree-canvas { position: relative; transform-origin: top left; }
   #tree-zoom-sizer { position: relative; }
@@ -58,10 +59,11 @@
      zoomed canvas, so it stays behind the right members at every zoom level */
   .gen-marker { position: absolute; left: 0; width: 100%; pointer-events: none; z-index: 0;
     border-top: 1px solid rgba(179,64,42,0.10); }
-  .gen-marker.band-a { background: linear-gradient(180deg, rgba(224,149,42,0.16), rgba(224,149,42,0.07)); }
-  .gen-marker.band-b { background: linear-gradient(180deg, rgba(92,31,39,0.07), rgba(92,31,39,0.025)); }
-  .gen-marker .band-num { position: absolute; left: 12px; top: 8px; font-family: var(--font-display); font-size: 13px;
-    font-weight: 700; color: var(--maroon-deep); opacity: 0.45; }
+  .gen-marker.band-a { background: rgba(255, 244, 225, 0.16); }
+  .gen-marker.band-b { background: rgba(28, 6, 8, 0.34); }
+  .gen-marker { border-top: 1px solid rgba(255, 236, 200, 0.35); }
+  .gen-marker .band-num { position: absolute; left: 14px; top: 10px; font-family: var(--font-display); font-size: 34px;
+    font-weight: 700; color: #FFF3DC; opacity: 0.92; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55); letter-spacing: 0.5px; }
   #tree-svg { position: relative; z-index: 1; }
   .gen-label-tag {
     position: absolute; left: 14px;
@@ -77,7 +79,8 @@
   .link.dim { stroke-opacity: 0.1; filter: none; }
 
   .sun-halo { fill: var(--gold); opacity: 0.28; pointer-events: none; }
-  .sun-halo.root-halo { opacity: 0.4; }
+  .sun-halo.root-halo { fill: #FFD21F; opacity: 0.75; filter: drop-shadow(0 0 12px rgba(255, 214, 40, 0.95)); }
+  .root-node .avatar-ring { filter: drop-shadow(0 0 10px rgba(255, 214, 40, 0.9)); }
 
   .node circle.avatar-ring {
     stroke-width: 3px; cursor: pointer; transition: stroke-width .12s;
@@ -86,16 +89,16 @@
   .node image { cursor: pointer; }
   .node:hover circle.avatar-ring { stroke-width: 4.5px; }
   .node text {
-    font-family: var(--font-body); font-size: 11px; font-weight: 600; fill: var(--ink); cursor: pointer; text-anchor: middle;
-    paint-order: stroke fill; stroke: #FFFBF3; stroke-width: 3.5px; stroke-linejoin: round;
+    font-family: var(--font-body); font-size: 11px; font-weight: 600; fill: #FFF6E6; cursor: pointer; text-anchor: middle;
+    paint-order: stroke fill; stroke: rgba(36, 8, 10, 0.88); stroke-width: 3.5px; stroke-linejoin: round;
   }
-  .node.placeholder text { fill: #7a4a30; }
+  .node.placeholder text { fill: #EBCFAE; }
   .node.dim { opacity: 0.15; }
   .node.dim .sun-halo { opacity: 0.05; }
   .node.highlight circle.avatar-ring { stroke: var(--gold) !important; stroke-width: 4px; }
 
   .root-node circle.avatar-ring { stroke: var(--gold); stroke-width: 3.5px; }
-  .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: var(--maroon-deep); }
+  .root-node text { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: #FFE066; }
 
   .panel {
     position: fixed; top: 0; right: 0; width: 340px; max-width: 88vw; height: 100%;
@@ -192,8 +195,7 @@
       <button id="collapse-all-btn" style="width:auto; padding:0 10px; font-size:12px; border-radius:15px;">Collapse all</button>
       <button id="zoom-in-btn" aria-label="Zoom in">+</button>
     </div>
-    <button class="btn btn-outline-dark btn-sm" id="download-pdf-btn" data-i18n="tree.download.pdf">Download as PDF</button>
-    <button class="btn btn-outline-dark btn-sm" id="download-image-btn">Download as Image</button>
+    <button class="btn btn-outline-dark btn-sm" id="download-json-btn" data-i18n="tree.download.json">Download tree (JSON)</button>
   </div>
 </div>
 
@@ -271,7 +273,7 @@
     const band = document.createElement('div');
     band.className = 'gen-marker ' + (gen % 2 ? 'band-a' : 'band-b'); band.dataset.gen = gen;
     band.style.top = (nodeY - 48) + 'px'; band.style.height = DY + 'px';
-    band.innerHTML = `<span class="band-num">${gen}</span>`;
+    band.innerHTML = `<span class="band-num">Gen ${gen}</span>`;
     canvas.appendChild(band);
   }
 
@@ -376,7 +378,7 @@
         .attr('clip-path', `url(#${clipId})`).attr('preserveAspectRatio', 'xMidYMid slice');
       sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', 'none').attr('stroke', ringColor);
     } else {
-      sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', isRoot ? 'var(--maroon)' : '#FFFBF3').attr('stroke', ringColor);
+      sel.append('circle').attr('class', 'avatar-ring').attr('r', r).attr('fill', isRoot ? '#FFD21F' : '#FFFBF3').attr('stroke', isRoot ? '#FFB300' : ringColor);
     }
     const label = sel.append('text').text(PandeyData.displayName(p)).attr('y', r + 15);
     wrapLabel(label, DX - 14, 1.15);
@@ -587,81 +589,18 @@
     currentPanelPersonId = p.id;
   }
 
-  // ---------- Downloads ----------
-  async function exportTreeAsImage() {
-    const btn = document.getElementById('download-image-btn');
-    const originalLabel = btn.textContent;
-    btn.textContent = 'Preparing…'; btn.disabled = true;
-    try {
-      const svgEl = document.getElementById('tree-svg');
-      const clone = svgEl.cloneNode(true);
-      // Inline every element's resolved (computed) style so the exported
-      // SVG carries its own colors/filters/fonts instead of relying on the
-      // page's stylesheet, which won't exist once this is a standalone file.
-      const props = ['fill', 'stroke', 'stroke-width', 'stroke-opacity', 'font-family', 'font-size', 'font-weight', 'opacity', 'filter', 'paint-order', 'stroke-linejoin', 'text-anchor'];
-      const originals = svgEl.querySelectorAll('*');
-      const clones = clone.querySelectorAll('*');
-      originals.forEach((orig, i) => {
-        const cs = getComputedStyle(orig);
-        let styleStr = '';
-        props.forEach(p => { const v = cs.getPropertyValue(p); if (v && v !== 'none') styleStr += `${p}:${v};`; });
-        if (styleStr) clones[i].setAttribute('style', styleStr);
-      });
-      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      bg.setAttribute('width', totalWidth); bg.setAttribute('height', totalHeight);
-      bg.setAttribute('fill', '#FBF2E3');
-      clone.insertBefore(bg, clone.firstChild);
-      clone.setAttribute('width', totalWidth); clone.setAttribute('height', totalHeight);
-
-      const svgData = new XMLSerializer().serializeToString(clone);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
-      const img = new Image();
-      img.onload = () => {
-        const scale = 2; // export at 2x for a crisp, legible image at full tree size
-        const c = document.createElement('canvas');
-        c.width = totalWidth * scale; c.height = totalHeight * scale;
-        const ctx = c.getContext('2d');
-        ctx.scale(scale, scale);
-        ctx.drawImage(img, 0, 0, totalWidth, totalHeight);
-        URL.revokeObjectURL(url);
-        c.toBlob((blob) => {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = 'pandey-family-tree.png';
-          a.click();
-          btn.textContent = originalLabel; btn.disabled = false;
-        }, 'image/png');
-      };
-      img.onerror = () => { btn.textContent = originalLabel; btn.disabled = false; alert('Could not generate the image — try again.'); };
-      img.src = url;
-    } catch (e) {
-      btn.textContent = originalLabel; btn.disabled = false;
-      alert('Could not generate the image: ' + e.message);
-    }
-  }
-  document.getElementById('download-image-btn').addEventListener('click', exportTreeAsImage);
-
-  // ---------- Search ----------
-  document.getElementById('download-pdf-btn').addEventListener('click', () => {
-    // Fit the whole tree width into one page's width before printing,
-    // so pages only ever stack vertically — never split awkwardly left/right
-    // the way default print pagination does with very wide content.
-    const A4_LANDSCAPE_USABLE_PX = 1050; // ~297mm landscape minus 8mm margins, at 96 CSS px/in
-    const printScale = Math.min(1, A4_LANDSCAPE_USABLE_PX / totalWidth);
-    const prevTransform = canvas.style.transform;
-    const prevSizerW = sizer.style.width, prevSizerH = sizer.style.height;
-    canvas.style.transform = `scale(${printScale})`;
-    sizer.style.width = 'auto'; sizer.style.height = 'auto';
-    window.print();
-    // restore the on-screen zoom afterwards (most browsers fire afterprint;
-    // a short fallback timeout covers the ones that don't for the print
-    // dialog itself, e.g. some in-app browsers)
-    const restore = () => { canvas.style.transform = prevTransform; sizer.style.width = prevSizerW; sizer.style.height = prevSizerH; };
-    window.addEventListener('afterprint', restore, { once: true });
-    setTimeout(restore, 2000);
+  // ---------- Download: the whole tree as a JSON file ----------
+  document.getElementById('download-json-btn').addEventListener('click', () => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    const blob = new Blob([JSON.stringify(people, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = `pandey-family-tree-${stamp}.json`;
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
 
+  // ---------- Search ----------
   document.getElementById('search-box').addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();
     nodeSel.classed('highlight', false).classed('dim', false);
@@ -689,7 +628,6 @@
   window.addEventListener('pandey-lang-changed', () => {
     draw();
     document.getElementById('search-box').setAttribute('placeholder', PandeyI18n.t('tree.search.placeholder', 'Search a name…'));
-    document.getElementById('download-pdf-btn').textContent = PandeyI18n.t('tree.download.pdf', 'Download as PDF');
     if (currentPanelPersonId) {
       const p = people.find(x => x.id === currentPanelPersonId);
       if (p) openPanel(p);
