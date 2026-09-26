@@ -99,7 +99,7 @@ function showFatalError(message) {
    Fill these two settings in once, after creating a free GoatCounter account.
    Until goatcounterCode is set, nothing is counted and no widget is shown. */
 const SITE_STATS = {
-  goatcounterCode: '',   // e.g. 'pandey-bairati' for https://pandey-bairati.goatcounter.com
+  goatcounterCode: 'surajpandey',   // e.g. 'pandey-bairati' for https://pandey-bairati.goatcounter.com
   dashboardUrl: ''       // GoatCounter's shareable dashboard link (the one ending in ?access-token=…)
 };
 function statsBase() { return SITE_STATS.goatcounterCode ? `https://${SITE_STATS.goatcounterCode}.goatcounter.com` : null; }
