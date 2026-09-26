@@ -2117,7 +2117,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/chetan_1790438947543.jpg"
+    ],
     "bio": "",
     "occupation": "Retired",
     "locations": [],
