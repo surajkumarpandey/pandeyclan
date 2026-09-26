@@ -1424,7 +1424,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/kailash_1790440883716.jpg"
+    ],
     "bio": "",
     "occupation": "Retired Indian Navy Officer",
     "locations": [
