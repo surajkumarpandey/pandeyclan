@@ -4790,7 +4790,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Harish Chandra Pant",
     "fatherName": null,
     "motherName": null,
     "spouseId": "shekhar_daughter_26",
@@ -4801,7 +4801,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "shivang",
