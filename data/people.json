@@ -3583,18 +3583,37 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
+    "fullName": "Bhasker Chandra Pant",
+    "fatherName": "Mohan Chandra Pant",
     "motherName": null,
     "spouseId": "taradutt_daughter_24",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "2026-09-26",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Bangalore",
+        "type": "current",
+        "year": null,
+        "lat": 12.9767936,
+        "lng": 77.590082,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": "RETIRED LIC Officer",
+    "birthPlace": "Haldwani",
+    "audioMessages": []
   },
   {
     "id": "mohita",
