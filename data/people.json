@@ -1852,8 +1852,8 @@
     "photos": [
       "uploads/ashok_daughter_22_1790360311099.jpg"
     ],
-    "bio": "",
-    "occupation": "Service",
+    "bio": "B.Tech.(Computer Science) with honour",
+    "occupation": "IT Professional",
     "locations": [
       {
         "place": "Nasik",
@@ -1893,6 +1893,14 @@
         "year": null,
         "lat": 27.4140049,
         "lng": 76.6170387,
+        "note": null
+      },
+      {
+        "place": "Bangalore",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
         "note": null
       }
     ],
