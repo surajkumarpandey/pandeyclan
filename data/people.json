@@ -3719,8 +3719,40 @@
     "birthDate": "1963-12-25",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
-    "photos": [],
+    "locations": [
+      {
+        "place": "Almora",
+        "type": "lived",
+        "year": null,
+        "lat": 29.702651,
+        "lng": 79.4326318,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
+    "photos": [
+      "uploads/damyanti_1790502495692.jpg",
+      "uploads/damyanti_1790502581205.jpg",
+      "uploads/damyanti_1790502581251.jpg",
+      "uploads/damyanti_1790502581284.jpg",
+      "uploads/damyanti_1790502581313.jpg",
+      "uploads/damyanti_1790502581343.jpg"
+    ],
     "bio": "",
     "occupation": "Retired Educationist",
     "audioMessages": [],
