@@ -3933,7 +3933,40 @@
     "birthDate": "1992-03-18",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Hyderabad",
+        "type": "lived",
+        "year": null,
+        "lat": 17.360589,
+        "lng": 78.4740613,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": 28.4670734,
+        "lng": 77.5137649,
+        "note": null
+      },
+      {
+        "place": "Someshwar",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "visited",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      }
+    ],
     "photos": [
       "uploads/pallav_1790500713229.jpg",
       "uploads/pallav_1790500778230.jpg"
