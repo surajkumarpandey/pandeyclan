@@ -3432,14 +3432,14 @@
   },
   {
     "id": "rohanika",
-    "name": "Rohanika",
+    "name": "Ruhanika",
     "gender": "F",
     "parentId": "kokil",
     "generation": 20,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Ruhanika Pandey",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -3448,7 +3448,11 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "fatherName": "Mohit Kumar Pandey",
+    "motherName": "Kokil Pandey",
+    "birthPlace": "Haldwani",
+    "audioMessages": []
   },
   {
     "id": "kushagra-pandey",
