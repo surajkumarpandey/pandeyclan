@@ -3396,14 +3396,55 @@
     "birthDate": "1984-11-30",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Hyderabad",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": 28.4670734,
+        "lng": 77.5137649,
+        "note": null
+      },
+      {
+        "place": "Bangalore",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
     "occupation": null,
     "sortOrder": 1,
     "fatherName": "Pradeep Kumar Pandey",
     "motherName": "Baby Pandey",
-    "birthPlace": "Haldwani",
+    "birthPlace": "Dewelchour Bandobasti",
     "audioMessages": []
   },
   {
