@@ -3943,7 +3943,32 @@
     "birthDate": "1988-10-01",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "visited",
+        "year": null,
+        "lat": 28.4670734,
+        "lng": 77.5137649,
+        "note": null
+      }
+    ],
     "photos": [
       "uploads/tamanna_1790502995839.jpg"
     ],
