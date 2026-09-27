@@ -5004,9 +5004,12 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/preeti-2_1790529760854.jpg",
+      "uploads/preeti-2_1790529765823.jpg"
+    ],
     "bio": "",
-    "occupation": null,
+    "occupation": "Professional Portraitist",
     "birthPlace": null,
     "audioMessages": []
   },
