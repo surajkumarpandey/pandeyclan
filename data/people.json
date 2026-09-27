@@ -3583,11 +3583,60 @@
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Lucknow",
+        "type": "lived",
+        "year": null,
+        "lat": 26.8381,
+        "lng": 80.9346001,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": 28.6328027,
+        "lng": 77.2197713,
+        "note": null
+      },
+      {
+        "place": "Hyderabad",
+        "type": "lived",
+        "year": null,
+        "lat": 17.360589,
+        "lng": 78.4740613,
+        "note": null
+      },
+      {
+        "place": "Bangalore",
+        "type": "current",
+        "year": null,
+        "lat": 12.9767936,
+        "lng": 77.590082,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "visited",
+        "year": null,
+        "lat": 19.054999,
+        "lng": 72.8692035,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
-    "occupation": "Service",
-    "fatherName": null,
+    "occupation": "HR Professional",
+    "fatherName": "Lalit Mohan Pandey",
     "motherName": null,
     "birthPlace": null,
     "audioMessages": []
