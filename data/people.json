@@ -3769,15 +3769,23 @@
         "lat": 26.6981094,
         "lng": 88.3245465,
         "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": 28.6664535,
+        "lng": 77.2169781,
+        "note": null
       }
     ],
     "photos": [
       "uploads/anjali_1790411531896.jpg"
     ],
     "bio": "",
-    "occupation": null,
+    "occupation": "Politician / Agriculturist",
     "audioMessages": [],
-    "birthPlace": null
+    "birthPlace": "Dewelchour Bandobasti"
   },
   {
     "id": "mahesh",
