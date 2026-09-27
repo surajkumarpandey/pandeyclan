@@ -3944,7 +3944,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/tamanna_1790502995839.jpg"
+    ],
     "bio": "",
     "occupation": "Educationist",
     "audioMessages": [],
