@@ -4389,16 +4389,16 @@
   },
   {
     "id": "rowansh",
-    "name": "Rowansh",
+    "name": "Ruaansh",
     "gender": "M",
     "parentId": "dheeraj",
     "generation": 20,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Ruaansh Joshi",
+    "fatherName": "Dhiraj Joshi",
+    "motherName": "Prajakta Joshi",
     "spouseId": null,
     "audioMessage": null,
     "birthDate": null,
@@ -4407,7 +4407,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "rashmi",
