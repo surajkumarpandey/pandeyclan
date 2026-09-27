@@ -3887,10 +3887,46 @@
     "birthDate": "1986-05-22",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
-    "photos": [],
+    "locations": [
+      {
+        "place": "Almora",
+        "type": "lived",
+        "year": null,
+        "lat": 29.702651,
+        "lng": 79.4326318,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": 29.2144809,
+        "lng": 79.5279012,
+        "note": null
+      },
+      {
+        "place": "Gaziabad",
+        "type": "lived",
+        "year": null,
+        "lat": 35.233837,
+        "lng": 71.33074,
+        "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "lived",
+        "year": null,
+        "lat": 28.6328027,
+        "lng": 77.2197713,
+        "note": null
+      }
+    ],
+    "photos": [
+      "uploads/tanmay_1790501199617.jpg",
+      "uploads/tanmay_1790501203553.jpg"
+    ],
     "bio": "",
-    "occupation": "Service",
+    "occupation": "IT Professional",
     "audioMessages": [],
     "birthPlace": null
   },
