@@ -3350,13 +3350,80 @@
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
-    "photos": [],
+    "locations": [
+      {
+        "place": "Bhowali",
+        "type": "lived",
+        "year": null,
+        "lat": 29.3834967,
+        "lng": 79.5188391,
+        "note": null
+      },
+      {
+        "place": "Kichha",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Haldwani",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Dewelchour Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Mumbai",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Bangalore",
+        "type": "lived",
+        "year": null,
+        "lat": 12.9767936,
+        "lng": 77.590082,
+        "note": null
+      },
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": 28.4670734,
+        "lng": 77.5137649,
+        "note": null
+      },
+      {
+        "place": "Nashik",
+        "type": "visited",
+        "year": null,
+        "lat": 20.0112475,
+        "lng": 73.7902364,
+        "note": null
+      }
+    ],
+    "photos": [
+      "uploads/baby-pandey_1790518632667.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "fatherName": "Mohan Chandra Joshi",
-    "motherName": null,
-    "birthPlace": null,
+    "motherName": "Nandi Joshi",
+    "birthPlace": "Mallital, Nainital",
     "audioMessages": []
   },
   {
