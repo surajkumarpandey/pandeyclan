@@ -4475,7 +4475,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Vikash Pandey",
     "fatherName": null,
     "motherName": null,
     "spouseId": "tamanna",
@@ -4486,7 +4486,9 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": "Entrepreneur",
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "jaya",
