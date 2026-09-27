@@ -3934,9 +3934,12 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/pallav_1790500713229.jpg",
+      "uploads/pallav_1790500778230.jpg"
+    ],
     "bio": "",
-    "occupation": null,
+    "occupation": "IT Professional",
     "audioMessages": [],
     "birthPlace": null
   },
