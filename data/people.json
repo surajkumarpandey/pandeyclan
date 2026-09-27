@@ -3536,7 +3536,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/mohit_1790527235285.jpg"
+    ],
     "bio": "",
     "occupation": "IT Professional",
     "fatherName": "Devendra Kumar Pandey",
