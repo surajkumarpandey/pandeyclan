@@ -3700,7 +3700,7 @@
     "notes": null,
     "fullName": "Durga Devi Pandey",
     "fatherName": "Dev Dutt Joshi",
-    "motherName": null,
+    "motherName": "Sarswati Joshi",
     "spouseId": "taradutt",
     "audioMessage": null,
     "birthDate": null,
@@ -3722,10 +3722,26 @@
         "lat": 29.2144809,
         "lng": 79.5279012,
         "note": null
+      },
+      {
+        "place": "Dhampur Uttar pradesh",
+        "type": "visited",
+        "year": null,
+        "lat": 29.2419144,
+        "lng": 78.5079901,
+        "note": null
+      },
+      {
+        "place": "Ujjain",
+        "type": "visited",
+        "year": null,
+        "lat": 23.1885131,
+        "lng": 75.7716562,
+        "note": null
       }
     ],
     "photos": [],
-    "bio": "",
+    "bio": "दुर्गा पाण्डेय जी के : दादाजी देवीदत्त जोशी -- परदादा  पद्मा दत्त जोशी -- वृद्ध पितामह ईश्वरी दत्त जोशी।  \nदादी : सरस्वती जोशी।",
     "occupation": null,
     "audioMessages": [],
     "birthPlace": "Garud"
