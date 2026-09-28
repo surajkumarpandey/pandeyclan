@@ -3563,7 +3563,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/rohanika_1790605380342.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "fatherName": "Mohit Kumar Pandey",
