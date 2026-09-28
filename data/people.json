@@ -3662,7 +3662,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/varniya-pandey_1790604808141.jpg"
+    ],
     "bio": "गोत्र : गौतम।",
     "occupation": null,
     "fatherName": "Kushagra Pande",
