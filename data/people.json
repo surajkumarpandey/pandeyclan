@@ -3690,7 +3690,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/meena-pandey_1790645159843.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "fatherName": null,
