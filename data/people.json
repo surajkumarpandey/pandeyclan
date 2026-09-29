@@ -3729,6 +3729,14 @@
         "lat": 29.5387223,
         "lng": 79.339948,
         "note": null
+      },
+      {
+        "place": "Dehradun",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
       }
     ],
     "photos": [
