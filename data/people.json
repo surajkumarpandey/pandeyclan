@@ -3562,7 +3562,24 @@
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Greater Noida",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      },
+      {
+        "place": "Bang5",
+        "type": "current",
+        "year": null,
+        "lat": 34.2102744,
+        "lng": 132.6277734,
+        "note": null
+      }
+    ],
     "photos": [
       "uploads/rohanika_1790762998662.jpg"
     ],
