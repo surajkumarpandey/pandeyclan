@@ -3108,12 +3108,13 @@
     "bio": "",
     "occupation": null,
     "fullName": "Mrityunjay Kumar Pandey",
-    "fatherName": "Suraj Kumar Pandey",
-    "motherName": "Vibha Pandey",
+    "fatherName": "Dr. Suraj Kumar Pandey",
+    "motherName": "Vibha Pandey, PPS",
     "birthDate": "2024-05-04",
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyap"
   },
   {
     "id": "hemlata-pant",
