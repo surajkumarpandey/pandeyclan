@@ -518,6 +518,17 @@
     }
     return [father, mother].filter(isRealName);
   }
+  // Gotra passes down the male line: a member by birth with none entered takes the
+  // nearest ancestor's; someone who married in shows only what is entered for them.
+  function gotraOf(p) {
+    let n = p;
+    while (n) {
+      if (n.gotra) return n.gotra;
+      n = n.parentId ? people.find(x => x.id === n.parentId) : null;
+    }
+    return null;
+  }
+
   function relationLines(p) {
     // Layout:            Dr. Suraj Kumar Pandey
     //                    Son of Ashok Kumar Pandey and Hemlata Pant
@@ -534,6 +545,8 @@
     let html = `<div class="rel-block"><div class="rel-name">${fullNameOf(p)}${genText}</div>`;
     const parents = parentNamesOf(p);
     if (parents.length) html += `<div class="rel-of">${ofLine(p.gender, parents)}</div>`;
+    const gotra = gotraOf(p);
+    if (gotra) html += `<div class="rel-of">${hi ? 'गोत्र' : 'Gotra'}: ${gotra}</div>`;
     html += '</div>';
     const spouse = p.spouseId ? people.find(x => x.id === p.spouseId) : null;
     if (spouse) {
@@ -544,6 +557,8 @@
         html += `<div class="rel-name">${fullNameOf(spouse)}</div>`;
         const spParents = parentNamesOf(spouse);
         if (spParents.length) html += `<div class="rel-of">${ofLine(spouse.gender, spParents)}</div>`;
+        const spGotra = gotraOf(spouse);
+        if (spGotra) html += `<div class="rel-of">${hi ? 'गोत्र' : 'Gotra'}: ${spGotra}</div>`;
       }
       html += '</div>';
     }
