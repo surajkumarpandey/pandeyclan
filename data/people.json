@@ -1836,12 +1836,13 @@
       }
     ],
     "spouseId": "vibha",
-    "fatherName": null,
-    "motherName": null,
-    "birthDate": null,
-    "birthPlace": null,
+    "fatherName": "Ashok Kumar Pandey",
+    "motherName": "Hemlata Pandey",
+    "birthDate": "1991-08-13",
+    "birthPlace": "Nashik Road",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyap"
   },
   {
     "id": "ashok_daughter_22",
