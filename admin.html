@@ -317,6 +317,8 @@
       <div class="field"><label>Full name (optional)</label><input type="text" id="f-fullname" value="${p.fullName || ''}"></div>
       <div class="field"><label>Father's name (useful when the father isn't tracked elsewhere in the tree — e.g. for a spouse who married in)</label><input type="text" id="f-fathername" value="${p.fatherName || ''}"></div>
       <div class="field"><label>Mother's name</label><input type="text" id="f-mothername" value="${p.motherName || ''}"></div>
+      <div class="field"><label>Gotra <span class="muted" style="font-weight:400;">(leave empty to inherit from the father's line; enter it for someone who married in)</span></label>
+        <input type="text" id="f-gotra" value="${p.gotra || ''}" placeholder="e.g. Kashyap"></div>
       <div class="field"><label>Gender</label><select id="f-gender"><option value="unknown" ${p.gender==='unknown'?'selected':''}>Unknown</option><option value="M" ${p.gender==='M'?'selected':''}>Male</option><option value="F" ${p.gender==='F'?'selected':''}>Female</option></select></div>
       <div class="field"><label>Occupation</label><input type="text" id="f-occupation" value="${p.occupation || ''}"></div>
       <div class="field"><label>Date of birth</label><input type="date" id="f-birthdate" value="${p.birthDate || ''}"></div>
@@ -553,6 +555,7 @@
       const fullNameVal = document.getElementById('f-fullname').value.trim() || null;
       const fatherNameVal = document.getElementById('f-fathername').value.trim() || null;
       const motherNameVal = document.getElementById('f-mothername').value.trim() || null;
+      const gotraVal = document.getElementById('f-gotra').value.trim() || null;
       const genderVal = document.getElementById('f-gender').value;
       const locVal = [...document.querySelectorAll('#loc-rows .loc-row-wrap')].map(wrap => ({
         place: wrap.querySelector('.loc-place').value.trim(), type: wrap.querySelector('.loc-type').value,
@@ -573,7 +576,7 @@
         const existingAudioList = existing.audioMessages || (existing.audioMessage ? [existing.audioMessage] : []);
         const keptAudio = existingAudioList.filter(src => !removedAudio.has(src));
         updated = {
-          ...existing, name: nameVal || existing.name, fullName: fullNameVal, fatherName: fatherNameVal, motherName: motherNameVal, gender: genderVal,
+          ...existing, name: nameVal || existing.name, fullName: fullNameVal, fatherName: fatherNameVal, motherName: motherNameVal, gotra: gotraVal, gender: genderVal,
           unnamedPlaceholder: nameVal ? false : existing.unnamedPlaceholder,
           occupation: occVal, birthDate: birthVal, birthPlace: birthPlaceVal, birthYear: null, bio: bioVal, locations: locVal,
           photos: [...keptPhotos, ...newPhotoUrls],
@@ -670,7 +673,7 @@
         newPerson = {
           id: uniqueId(slugify(name), existingIds), name, gender, parentId: parent.id,
           generation: (parent.generation || 1) + 1, tree: parent.tree || 'A',
-          unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, spouseId: null, audioMessage: null,
+          unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, gotra: null, spouseId: null, audioMessage: null,
           birthDate, birthPlace, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
         };
         latestPeople.push(newPerson);
@@ -699,7 +702,7 @@
         newSpouse = {
           id: uniqueId(slugify(name), existingIds), name, gender, parentId: null,
           generation: partner.generation, tree: partner.tree || 'A',
-          unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, spouseId: partner.id, audioMessage: null,
+          unnamedPlaceholder: false, notes: null, fullName: null, fatherName: null, motherName: null, gotra: null, spouseId: partner.id, audioMessage: null,
           birthDate: null, birthYear: null, deathYear: null, locations: [], photos: [], bio: '', occupation: null
         };
         latestPeople.push(newSpouse);
