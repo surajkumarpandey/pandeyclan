@@ -1133,7 +1133,7 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "\"Departed for his heavenly abode on 01 Aug 1994 in Haldwani.\"",
+    "bio": "\"Born in 1902 .... Confirmed from both uncles.\n\"Departed for his heavenly abode on 01 Aug 1994 in Haldwani.\"",
     "occupation": "Entrepreneur / Agriculturist",
     "locations": [
       {
@@ -1185,7 +1185,8 @@
     "audioMessages": [],
     "audioMessage": null,
     "spouseId": "saroj",
-    "birthPlace": "Bairati Almora"
+    "birthPlace": "Bairati Almora",
+    "gotra": null
   },
   {
     "id": "bholadutt",
