@@ -6472,7 +6472,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/jeewan_1791526901170.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "gotra": null,
