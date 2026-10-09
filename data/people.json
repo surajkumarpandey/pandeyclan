@@ -6463,7 +6463,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Jeewan Chandra Tewari",
     "fatherName": null,
     "motherName": null,
     "spouseId": "pushpa",
@@ -6474,7 +6474,10 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "pushpa-2",
