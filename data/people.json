@@ -5139,11 +5139,14 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/pushpa_1791526943134.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "birthPlace": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "vinod",
