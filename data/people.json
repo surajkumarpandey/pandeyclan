@@ -6413,7 +6413,16 @@
     "birthPlace": "Haldwani",
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Haldwani",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "photos": [
       "uploads/son-hema_1791526417237.jpg"
     ],
