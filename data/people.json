@@ -5063,7 +5063,7 @@
     "motherName": "Tamanna Pandey",
     "spouseId": null,
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "2015-07-16",
     "birthPlace": "Haldwani",
     "birthYear": null,
     "deathYear": null,
@@ -5071,7 +5071,8 @@
     "photos": [],
     "bio": "",
     "occupation": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": "Kashyap"
   },
   {
     "id": "saroj",
