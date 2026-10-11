@@ -4781,11 +4781,11 @@
     "unnamedPlaceholder": false,
     "notes": null,
     "fullName": "Vikash Pandey",
-    "fatherName": null,
-    "motherName": null,
+    "fatherName": "Mohan Chandra Pandey",
+    "motherName": "Chandra Pandey",
     "spouseId": "tamanna",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1985-06-17",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
@@ -4793,7 +4793,8 @@
     "bio": "",
     "occupation": "Entrepreneur",
     "birthPlace": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": "Kashyap"
   },
   {
     "id": "jaya",
