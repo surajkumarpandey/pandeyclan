@@ -4146,10 +4146,10 @@
     "notes": null,
     "fullName": "Mahesh Chandra Joshi",
     "fatherName": "Leeladhar Joshi",
-    "motherName": null,
+    "motherName": "Tara Joshi",
     "spouseId": "damyanti",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1955-11-08",
     "birthYear": null,
     "deathYear": null,
     "locations": [
@@ -4202,7 +4202,8 @@
     "bio": "",
     "occupation": "Retired Educationist",
     "birthPlace": "Almora",
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": "Bharadwaj"
   },
   {
     "id": "dheeraj",
