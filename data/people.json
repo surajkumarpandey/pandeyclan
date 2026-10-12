@@ -4639,7 +4639,7 @@
     "motherName": null,
     "spouseId": "umesh",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1966-08-01",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
@@ -4647,7 +4647,8 @@
     "bio": "",
     "occupation": null,
     "birthPlace": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "preeti",
