@@ -5900,7 +5900,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Naveen Chandra Pant",
     "fatherName": null,
     "motherName": null,
     "spouseId": "bholadutt_daughter_29",
@@ -5909,9 +5909,14 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/naveen-2_1791830651183.jpg"
+    ],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "ghanshyam",
