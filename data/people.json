@@ -3037,7 +3037,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/gaurav_1791830467388.jpg"
+    ],
     "bio": "",
     "occupation": "Entrepreneur / Agriculturist",
     "locations": [],
@@ -3048,7 +3050,8 @@
     "birthPlace": null,
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "kanika"
+    "spouseId": "kanika",
+    "gotra": null
   },
   {
     "id": "harish_daughter_38",
