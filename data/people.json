@@ -2442,7 +2442,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/umesh_1791806667118.jpg"
+    ],
     "bio": "\"Departed for his heavenly abode on 08 August 2018 in Kichcha.\"",
     "occupation": "Service",
     "locations": [
@@ -2486,7 +2488,8 @@
     "birthDate": null,
     "birthPlace": "Bairati, almora",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": null
   },
   {
     "id": "bholadutt_daughter_29",
