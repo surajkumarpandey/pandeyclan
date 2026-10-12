@@ -4643,7 +4643,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/prema-2_1791829842157.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "birthPlace": null,
