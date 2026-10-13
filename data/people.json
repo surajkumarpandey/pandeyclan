@@ -3584,7 +3584,7 @@
     "fullName": "Mohit Kumar Pandey",
     "spouseId": "kokil",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1978-03-03",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
@@ -3596,7 +3596,8 @@
     "fatherName": "Devendra Kumar Pandey",
     "motherName": "Chandra Pandey",
     "birthPlace": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "rohanika",
