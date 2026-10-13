@@ -2090,7 +2090,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/taradutt_daughter_24_1791857144022.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "locations": [
@@ -2126,7 +2128,9 @@
     "birthDate": "1959-09-21",
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "bhasker"
+    "spouseId": "bhasker",
+    "gotra": null,
+    "birthPlace": null
   },
   {
     "id": "chetan",
