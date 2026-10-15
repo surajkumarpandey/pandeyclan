@@ -5458,18 +5458,23 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Anurita Pandey",
     "fatherName": null,
     "motherName": null,
     "spouseId": "chetan",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1900-01-14",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/anurita_1792044016529.jpg"
+    ],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": "Kashyap",
+    "birthPlace": "Kanpur",
+    "audioMessages": []
   },
   {
     "id": "pratibha",
