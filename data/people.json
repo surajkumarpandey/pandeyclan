@@ -4879,9 +4879,9 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Manish Upreti",
+    "fatherName": "Bhuwan Chandra Upreti",
+    "motherName": "Usha Upreti",
     "spouseId": "mohita",
     "audioMessage": null,
     "birthDate": null,
@@ -4890,7 +4890,10 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "ekagra",
