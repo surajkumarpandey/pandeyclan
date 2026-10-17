@@ -3965,15 +3965,18 @@
     "motherName": "Lata Pant",
     "spouseId": "manish",
     "audioMessage": null,
-    "birthDate": "2026-09-24",
+    "birthDate": "1982-01-16",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/mohita_1792256691632.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "birthPlace": "Haldwani",
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "mayank",
