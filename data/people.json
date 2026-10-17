@@ -3909,19 +3909,19 @@
   },
   {
     "id": "bhasker",
-    "name": "Bhasker",
+    "name": "Bhaskar",
     "gender": "M",
     "parentId": null,
     "generation": 18,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": "Bhasker Chandra Pant",
+    "fullName": "Bhaskar Chandra Pant",
     "fatherName": "Mohan Chandra Pant",
     "motherName": null,
     "spouseId": "taradutt_daughter_24",
     "audioMessage": null,
-    "birthDate": "2026-09-26",
+    "birthDate": "1900-07-21",
     "birthYear": null,
     "deathYear": null,
     "locations": [
@@ -3948,7 +3948,8 @@
     "bio": "",
     "occupation": "RETIRED LIC Officer",
     "birthPlace": "Haldwani",
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "mohita",
