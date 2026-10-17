@@ -3993,7 +3993,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/mayank_1792255846444.jpg"
+    ],
     "bio": "",
     "occupation": "Service",
     "birthPlace": "Haldwani",
