@@ -4011,20 +4011,23 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Neeraj Pant",
+    "fatherName": "Bhaskar Chandra Pant",
+    "motherName": "Lata Pant",
     "spouseId": "pallavi",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1988-09-17",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/neeraj_1792256097693.jpg"
+    ],
     "bio": "",
     "occupation": null,
-    "birthPlace": null,
-    "audioMessages": []
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "damyanti",
