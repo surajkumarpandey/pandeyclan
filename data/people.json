@@ -3989,7 +3989,7 @@
     "motherName": "Lata Pant",
     "spouseId": "jaya",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1900-03-27",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
@@ -3997,7 +3997,8 @@
     "bio": "",
     "occupation": "Service",
     "birthPlace": "Haldwani",
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "neeraj",
