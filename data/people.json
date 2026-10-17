@@ -4950,8 +4950,8 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
+    "fullName": "Pallavi Pant",
+    "fatherName": "Mahesh Tiwari",
     "motherName": null,
     "spouseId": "neeraj",
     "audioMessage": null,
@@ -4961,7 +4961,10 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "daughter-neeraj",
