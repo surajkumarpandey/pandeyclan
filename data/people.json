@@ -2097,7 +2097,7 @@
     "occupation": null,
     "locations": [
       {
-        "place": "Dewelchaur Bandobasti",
+        "place": "Dewelchaur Bandobasti, Haldwani",
         "type": "origin",
         "year": "1959",
         "lat": null,
@@ -2119,6 +2119,14 @@
         "lat": 12.9767936,
         "lng": 77.590082,
         "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
       }
     ],
     "sortOrder": 1,
@@ -2129,8 +2137,8 @@
     "audioMessages": [],
     "audioMessage": null,
     "spouseId": "bhasker",
-    "gotra": null,
-    "birthPlace": null
+    "gotra": "Bhardwaj",
+    "birthPlace": "Haldwani"
   },
   {
     "id": "chetan",
