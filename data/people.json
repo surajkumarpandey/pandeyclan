@@ -3948,6 +3948,14 @@
         "lat": null,
         "lng": null,
         "note": null
+      },
+      {
+        "place": "Delhi",
+        "type": "visited",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
       }
     ],
     "photos": [
@@ -3957,7 +3965,7 @@
     "occupation": "RETIRED LIC Officer",
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "gotra": null
+    "gotra": "Bhardwaj"
   },
   {
     "id": "mohita",
