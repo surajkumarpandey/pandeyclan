@@ -4850,18 +4850,28 @@
     "notes": null,
     "fullName": "Jaya Pant",
     "fatherName": null,
-    "motherName": null,
+    "motherName": "Rekha Awasthi",
     "spouseId": "mayank",
     "audioMessage": null,
     "birthDate": null,
     "birthYear": null,
     "deathYear": null,
-    "locations": [],
+    "locations": [
+      {
+        "place": "Bangalore",
+        "type": "current",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
+      }
+    ],
     "photos": [],
     "bio": "",
     "occupation": "Service",
     "birthPlace": "Lucknow",
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": "Bhardwaj"
   },
   {
     "id": "varnika",
