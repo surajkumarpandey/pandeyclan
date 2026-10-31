@@ -4486,16 +4486,26 @@
         "lat": 28.6328027,
         "lng": 77.2197713,
         "note": null
+      },
+      {
+        "place": "Hyderabad",
+        "type": "lived",
+        "year": null,
+        "lat": null,
+        "lng": null,
+        "note": null
       }
     ],
     "photos": [
       "uploads/pallav_1790500713229.jpg",
-      "uploads/pallav_1790500778230.jpg"
+      "uploads/pallav_1790500778230.jpg",
+      "uploads/pallav_1793457827300.jpg"
     ],
     "bio": "",
     "occupation": "IT Professional",
     "audioMessages": [],
-    "birthPlace": null
+    "birthPlace": null,
+    "gotra": null
   },
   {
     "id": "kshitij",
