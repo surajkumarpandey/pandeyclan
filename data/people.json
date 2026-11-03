@@ -4942,14 +4942,14 @@
   },
   {
     "id": "manish",
-    "name": "Manish",
+    "name": "Maneesh",
     "gender": "M",
     "parentId": null,
     "generation": 19,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": "Manish Upreti",
+    "fullName": "Maneesh Upreti",
     "fatherName": "Bhuwan Chandra Upreti",
     "motherName": "Usha Upreti",
     "spouseId": "mohita",
@@ -4958,7 +4958,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/manish_1793730161115.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "gotra": null,
