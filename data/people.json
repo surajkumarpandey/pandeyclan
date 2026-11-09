@@ -6614,8 +6614,8 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
+    "fullName": "Pushpa Pandey",
+    "fatherName": "Narayan Dutt Pant",
     "motherName": null,
     "spouseId": "kailash",
     "audioMessage": null,
@@ -6653,8 +6653,9 @@
     ],
     "bio": "",
     "occupation": null,
-    "birthPlace": null,
-    "audioMessages": []
+    "birthPlace": "Haldwani",
+    "audioMessages": [],
+    "gotra": null
   },
   {
     "id": "jeewan-2",
