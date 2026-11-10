@@ -4420,9 +4420,9 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
-    "fatherName": null,
-    "motherName": null,
+    "fullName": "Satish Chandra Joshi",
+    "fatherName": "Bhasker Dutt Joshi",
+    "motherName": "Usha Joshi",
     "spouseId": "anjali",
     "audioMessage": null,
     "birthDate": null,
@@ -4431,7 +4431,10 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": "Defence (Air Force), Education Department",
+    "gotra": "Angirash",
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "pallav",
