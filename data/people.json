@@ -4513,14 +4513,14 @@
   },
   {
     "id": "kshitij",
-    "name": "Kshitiz",
+    "name": "Kshitij",
     "gender": "M",
     "parentId": "anjali",
     "generation": 19,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": "Kshitiz Joshi",
+    "fullName": "Kshitij Joshi",
     "fatherName": "Satish Chandra Joshi",
     "motherName": "Anjali Joshi",
     "spouseId": "komal",
@@ -4562,12 +4562,14 @@
         "note": null
       }
     ],
-    "photos": [],
+    "photos": [
+      "uploads/kshitij_1794322136590.jpg"
+    ],
     "bio": "",
     "occupation": "Service",
     "audioMessages": [],
-    "birthPlace": "Silchar, Assam",
-    "gotra": "Angirash"
+    "birthPlace": null,
+    "gotra": null
   },
   {
     "id": "kanchan",
