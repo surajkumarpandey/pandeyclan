@@ -4425,15 +4425,17 @@
     "motherName": "Usha Joshi",
     "spouseId": "anjali",
     "audioMessage": null,
-    "birthDate": null,
+    "birthDate": "1963-06-05",
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/satish_1794324132042.jpg"
+    ],
     "bio": "",
     "occupation": "Defence (Air Force), Education Department",
     "gotra": "Angirash",
-    "birthPlace": null,
+    "birthPlace": "Dehradun",
     "audioMessages": []
   },
   {
