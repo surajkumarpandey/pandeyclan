@@ -4294,7 +4294,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/dheeraj_1794408390056.jpg"
+    ],
     "bio": "",
     "occupation": "IT Professional",
     "audioMessages": [],
