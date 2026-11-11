@@ -4809,7 +4809,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/rowansh_1794377817251.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "birthPlace": "Nashik, Maharashtra",
