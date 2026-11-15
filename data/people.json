@@ -2973,7 +2973,8 @@
     "birthDate": null,
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "sortOrder": 2
   },
   {
     "id": "lalit_daughter_36",
@@ -2997,7 +2998,8 @@
     "birthPlace": null,
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "vinod-3"
+    "spouseId": "vinod-3",
+    "sortOrder": 1
   },
   {
     "id": "lalit_daughter_37",
@@ -3021,7 +3023,8 @@
     "birthPlace": null,
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "spouseanju"
+    "spouseId": "spouseanju",
+    "sortOrder": 0
   },
   {
     "id": "ritesh",
@@ -3047,7 +3050,8 @@
     "birthPlace": null,
     "audioMessages": [],
     "audioMessage": null,
-    "gotra": "Kashyap"
+    "gotra": "Kashyap",
+    "sortOrder": 3
   },
   {
     "id": "gaurav",
