@@ -6002,7 +6002,7 @@
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Manorama Pandey",
     "fatherName": null,
     "motherName": null,
     "spouseId": "bholadutt",
@@ -6013,7 +6013,10 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": "Kashyap",
+    "birthPlace": "Aligarh",
+    "audioMessages": []
   },
   {
     "id": "naveen-2",
