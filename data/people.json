@@ -6136,11 +6136,14 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/meenakshi_1794763662469.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "birthPlace": null,
-    "audioMessages": []
+    "audioMessages": [],
+    "gotra": "Kashysp"
   },
   {
     "id": "amit",
