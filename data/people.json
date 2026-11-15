@@ -2549,7 +2549,7 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "",
+    "bio": "Nickname 'Pappu'।",
     "occupation": null,
     "locations": [],
     "spouseId": "premaspouse",
@@ -2559,7 +2559,8 @@
     "birthDate": null,
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": null
   },
   {
     "id": "suresh",
