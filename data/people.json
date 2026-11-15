@@ -6011,7 +6011,9 @@
     "birthYear": null,
     "deathYear": null,
     "locations": [],
-    "photos": [],
+    "photos": [
+      "uploads/manorama_1794763563385.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "gotra": "Kashyap",
