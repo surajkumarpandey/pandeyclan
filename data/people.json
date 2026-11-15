@@ -1200,7 +1200,7 @@
     "birthYear": null,
     "deathYear": null,
     "photos": [],
-    "bio": "\"Departed for his heavenly abode on 02 July 2005 in Haldwani.\"",
+    "bio": "On 15Nov2026, Lalit Chacha confirmed that Bhola Dutt Pandey ji expired at the age of 93 years in Haldwani, he was born in 1912.\n\"Departed for his heavenly abode on 02 July 2005 in Haldwani.\"",
     "occupation": "Politician / Agriculturist",
     "locations": [
       {
@@ -1229,14 +1229,15 @@
       }
     ],
     "fullName": "Bhola Dutt Pandey",
-    "birthDate": "1914-01-01",
+    "birthDate": "1912-01-01",
     "sortOrder": 3,
     "spouseId": "manorama",
     "fatherName": "Lakshmi Dutt Pandey",
     "motherName": "Tulsi Devi Pandey",
     "birthPlace": "Bairati Almora",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyao"
   },
   {
     "id": "taradutt",
