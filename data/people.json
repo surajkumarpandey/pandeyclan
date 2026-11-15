@@ -6845,14 +6845,14 @@
   },
   {
     "id": "premaspouse",
-    "name": "PremaSpouse",
+    "name": "Ramesh",
     "gender": "F",
     "parentId": null,
     "generation": 17,
     "tree": "A",
     "unnamedPlaceholder": false,
     "notes": null,
-    "fullName": null,
+    "fullName": "Ramesh Chandra Pant",
     "fatherName": null,
     "motherName": null,
     "spouseId": "bholadutt_daughter_30",
@@ -6863,7 +6863,10 @@
     "locations": [],
     "photos": [],
     "bio": "",
-    "occupation": null
+    "occupation": null,
+    "gotra": null,
+    "birthPlace": null,
+    "audioMessages": []
   },
   {
     "id": "mohit-2",
