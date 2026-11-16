@@ -2535,7 +2535,8 @@
     "birthPlace": null,
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "naveen-2"
+    "spouseId": "naveen-2",
+    "sortOrder": 4
   },
   {
     "id": "bholadutt_daughter_30",
@@ -2560,7 +2561,8 @@
     "birthPlace": "Haldwani",
     "audioMessages": [],
     "audioMessage": null,
-    "gotra": null
+    "gotra": null,
+    "sortOrder": 3
   },
   {
     "id": "suresh",
@@ -2593,7 +2595,8 @@
     "birthDate": null,
     "birthPlace": "Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "sortOrder": 6
   },
   {
     "id": "bholadutt_daughter_31",
@@ -2617,7 +2620,8 @@
     "birthDate": "1961-08-07",
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "sortOrder": 5
   },
   {
     "id": "lalit",
@@ -2642,7 +2646,8 @@
     "audioMessages": [],
     "audioMessage": null,
     "spouseId": "tara",
-    "gotra": "Kashyap"
+    "gotra": "Kashyap",
+    "sortOrder": 2
   },
   {
     "id": "harish",
@@ -2699,7 +2704,8 @@
     "birthPlace": "Haldwani",
     "audioMessages": [],
     "audioMessage": null,
-    "spouseId": "meenakshi"
+    "spouseId": "meenakshi",
+    "sortOrder": 0
   },
   {
     "id": "manoj_umesh",
@@ -5281,7 +5287,8 @@
     "occupation": null,
     "birthPlace": null,
     "audioMessages": [],
-    "gotra": null
+    "gotra": null,
+    "sortOrder": 1
   },
   {
     "id": "vinod",
