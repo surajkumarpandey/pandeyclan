@@ -2155,7 +2155,7 @@
     "photos": [
       "uploads/chetan_1790438947543.jpg"
     ],
-    "bio": "",
+    "bio": "Married on 18 November 1993 (18/11/1993)।",
     "occupation": "Retired",
     "locations": [],
     "sortOrder": 2,
@@ -2166,7 +2166,8 @@
     "birthDate": "1965-04-30",
     "birthPlace": null,
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": null
   },
   {
     "id": "shekhar_daughter_25",
