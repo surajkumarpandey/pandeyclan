@@ -1507,7 +1507,7 @@
     "photos": [
       "uploads/pradeep_1790852985929.jpg"
     ],
-    "bio": "",
+    "bio": "Married on 18 February 1980 (18/02/1980) with Baby Joshi।",
     "occupation": "Service",
     "locations": [
       {
@@ -1591,7 +1591,8 @@
     "birthDate": "1956-07-15",
     "birthPlace": "Dewelchour Bandobasti, Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyap"
   },
   {
     "id": "ashok",
