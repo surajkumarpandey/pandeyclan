@@ -1432,7 +1432,7 @@
     "photos": [
       "uploads/kailash_1790440883716.jpg"
     ],
-    "bio": "",
+    "bio": "Married on 11 May 1971 (11/05/1971) with Pushplata Pant।",
     "occupation": "Retired Indian Navy Officer",
     "locations": [
       {
@@ -1492,7 +1492,8 @@
     "birthDate": "1946-01-03",
     "birthPlace": "Bairati, Almora",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyap"
   },
   {
     "id": "pradeep",
