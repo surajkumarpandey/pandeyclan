@@ -1339,7 +1339,7 @@
     "photos": [
       "uploads/shekhar_1790399092684.jpg"
     ],
-    "bio": "",
+    "bio": "Married on 02 February 1961 (02/02/1961) with Reba  Pant।",
     "occupation": "Retired Indian Navy Officer",
     "locations": [
       {
@@ -1415,7 +1415,8 @@
     "birthDate": "1932-04-14",
     "birthPlace": "Bairati, Almora",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyap"
   },
   {
     "id": "kailash",
