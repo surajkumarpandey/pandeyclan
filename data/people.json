@@ -2041,7 +2041,9 @@
     "notes": null,
     "birthYear": null,
     "deathYear": null,
-    "photos": [],
+    "photos": [
+      "uploads/dev_1795574948053.jpg"
+    ],
     "bio": "",
     "occupation": null,
     "locations": [],
@@ -2049,9 +2051,10 @@
     "fatherName": "Khajan Chandra Pandey",
     "motherName": "Meena Pandey",
     "birthDate": "2007-08-04",
-    "birthPlace": "Haldwani",
+    "birthPlace": "Dewelchour, Haldwani",
     "audioMessages": [],
-    "audioMessage": null
+    "audioMessage": null,
+    "gotra": "Kashyap"
   },
   {
     "id": "khajan_daughter_23",
